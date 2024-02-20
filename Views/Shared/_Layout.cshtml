@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>   
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>@ViewData["Title"] - Landed MVC</title>
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/LandedMVC.styles.css" asp-append-version="true" /> *@
+    <noscript><link rel="stylesheet" href="~/css/noscript.css" asp-append-version="true" /></noscript>
+</head>
+<body class="is-preload landing">
+    <div id="page-wrapper">
+        <header id="header">
+            <h1 id="logo"><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Landed MVC</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li>
+                        <a href="#">Layouts</a>
+                        <ul>
+                            <li><a href="left-sidebar.html">Left Sidebar</a></li>
+                            <li><a href="right-sidebar.html">Right Sidebar</a></li>
+                            <li><a href="no-sidebar.html">No Sidebar</a></li>
+                            <li>
+                                <a href="#">Submenu</a>
+                                <ul>
+                                    <li><a href="#">Option 1</a></li>
+                                    <li><a href="#">Option 2</a></li>
+                                    <li><a href="#">Option 3</a></li>
+                                    <li><a href="#">Option 4</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="elements.html">Elements</a></li>
+                    <li><a href="#" class="button primary">Sign Up</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+        <footer id="footer">
+            <ul class="icons">
+                <li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+                <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                <li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <ul class="copyright">
+                <li>&copy; 2024 - Landed MVC. All rights reserved.</li>
+                <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                <li>Demo Images: <a href="http://unsplash.com">Unsplash</a></li>
+                <li>About Me: <a href="https://resume.mypitech.com">Shawn Wheeler</a></li>
+            </ul>
+        </footer>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.scrolly.min.js"></script>
+    <script src="~/js/jquery.dropotron.min.js"></script>
+    <script src="~/js/jquery.scrollex.min.js"></script>
+    <script src="~/js/browser.min.js"></script>
+    <script src="~/js/breakpoints.min.js"></script>
+    <script src="~/js/util.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
