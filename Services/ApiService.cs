@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json;
-using TestMVC.Attributes;
+using LandedMVC.Attributes;
 
 
-namespace TestMVC.Services
+namespace LandedMVC.Services
 {
     public sealed class ApiService<R> where R : class
     {

@@ -1,4 +1,4 @@
-﻿namespace TestMVC.Attributes
+﻿namespace LandedMVC.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
     public class ApiKeyAttribute : Attribute

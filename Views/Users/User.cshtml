@@ -1,0 +1,53 @@
+﻿@model LandedMVC.Models.UserModel
+
+@{
+    ViewData["Title"] = "User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var buttonText = "Add";
+    if (Model != null && Model.Id != 0)
+    {
+        buttonText = "Update";
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">User</h1>
+    
+    <div class="row">
+        <div class="center alntxtleft">
+            <form asp-action="User">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input asp-for="Id" class="form-control" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Notes" class="control-label" style="vertical-align: top; display:block;"></label>
+                    <textarea asp-for="Notes" style="display:block; width:100%; height:100%;" cols="70" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding-top: 10px">
+                    <input type="submit" value="@buttonText" class="btn btn-primary" />
+                    <div>
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

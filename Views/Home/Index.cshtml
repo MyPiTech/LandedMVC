@@ -8,7 +8,7 @@
 			<h2>The future has landed</h2>
 			<p>
 				And there are no hoverboards or flying cars.<br />
-				Just apps. So many apps...  &#128514;
+				Just Landed MVC...  &#128514;
 			</p>
 		</header>
 		<span class="image"><img src="images/pic01_316.jpg" alt="" /></span>
@@ -102,17 +102,18 @@
 		<div class="box alt">
 			<div class="row gtr-uniform">
 				<section class="col-4 col-6-medium col-12-xsmall">
-					<span class="icon solid alt major fa-users"></span>
+                    <a asp-action="index" asp-controller="users" class="icon solid major fa-users"/></a>
 					<h3>Users</h3>
-					<p>In a normal one-to-many flow. Things would start here.</p>
+                    <p>In a normal one-to-many flow. Things would start here.</p>
 				</section>
 				<section class="col-4 col-6-medium col-12-xsmall">
-					<span class="icon solid alt major fa-calendar"></span>
+					<a asp-action="index" asp-controller="users"  class="icon solid major fa-calendar"></a>
 					<h3>Events</h3>
 					<p>From here you can access the events without going through the parent first.</p>
 				</section>
 				<section class="col-4 col-6-medium col-12-xsmall">
-					<span class="icon solid alt major fa-database"></span>
+					<a asp-action="index" asp-controller="users" class="icon solid major fa-database"></a>
+					@* <span class="icon solid alt major fa-database"></span> *@
 					<h3>Access the API</h3>
 					<p>Access the API directly using its Swagger UI.</p>
 				</section>

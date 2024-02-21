@@ -1,7 +1,7 @@
-﻿using TestMVC.Attributes;
-using TestMVC.Models;
+﻿using LandedMVC.Attributes;
+using LandedMVC.Models;
 
-namespace TestMVC.Dtos
+namespace LandedMVC.Dtos
 {
     [ApiRoute("/Users")]
     public class UserDto

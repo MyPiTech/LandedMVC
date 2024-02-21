@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TestMVC.Dtos;
+using LandedMVC.Dtos;
 
-namespace TestMVC.Models
+namespace LandedMVC.Models
 {
     public class UserModel
     {

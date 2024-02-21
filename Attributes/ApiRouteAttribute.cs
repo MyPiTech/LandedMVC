@@ -1,4 +1,4 @@
-﻿namespace TestMVC.Attributes
+﻿namespace LandedMVC.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ApiRouteAttribute : Attribute

@@ -1,6 +1,6 @@
-﻿using TestMVC.Dtos;
+﻿using LandedMVC.Dtos;
 
-namespace TestMVC.Models
+namespace LandedMVC.Models
 {
     public class EventsModel : DataModel<EventDto>
     {

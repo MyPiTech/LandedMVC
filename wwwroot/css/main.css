@@ -120,6 +120,8 @@ input, select, textarea {
 			border-bottom-color: transparent;
 		}
 
+
+
 	strong, b {
 		color: #ffffff;
 		font-weight: 300;
@@ -2507,6 +2509,20 @@ input, select, textarea {
 					text-shadow: 1px 0 0 #ffffff, -1px 0 0 #ffffff, 0 1px 0 #ffffff, 0 -1px 0 #ffffff;
 				}
 
+				a.icon {
+					-moz-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+					-webkit-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+					-ms-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+					transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+					color: #ffffff;
+					text-decoration: none;
+				}
+
+					a.icon:hover {
+						color: #e44c65 !important;
+						cursor: pointer;
+					}
+
 /* Image */
 
 	.image {
@@ -3586,6 +3602,10 @@ input, select, textarea {
 					color: inherit;
 				}
 
+	#iconLink {
+
+	}
+
 /* XLarge */
 
 	@media screen and (max-width: 1680px) {
@@ -4109,3 +4129,5 @@ input, select, textarea {
 					}
 
 	}
+
+	

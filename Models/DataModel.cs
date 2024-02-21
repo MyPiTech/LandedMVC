@@ -1,4 +1,4 @@
-﻿namespace TestMVC.Models
+﻿namespace LandedMVC.Models
 {
     public class DataModel<D> where D : class
     {

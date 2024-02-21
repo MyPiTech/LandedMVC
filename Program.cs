@@ -1,10 +1,28 @@
+using LandedMVC.Dtos;
+using LandedMVC.Services;
+using Microsoft.Net.Http.Headers;
+using System.Runtime.Intrinsics.Arm;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+var apiBase = builder.Configuration.GetValue<string>("ApiBase") ?? string.Empty;
+builder.Services.AddHttpClient<ApiService<UserDto>>(
+    client =>
+    {
+        client.BaseAddress = new Uri(apiBase);
+        client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+    });
+builder.Services.AddHttpClient<ApiService<EventDto>>(
+    client =>
+    {
+        client.BaseAddress = new Uri(apiBase);
+        client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+    });
 
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
