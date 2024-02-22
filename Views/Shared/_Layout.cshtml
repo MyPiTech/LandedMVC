@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <title>@ViewData["Title"] - Landed MVC</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
     @* <link rel="stylesheet" href="~/LandedMVC.styles.css" asp-append-version="true" /> *@
     <noscript><link rel="stylesheet" href="~/css/noscript.css" asp-append-version="true" /></noscript>
@@ -11,29 +12,36 @@
 <body class="is-preload landing">
     <div id="page-wrapper">
         <header id="header">
-            <h1 id="logo"><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Landed MVC</a></h1>
+            <h1 id="logo"><a class="navbar-brand" asp-action="Index" asp-controller="Home">Landed MVC</a></h1>
             <nav id="nav">
                 <ul>
-                    <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a class="navbar-brand" asp-action="Index"  asp-controller="Home">Home</a></li>
                     <li>
-                        <a href="#">Layouts</a>
+                        <a href="#">MVC</a>
                         <ul>
-                            <li><a href="left-sidebar.html">Left Sidebar</a></li>
-                            <li><a href="right-sidebar.html">Right Sidebar</a></li>
-                            <li><a href="no-sidebar.html">No Sidebar</a></li>
+                            <li><a asp-action="index" asp-controller="users">Users</a></li>
+                            <li><a asp-action="index" asp-controller="users">Events</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">My Other Projects</a>
+                        <ul>
+                            <li><a href="https://resume.mypitech.com" target="_blank">Resume/Bio</a></li>
+                            <li><a href="right-sidebar.html">Simple MVC</a></li>
+                            <li><a asp-action="index" asp-controller="users">API Swagger UI</a></li>
+                            <li><a href="no-sidebar.html">Simple SignalR</a></li>
                             <li>
-                                <a href="#">Submenu</a>
+                                <a href="#">Repositories</a>
                                 <ul>
-                                    <li><a href="#">Option 1</a></li>
-                                    <li><a href="#">Option 2</a></li>
-                                    <li><a href="#">Option 3</a></li>
-                                    <li><a href="#">Option 4</a></li>
+                                    <li><a href="#">This Repo</a></li>
+                                    <li><a href="#">Simple MVC Repo</a></li>
+                                    <li><a href="#">Simple SignalR Repo</a></li>
+                                    <li><a href="#">API Repo</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
-                    <li><a href="elements.html">Elements</a></li>
-                    <li><a href="#" class="button primary">Sign Up</a></li>
+                    <li><a href="/#five" class="button primary">Contact Me</a></li>
                 </ul>
             </nav>
         </header>
