@@ -19,47 +19,107 @@
 					<section>
 						<h3>Users Table</h3>
 						<p>
-							I know jQuery is old and out of vogue, but you can still accomplish a pretty impressive, responsive UI.
-							In this case, I am using the DataTables library and an AJAX request to the users' controller. That, in turn, makes a call to the API. Which, of course, retrieves the data from the database.
+							I know jQuery is old and out of vogue, but you can still accomplish a pretty impressive, responsive UI. I am also aware that a lot of what makes jQuery so useful is now implemented in vanilla JS. So it's likely that some of what I am using it for could be done without it.
+						</p>
+						<p>
+							Thus is the nature of web technology. Just about the time you gain some expertise, something new has come along... Remember Flash? lol
+						</p>
+						<p>
+							I am using the jQuery DataTables library and an AJAX request to the users' controller. That, in turn, makes a call to the API. Which, of course, retrieves the data from the database.
 						</p>
 						<footer>
 							<ul class="actions">
-								<li><a href="#" class="button">Learn More</a></li>
+								<li><a href="#continue" class="button scrolly">Keep Reeding</a></li>
 							</ul>
 						</footer>
 					</section>
 				</section>
 
 			</div>
+			
 			<div class="col-8 col-12-medium imp-medium">
 
+				<div id="notification" class="notification"></div><br />
 				<!-- Content -->
 				<section id="content">
-					<p><a href="#" class="button fit small">Create New User</a></p>
-                    
-                    <table id="usersTbl" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Last Name</th>
-                                <th>First Name</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <hr />
-					<h3>Dolore Amet Consequat</h3>
-					<p>Aliquam massa urna, imperdiet sit amet mi non, bibendum euismod est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam quam, mollis at magna consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam.</p>
-					<p>Vestibulum diam quam, mollis at consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum. Morbi mattis elementum orci, nec dictum porta cursus justo. Quisque ultricies lorem in ligula condimentum, et egestas turpis sagittis. Cras ac nunc urna. Nullam eget lobortis purus. Phasellus vitae tortor non est placerat tristique.</p>
+
+					<div id="dTableWrapper" class="row" >
+						<p style="width: 100%"><a id="createBtn" href="#" class="button fit small">Create New User</a></p>
+						<table id="usersTbl" style="width:100%">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Last Name</th>
+									<th>First Name</th>
+									<th>Notes</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>		
+					</div>
+						
+					<form method="post" id="userForm" action="">
+						<div id="dFormWrapper" class="row gtr-uniform gtr-50" style="display:none;">
+							<div class="col-12">
+								<h4 id="formHeader">Create a new user.</h4>
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<input type="text" name="firstName" id="firstName" placeholder="*First Name" />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<input type="text" name="lastName" id="lastName" placeholder="*Last Name" />
+							</div>
+							<div class="col-12">
+								<textarea name="notes" id="notes" placeholder="Notes" rows="4"></textarea>
+							</div>
+							<div class="col-12">
+								<ul class="actions">
+									<li><input type="submit" value="Submit" /></li>
+									<li><a id="resetBtn" href="#" class="button fit">Reset</a></li>
+									<li><a id="cancelBtn" href="#" class="button fit">Cancel</a></li>
+								</ul>
+							</div>
+							<input type="hidden" name="id" id="userId" value="0" />
+						</div>
+					</form>
 					
+                    <hr />
+					<section id="continue">
+
+						<h3>Users Table</h3>
+						<p>
+							Some things to take note of:
+							<ol>
+								<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, hire me. &#128516; </li>
+								<li>By using AJAX to populate the table. We allow for the rest of the page to load. Despite any delays on the table.</li>
+								<li>This is a fairly simple implementation of the DataTables library. I am loading the complete record set and letting the data table handle all of the searching, pagination, etc. client-side. This can be changed to be server-side, if performance is an issue.</li>
+							</ol>
+						</p>
+						<p>
+							The heavy use of AJAX and JQuery here pretty much circumvents the whole "model" part of the model, view, controller framework. That said, the server side is almost identical to my other MVC demo. We are still binding the requests to the model and using the model. As well as, it's state to perform server-side validation.
+						</p>
+						<p>
+							So why not use React or Angular, you ask? I'm glad you asked... lol. The answer is that there is no reason not to. Though arguably there is also no reason to use it here either. JS frameworks do bring some impressive stuff to the table. However, in this case, they are probably overkill.
+						</p>
+						<p>
+							I do intend to create a React/Typescript version of this same project. So I guess, in summary, I'm not using it here because it's not "needed" and because it is a completely separate tech stack. I am only trying to demonstrate a "senior" level grasp of responsive MVC with this project.
+						</p>
+					</section>
+
 				</section>
 
 			</div>
+
 		</div>
+
 	</div>
+
 </div>
+
 @section Scripts {
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+	<script src="https://cdn.datatables.net/plug-ins/2.0.0/dataRender/ellipsis.js"></script>
     <script src="~/js/views/users/index.js"></script>
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

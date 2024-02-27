@@ -6,8 +6,9 @@
     <title>@ViewData["Title"] - Landed MVC</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
-    @* <link rel="stylesheet" href="~/LandedMVC.styles.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <noscript><link rel="stylesheet" href="~/css/noscript.css" asp-append-version="true" /></noscript>
+    <link rel="icon" href="~/pi_icon.ico">
 </head>
 <body class="is-preload landing">
     <div id="page-wrapper">
@@ -17,26 +18,27 @@
                 <ul>
                     <li><a class="navbar-brand" asp-action="Index"  asp-controller="Home">Home</a></li>
                     <li>
-                        <a href="#">MVC</a>
+                        <a asp-action="index" asp-controller="users" target="_blank">MVC</a>
                         <ul>
-                            <li><a asp-action="index" asp-controller="users">Users</a></li>
-                            <li><a asp-action="index" asp-controller="users">Events</a></li>
+                            <li><a asp-action="index" asp-controller="users" target="_blank">Users</a></li>
+                            <li><a asp-action="index" asp-controller="users" target="_blank">Events</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="#">My Other Projects</a>
                         <ul>
                             <li><a href="https://resume.mypitech.com" target="_blank">Resume/Bio</a></li>
-                            <li><a href="right-sidebar.html">Simple MVC</a></li>
-                            <li><a asp-action="index" asp-controller="users">API Swagger UI</a></li>
-                            <li><a href="no-sidebar.html">Simple SignalR</a></li>
+                            <li><a href="https://mssimpletestmvc.azurewebsites.net" target="_blank">Simple MVC</a></li>
+                            <li><a href="https://signalrdemo.azurewebsites.net" target="_blank">Simple SignalR</a></li>
+                            <li><a href="https://swcoretestapi.azurewebsites.net/swagger/index.html" target="_blank">API Swagger UI</a></li>
+                            
                             <li>
                                 <a href="#">Repositories</a>
                                 <ul>
-                                    <li><a href="#">This Repo</a></li>
-                                    <li><a href="#">Simple MVC Repo</a></li>
-                                    <li><a href="#">Simple SignalR Repo</a></li>
-                                    <li><a href="#">API Repo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/LandedMVC" target="_blank">This Repo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/TestMVC" target="_blank">Simple MVC Repo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/SignalRDiceGame" target="_blank">Simple SignalR Repo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/DotNetCoreTestApi" target="_blank">API Repo</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -50,9 +52,9 @@
         </main>
         <footer id="footer">
             <ul class="icons">
-                <li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
-                <li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-                <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                <li><a href="mailto:swheeler@mypitech.com?subject=Web Contact" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+                <li><a href="https://www.linkedin.com/in/shawn-wheeler-5850a956" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+                <li><a href="https://github.com/MyPiTech" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
             </ul>
             <ul class="copyright">
                 <li>&copy; 2024 - Landed MVC. All rights reserved.</li>

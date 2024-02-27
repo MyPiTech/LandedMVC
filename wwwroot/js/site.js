@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function detectScreenSize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-// Write your JavaScript code.
+    // Check if the screen is small
+    const isSmallScreen = width < 600 || height < 400;
+
+    // Return the boolean value
+    return isSmallScreen;
+}

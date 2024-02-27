@@ -3,11 +3,12 @@ using LandedMVC.Models;
 
 namespace LandedMVC.Dtos
 {
-    [ApiRoute("/Events")]
-    public class EventDto
+    [ApiRoute("/Users/{uId}/Events")]
+    public class UserEventDto
     {
         [ApiKey]
         public int Id { get; set; }
+        [ApiKey("uId")]
         public int UserId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;

@@ -18,7 +18,7 @@
 
 <!-- One -->
 <section id="one" class="spotlight style1 bottom">
-	<span class="image fit main"><img src="images/pic02_1600X1050.jpg" alt="" /></span>
+	<span class="image fit main"><img src="images/pic03_1600x1050.jpg" alt="" /></span>
 	<div class="content">
 		<div class="container">
 			<div class="row">
@@ -49,7 +49,7 @@
 
 <!-- Two -->
 <section id="two" class="spotlight style2 right">
-	<span class="image fit main"><img src="images/pic03_1600x1050.jpg" alt="" /></span>
+	<span class="image fit main"><img src="images/pic02_1600X1050.jpg" alt="" /></span>
 	<div class="content">
 		<header>
 			<h2>I am a self-taught software developer</h2>
@@ -78,7 +78,7 @@
 			I only bring this up because I have been out of work for a year. Mostly due to this accident and the time it has taken to recover.
 		</p>
 		<p>
-			This has made me a bit rusty, and that has a lot to do with why these demo projects exist. In part to refresh my memory, but also to hopefully assuage the fear of recruiters and interviewers. Especially if I forget something basic that I should remember.
+			This has made me a bit rusty, and that has a lot to do with why these demo projects exist. In part to refresh my memory, but also to hopefully assuage the fear of interviewers. Especially if I forget something basic that I should remember.
 		</p>
 		<p>
 			It happens.
@@ -109,10 +109,10 @@
 				<section class="col-4 col-6-medium col-12-xsmall">
 					<a asp-action="index" asp-controller="users"  class="icon solid major fa-calendar"></a>
 					<h3>Events</h3>
-					<p>From here you can access the events without going through the parent first.</p>
+					<p>From here you can access all the events without going through the parent user first. (Under Construction)</p>
 				</section>
 				<section class="col-4 col-6-medium col-12-xsmall">
-					<a asp-action="index" asp-controller="users" class="icon solid major fa-database"></a>
+					<a href="https://swcoretestapi.azurewebsites.net/swagger/index.html" target="_blank" class="icon solid major fa-database"></a>
 					<h3>Access the API</h3>
 					<p>Access the API directly using its Swagger UI.</p>
 				</section>
@@ -132,14 +132,22 @@
 		<header>
 			<h2>Lets talk...</h2>
 			<p>Send me an email the easy way. This form uses an endpoint in my API to send me an email.</p>
-			<p><a asp-area="" asp-controller="Home" asp-action="Index" class="button small">Home</a></p>
 		</header>
-		<form method="post" action="#" class="cta">
+		
+		<form id="contactForm" method="post" action="#" class="cta">
 			<div class="col-12">
-				<div class="col-8 col-12-xsmall"><input type="text" name="name" id="name" placeholder="Your Name" /></div>
-				<textarea name="message" id="message" placeholder="Enter your message" rows="6"></textarea><br />
+				<div id="notification" class="notification error light"></div><br />
+				<div class="col-8 col-12-xsmall"><input type="text" name="name" id="name" placeholder="*Your Name" /></div>
+				<textarea name="message" id="message" placeholder="*Enter your message" rows="6"></textarea><br />
 			</div>
 			<div class="col-4 col-12-xsmall"><input type="submit" value="Send" class="fit primary" /></div>
 		</form>
 	</div>
 </section>
+
+@section Scripts {
+	<script src="~/js/views/home/index.js"></script>
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

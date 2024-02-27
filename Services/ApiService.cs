@@ -1,18 +1,32 @@
-﻿using System.Reflection;
+﻿// ***********************************************************************
+// Assembly         : LandedMVC
+// Author           : Shawn Wheeler
+// Created          : 02-20-2024
+//
+// Last Modified By : Shawn Wheeler
+// Last Modified On : 02-26-2024
+// ***********************************************************************
+// <copyright file="ApiService.cs" company="LandedMVC">
+//     Copyright (c) MyPiTech. All rights reserved.
+// </copyright>
+// <summary>Generic API service</summary>
+// ***********************************************************************
+using System.Reflection;
 using System.Text.Json;
 using LandedMVC.Attributes;
 
 
 namespace LandedMVC.Services
 {
-    public sealed class ApiService<R> where R : class
+
+	public sealed class ApiService<DTO> where DTO : class
     {
-        private readonly ILogger<ApiService<R>> _logger;
+        private readonly ILogger<ApiService<DTO>> _logger;
         private readonly HttpClient _client;
         private readonly JsonSerializerOptions _JsonReadOptions;
         private readonly JsonSerializerOptions _JsonWriteOptions;
 
-        public ApiService(HttpClient httpClient, ILogger<ApiService<R>> logger)
+        public ApiService(HttpClient httpClient, ILogger<ApiService<DTO>> logger)
         {
             _client = httpClient;
             _logger = logger;
@@ -20,85 +34,127 @@ namespace LandedMVC.Services
             _JsonWriteOptions = new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never };
         }
 
-        public async Task<R[]?> GetAllAsync(CancellationToken token = default)
+        public async Task<DTO[]?> GetAllAsync(CancellationToken token = default)
         {
             return await GetAllAsync(null, token);
         }
 
-        public async Task<R[]?> GetAllAsync(Func<R>? newR = null, CancellationToken token = default)
+        public async Task<DTO[]?> GetAllAsync(Func<DTO>? newR = null, CancellationToken token = default)
         {
             try
             {
                 var apiRoute = GetRoute(newR);
 
-                R[]? response = await _client.GetFromJsonAsync<R[]>(apiRoute, _JsonReadOptions, token);
+                DTO[]? response = await _client.GetFromJsonAsync<DTO[]>(apiRoute, _JsonReadOptions, token);
 
                 return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-            }
-            return null;
+				throw;
+			}
         }
 
-        public async Task<R?> GetOneAsync(Func<R> newR, CancellationToken token = default)
+        public async Task<DTO?> GetOneAsync(Func<DTO> newR, CancellationToken token = default)
         {
             try
             {
                 var apiRoute = GetRoute(newR, true);
 
-                R? response = await _client.GetFromJsonAsync<R>(apiRoute, _JsonReadOptions, token);
+                DTO? response = await _client.GetFromJsonAsync<DTO>(apiRoute, _JsonReadOptions, token);
 
                 return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-            }
-            return null;
+				_logger.LogError(ex.Message);
+				throw;
+			}
         }
 
-        public async Task AddAsync(R dto, CancellationToken token = default)
+        public async Task<DTO?> AddAsync(DTO dto, CancellationToken token = default)
         {
             try
             {
                 var apiRoute = GetRoute(() => dto);
-                await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
-            }
+                var response = await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+                
+                response.EnsureSuccessStatusCode();
+				return await response.Content.ReadFromJsonAsync<DTO>(token);
+			}
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-            }
+				throw;
+			}
         }
 
-        public async Task EditAsync(R dto, CancellationToken token = default)
+		public async Task<HttpResponseMessage> PostAsync(DTO dto, CancellationToken token = default)
+		{
+			try
+			{
+				var apiRoute = GetRoute(() => dto);
+				HttpResponseMessage response = await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+
+				response.EnsureSuccessStatusCode();
+				return response;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message);
+				throw;
+			}
+		}
+
+		public async Task EditAsync(DTO dto, CancellationToken token = default)
         {
             try
             {
                 var apiRoute = GetRoute(() => dto, true);
-                await _client.PutAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
-            }
+				var response = await _client.PutAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+
+				response.EnsureSuccessStatusCode();
+			}
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-            }
+				throw;
+			}
         }
 
-        public async Task DeleteAsync(Func<R> newR, CancellationToken token = default)
+        public async Task DeleteAsync(Func<DTO> newR, CancellationToken token = default)
         {
             try
             {
                 var apiRoute = GetRoute(newR, true);
-                await _client.DeleteAsync(apiRoute, token);
-            }
+				var response = await _client.DeleteAsync(apiRoute, token);
+				response.EnsureSuccessStatusCode();
+			}
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-            }
+				throw;
+			}
         }
 
-        private string GetRoute(Func<R>? newR, bool appendPrimary = false)
+		/*public async Task PostAsync(Func<DTO> newR, CancellationToken token = default)
+		{
+			try
+			{
+				var apiRoute = GetRoute(newR);
+				var response = await _client.PostAsJsonAsync(apiRoute, newR(), _JsonWriteOptions, token);
+
+				response.EnsureSuccessStatusCode();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message);
+				throw;
+			}
+		}*/
+
+		private string GetRoute(Func<DTO>? newR, bool appendPrimary = false)
         {
             if (newR != null)
             {
@@ -108,9 +164,9 @@ namespace LandedMVC.Services
             return GetRouteString(dto: null, appendPrimary);
         }
 
-        private static string GetRouteString(R? dto, bool appendPrimary = false)
+        private static string GetRouteString(DTO? dto, bool appendPrimary = false)
         {
-            Type rType = typeof(R);
+            Type rType = typeof(DTO);
 
             if (Attribute.GetCustomAttribute(rType, typeof(ApiRouteAttribute)) is not ApiRouteAttribute apiRoute)
                 throw new Exception("Route not found.");

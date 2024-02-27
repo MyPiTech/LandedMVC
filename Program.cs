@@ -1,7 +1,7 @@
 using LandedMVC.Dtos;
 using LandedMVC.Services;
 using Microsoft.Net.Http.Headers;
-using System.Runtime.Intrinsics.Arm;
+using TestApi.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +15,18 @@ builder.Services.AddHttpClient<ApiService<UserDto>>(
         client.BaseAddress = new Uri(apiBase);
         client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
     });
-builder.Services.AddHttpClient<ApiService<EventDto>>(
+builder.Services.AddHttpClient<ApiService<UserEventDto>>(
     client =>
     {
         client.BaseAddress = new Uri(apiBase);
         client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
     });
+builder.Services.AddHttpClient<ApiService<EmailDto>>(
+	client =>
+	{
+		client.BaseAddress = new Uri(apiBase);
+		client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+	});
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

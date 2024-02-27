@@ -23,7 +23,7 @@ namespace LandedMVC.Models
         [Display(Name = "Event Duration")]
         public int? Duration { get; set; }
 
-        public EventDto ToDto() => new() { 
+        public UserEventDto ToDto() => new() { 
             Duration = Duration ?? default, 
             UserId = UserId, 
             Title = Title, 
