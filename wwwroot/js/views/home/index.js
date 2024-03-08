@@ -18,16 +18,18 @@ $(function () {
             }
         },
         submitHandler: function (form) {
-
+            notify('Sending email...');
             $.ajax({
                 url: 'home/email',
                 method: 'POST',
                 data: $(form).serialize(),
                 success: function (result) {
                     notify('Email sent successfully. Thanks!');
+                    $('#name').val('');
+                    $('#message').val('');
                 },
                 error: function (xhr, resp, text) {
-                    notify('An error occured. The email was not sent.', true);
+                    notify('An error occurred. The email was not sent.', true);
                 }
             });
 

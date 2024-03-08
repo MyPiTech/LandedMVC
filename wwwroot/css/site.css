@@ -3,7 +3,23 @@
         transition: background-color 0s 600000s, color 0s 600000s !important;
     }
 
-    select[name="usersTbl_length"] {
+    input[type="datetime-local"]{
+        color-scheme: dark;
+    }
+
+    input[type="number"]{
+        color-scheme: dark;
+    }
+
+    label[for="dt-length-0"]{
+        display:inline;
+    }
+
+    label[for="dt-search-0"]{
+        display:inline;
+    }
+
+    select[name="dataTable_length"] {
         display: inline-block;
         width: 55px;
         background-position: calc(130% - 1rem) center;
@@ -58,17 +74,35 @@
         width: 100%
     }
 
-.notification {
-    padding: 1em 1em 1em 1em;
-    display: none;
-    text-align: center;
-    font-weight: bold;
-    border-left: 10px solid;
-    margin-bottom: 10px;
-   /* top: 0;
-    position: fixed;
-    opacity: 1;*/
-}
+    .dt-container {
+        width: 100%
+    }
+
+    table.dataTable.dtr-inline.collapsed > tbody > tr.dtr-expanded > td.dtr-control:before, table.dataTable.dtr-inline.collapsed > tbody > tr.dtr-expanded > th.dtr-control:before {
+        border-top-color: #e44c65;
+        border-left-color: transparent !important;
+    }
+
+    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before{
+        border-left-color: #e44c65
+    }
+
+    .notification {
+        padding: 1em 1em 1em 1em;
+        top: 0;
+        position: fixed;
+        display: none;
+        text-align: center;
+        font-weight: bold;
+        border-left: 10px solid;
+        border-top: 1px solid;
+        border-right: 1px solid;
+        border-bottom: 1px solid;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background-color: rgba(28, 29, 38, 1);
+        z-index: 999999;
+    }
 
         .notification.success {
             border-color: #39c088;
@@ -80,15 +114,17 @@
             color: #e44c65;
         }
 
-            .notification.success.light {
-                border-color: #ffffff;
-                color: #ffffff;
-            }
+        .notification.success.light {
+            background-color: rgba(228, 76, 101, 1);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
 
-            .notification.error.light {
-                border-color: #ffffff;
-                color: #ffffff;
-            }
+        .notification.error.light {
+            background-color: rgba(228, 76, 101, 1);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
 
     .createBtn {
         margin: 0 0 2em 0;
@@ -102,4 +138,8 @@
 
     .hide {
         display: none;
+    }
+    
+    .inline{
+        display:inline;
     }

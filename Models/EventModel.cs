@@ -10,26 +10,38 @@ namespace LandedMVC.Models
         public int UserId { get; set; }
 
         [Required(ErrorMessage = "Title is required.")]
-        public string Title { get; set; } = string.Empty;
+		[StringLength(40)]
+		public string Title { get; set; } = string.Empty;
 
-        public string? Location { get; set; } = string.Empty;
+		[StringLength(40)]
+		public string? Location { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Event Start is required.")]
+        [Required]
         [Display(Name = "Event Start")]
         public DateTime? Start { get; set; }
 
-        [Required(ErrorMessage = "Event Duration is required.")]
-        [Range(1, 100, ErrorMessage = "Enter event duration between 1 to 100.")]
+        [Required]
+        [Range(10, 100)]
         [Display(Name = "Event Duration")]
         public int? Duration { get; set; }
 
-        public UserEventDto ToDto() => new() { 
+        public EventDto ToDto() => new() { 
             Duration = Duration ?? default, 
             UserId = UserId, 
             Title = Title, 
             Id = Id, 
             Location = Location ?? string.Empty, 
             Start = Start ?? default 
-        };    
-    }
+        };
+
+		public UserEventDto ToUserEventDto() => new()
+		{
+			Duration = Duration ?? default,
+			UserId = UserId,
+			Title = Title,
+			Id = Id,
+			Location = Location ?? string.Empty,
+			Start = Start ?? default
+		};
+	}
 }

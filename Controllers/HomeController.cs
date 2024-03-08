@@ -1,47 +1,69 @@
+// ***********************************************************************
+// Assembly         : LandedMVC
+// Author           : Shawn Wheeler
+// Created          : 02-18-2024
+//
+// Last Modified By : Shawn Wheeler
+// Last Modified On : 02-26-2024
+// ***********************************************************************
+// <copyright file="HomeController.cs" company="LandedMVC">
+//     Copyright (c) MyPiTech. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 using LandedMVC.Models;
 using LandedMVC.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using TestApi.Dtos;
 
 namespace LandedMVC.Controllers
 {
-    public class HomeController : Controller
+	/// <summary>
+	/// Class HomeController.
+	/// Implements the <see cref="Controller" />
+	/// </summary>
+	/// <seealso cref="Controller" />
+	public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApiService<EmailDto> _apiService;
+		/// <summary>
+		/// The API service
+		/// </summary>
+		private readonly ApiService<EmailDto> _apiService;
 
-        public HomeController(ILogger<HomeController> logger, ApiService<EmailDto> apiService)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HomeController"/> class.
+		/// </summary>
+		/// <param name="apiService">The API service.</param>
+		public HomeController(ApiService<EmailDto> apiService)
         {
-            _logger = logger;
             _apiService = apiService;
         }
 
-        public IActionResult Index()
+		/// <summary>
+		/// Default index view.
+		/// </summary>
+		/// <returns>IActionResult.</returns>
+		public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+		/// <summary>
+		/// Send an email as an asynchronous operation.
+		/// </summary>
+		/// <param name="model">The email model.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task&lt;IActionResult&gt; representing the asynchronous operation.</returns>
 		[HttpPost]
-		public async Task<IActionResult> EmailAsync(EmailModel email, CancellationToken token) 
+		public async Task<IActionResult> EmailAsync(EmailModel model, CancellationToken token) 
         {
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
-			await _apiService.PostAsync(email.ToDto(), token);
-			return Json(email);
+			await _apiService.PostAsync(model.ToDto(), token);
+			return Json(model);
 		}
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

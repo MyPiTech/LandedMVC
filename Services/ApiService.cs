@@ -9,24 +9,46 @@
 // <copyright file="ApiService.cs" company="LandedMVC">
 //     Copyright (c) MyPiTech. All rights reserved.
 // </copyright>
-// <summary>Generic API service</summary>
+// <summary></summary>
 // ***********************************************************************
 using System.Reflection;
 using System.Text.Json;
 using LandedMVC.Attributes;
 
-
 namespace LandedMVC.Services
 {
 
+	/// <summary>
+	/// Class ApiService. This class cannot be inherited.
+	/// </summary>
+	/// <typeparam name="DTO">The type of the dto.</typeparam>
 	public sealed class ApiService<DTO> where DTO : class
     {
-        private readonly ILogger<ApiService<DTO>> _logger;
-        private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _JsonReadOptions;
-        private readonly JsonSerializerOptions _JsonWriteOptions;
+		/// <summary>
+		/// The logger
+		/// </summary>
+		private readonly ILogger<ApiService<DTO>> _logger;
+		/// <summary>
+		/// The client
+		/// </summary>
+		private readonly HttpClient _client;
+		/// <summary>
+		/// The json read options
+		/// </summary>
+		private readonly JsonSerializerOptions _JsonReadOptions;
+		/// <summary>
+		/// The json write options
+		/// </summary>
+		private readonly JsonSerializerOptions _JsonWriteOptions;
 
-        public ApiService(HttpClient httpClient, ILogger<ApiService<DTO>> logger)
+		private const string NoRecords = "\"No records were found.\"";
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ApiService{DTO}"/> class.
+		/// </summary>
+		/// <param name="httpClient">The HTTP client.</param>
+		/// <param name="logger">The logger.</param>
+		public ApiService(HttpClient httpClient, ILogger<ApiService<DTO>> logger)
         {
             _client = httpClient;
             _logger = logger;
@@ -34,20 +56,40 @@ namespace LandedMVC.Services
             _JsonWriteOptions = new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never };
         }
 
-        public async Task<DTO[]?> GetAllAsync(CancellationToken token = default)
+		/// <summary>
+		/// Get all as an asynchronous operation.
+		/// </summary>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task&lt;DTO[]&gt; representing the asynchronous operation.</returns>
+		public async Task<DTO[]?> GetAllAsync(CancellationToken token = default)
         {
             return await GetAllAsync(null, token);
         }
 
-        public async Task<DTO[]?> GetAllAsync(Func<DTO>? newR = null, CancellationToken token = default)
+		/// <summary>
+		/// Get all as an asynchronous operation.
+		/// </summary>
+		/// <param name="fDto">A function that returns the dto.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task&lt;DTO[]&gt; representing the asynchronous operation.</returns>
+		public async Task<DTO[]?> GetAllAsync(Func<DTO>? fDto = null, CancellationToken token = default)
         {
             try
             {
-                var apiRoute = GetRoute(newR);
+                var apiRoute = GetRoute(fDto);
 
-                DTO[]? response = await _client.GetFromJsonAsync<DTO[]>(apiRoute, _JsonReadOptions, token);
+				var response = await _client.GetAsync(apiRoute, token);
+				if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+				{
+					var message = await response.Content.ReadAsStringAsync(token);
+					if(message.Equals(NoRecords))
+					{
+						return default;
+					}
+				}
 
-                return response;
+				response.EnsureSuccessStatusCode();
+				return await response.Content.ReadFromJsonAsync<DTO[]>(token);
             }
             catch (Exception ex)
             {
@@ -56,11 +98,17 @@ namespace LandedMVC.Services
 			}
         }
 
-        public async Task<DTO?> GetOneAsync(Func<DTO> newR, CancellationToken token = default)
+		/// <summary>
+		/// Get one as an asynchronous operation.
+		/// </summary>
+		/// <param name="fDto">A function that returns the dto.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task&lt;DTO&gt; representing the asynchronous operation.</returns>
+		public async Task<DTO?> GetOneAsync(Func<DTO> fDto, CancellationToken token = default)
         {
             try
             {
-                var apiRoute = GetRoute(newR, true);
+                var apiRoute = GetRoute(fDto, true);
 
                 DTO? response = await _client.GetFromJsonAsync<DTO>(apiRoute, _JsonReadOptions, token);
 
@@ -73,7 +121,13 @@ namespace LandedMVC.Services
 			}
         }
 
-        public async Task<DTO?> AddAsync(DTO dto, CancellationToken token = default)
+		/// <summary>
+		/// Add as an asynchronous operation.
+		/// </summary>
+		/// <param name="dto">The dto.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task&lt;DTO&gt; representing the asynchronous operation.</returns>
+		public async Task<DTO?> AddAsync(DTO dto, CancellationToken token = default)
         {
             try
             {
@@ -90,6 +144,55 @@ namespace LandedMVC.Services
 			}
         }
 
+		/// <summary>
+		/// Edit as an asynchronous operation.
+		/// </summary>
+		/// <param name="dto">The dto.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task representing the asynchronous operation.</returns>
+		public async Task EditAsync(DTO dto, CancellationToken token = default)
+        {
+            try
+            {
+                var apiRoute = GetRoute(() => dto, true);
+				var response = await _client.PutAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+
+				response.EnsureSuccessStatusCode();
+			}
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+				throw;
+			}
+        }
+
+		/// <summary>
+		/// Delete as an asynchronous operation.
+		/// </summary>
+		/// <param name="fDto">A function that returns the dto.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task representing the asynchronous operation.</returns>
+		public async Task DeleteAsync(Func<DTO> fDto, CancellationToken token = default)
+        {
+            try
+            {
+                var apiRoute = GetRoute(fDto, true);
+				var response = await _client.DeleteAsync(apiRoute, token);
+				response.EnsureSuccessStatusCode();
+			}
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+				throw;
+			}
+        }
+
+		/// <summary>
+		/// Post as an asynchronous operation.
+		/// </summary>
+		/// <param name="dto">The dto.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A Task&lt;HttpResponseMessage&gt; representing the asynchronous operation.</returns>
 		public async Task<HttpResponseMessage> PostAsync(DTO dto, CancellationToken token = default)
 		{
 			try
@@ -107,64 +210,30 @@ namespace LandedMVC.Services
 			}
 		}
 
-		public async Task EditAsync(DTO dto, CancellationToken token = default)
+		/// <summary>
+		/// Gets the route.
+		/// </summary>
+		/// <param name="fDto">A function that returns the dto.</param>
+		/// <param name="appendPrimary">if set to <c>true</c> [append primary].</param>
+		/// <returns>System.String.</returns>
+		private string GetRoute(Func<DTO>? fDto, bool appendPrimary = false)
         {
-            try
+            if (fDto != null)
             {
-                var apiRoute = GetRoute(() => dto, true);
-				var response = await _client.PutAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
-
-				response.EnsureSuccessStatusCode();
-			}
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-				throw;
-			}
-        }
-
-        public async Task DeleteAsync(Func<DTO> newR, CancellationToken token = default)
-        {
-            try
-            {
-                var apiRoute = GetRoute(newR, true);
-				var response = await _client.DeleteAsync(apiRoute, token);
-				response.EnsureSuccessStatusCode();
-			}
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-				throw;
-			}
-        }
-
-		/*public async Task PostAsync(Func<DTO> newR, CancellationToken token = default)
-		{
-			try
-			{
-				var apiRoute = GetRoute(newR);
-				var response = await _client.PostAsJsonAsync(apiRoute, newR(), _JsonWriteOptions, token);
-
-				response.EnsureSuccessStatusCode();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex.Message);
-				throw;
-			}
-		}*/
-
-		private string GetRoute(Func<DTO>? newR, bool appendPrimary = false)
-        {
-            if (newR != null)
-            {
-                return GetRouteString(newR(), appendPrimary);
+                return GetRouteString(fDto(), appendPrimary);
             }
 
             return GetRouteString(dto: null, appendPrimary);
         }
 
-        private static string GetRouteString(DTO? dto, bool appendPrimary = false)
+		/// <summary>
+		/// Gets the route string.
+		/// </summary>
+		/// <param name="dto">The dto.</param>
+		/// <param name="appendPrimary">if set to <c>true</c> [append primary].</param>
+		/// <returns>System.String.</returns>
+		/// <exception cref="System.Exception">Route not found.</exception>
+		private static string GetRouteString(DTO? dto, bool appendPrimary = false)
         {
             Type rType = typeof(DTO);
 

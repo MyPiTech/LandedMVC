@@ -2,63 +2,65 @@ $(function () {
 
     let formState = null;
 
-    let table = $('#usersTbl').DataTable({
+    //table
+    $.fn.dataTable.ext.errMode = function (settings, helpPage, message) {
+        notify(`An error occurred loading table. <br/> <br/> Error: ${message}`, true, 5000);
+    }
 
+    const table = $('#dataTable').DataTable({
+        stateSave: true,
+        order: [[1, 'asc']],
+        responsive: true,
         pagingType: 'first_last_numbers',
         pageLength: 5,
         lengthMenu: [5, 10],
-        ajax: { url: '/users/users', dataSrc: '' },
+        ajax: { url: '/users/getAll', dataSrc: '' },
         columns: [
+            {
+                className: 'dtr-control',
+                orderable: false,
+                data: null,
+                defaultContent: ''
+            },
             { data: 'id' },
-            { data: 'lastName' },
-            { data: 'firstName' },
+            {
+                data: 'lastName',
+                render: DataTable.render.ellipsis(10) },
+            {
+                data: 'firstName',
+                render: DataTable.render.ellipsis(10) },
             {
                 data: 'notes',
                 orderable: false,
-                render: DataTable.render.ellipsis(5)
+                render: DataTable.render.ellipsis(20)
             },
             {
                 data: null,
                 orderable: false,
                 mRender: function (data, type, row) {
-                    let eventsAction = `<span x-type="events" x-id= ${data.id} class="icon solid alt fa-calendar" title="Events"></span>`;
-                    let editAction = `<span x-type="edit" x-id= ${data.id} class="icon solid alt fa-list-alt" title="Edit"></span>`;
-                    let deleteAction = `<span x-type="delete" x-id= ${data.id} class="icon solid alt fa-trash" title="Delete"></span>`;
+                    let eventsAction = `<span x-type="events" x-id="${data.id}" class="icon solid alt fa-calendar" title="Events"></span>`;
+                    let editAction = `<span x-type="edit" x-id="${data.id}" class="icon solid alt fa-list-alt" title="Edit"></span>`;
+                    let deleteAction = `<span x-type="delete" x-id="${data.id}" class="icon solid alt fa-trash" title="Delete"></span>`;
 
-                    return `${editAction}&nbsp;&nbsp;${deleteAction}&nbsp;&nbsp;${eventsAction}`;
+                    return `${editAction}&nbsp;&nbsp;${eventsAction}&nbsp;&nbsp;${deleteAction}`;
                 }
             }
         ],
         createdRow: function (row, data, dataIndex) {
-            let uId = data['id'];
+            const uId = data['id'];
             $(row).attr('id', `row_${uId}`);
         },
         fnDrawCallback: function (oSettings) {
             if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay()) {
-                $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                $(oSettings.nTableWrapper).find('.dt-paging').hide();
             } else {
-                $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+                $(oSettings.nTableWrapper).find('.dt-paging').show();
             }
         }
-
     });
 
-    $('#usersTbl tbody').on('click', 'span', function () {
-
-        let xType = this.getAttribute('x-type');
-        let uId = this.getAttribute('x-id');
-
-        if (xType === 'events') {
-            handleEvents(uId);
-        } else if (xType === 'edit') {
-            handleEdit(uId);
-        } else {
-            handleDelete(uId);
-        }
-
-    });
-
-    let validator = $('#userForm').validate({
+    //form
+    const validator = $('#dataForm').validate({
         rules: {
             firstName: {
                 required: true
@@ -76,47 +78,59 @@ $(function () {
             }
         },
         submitHandler: function (form) {
-
             $.ajax({
-                url: 'users/user',
+                url: 'users/upsert',
                 method: 'POST',
                 data: $(form).serialize(),
                 success: function (result) {
-                    console.log(result);
-
-                    let id = $('#userId').val();
+                    const id = $('#userId').val();
                     let action = '';
                     if (id > 0) {
                         action = 'updated';
-                        table.row(`#row_${id}`).data(result).draw();
+                        table.row(`#row_${id}`).data(result);
                     } else {
                         action = 'created';
-                        table.row.add(result).draw();
+                        //when this occurs too quickly the table's pagination breaks
+                        //this is a hacky solution
+                        //I should probably make all datatables processing server-side
+                        setTimeout(function () {
+                            table.row.add(result);
+                            table.columns.adjust().draw(false);
+                        }, 1000);
                     }
 
-                    notify(`The User was successfully ${action}.`);
+                    notify(`The user was successfully ${action}.`);
                     toggleDataTable();
                 },
                 error: function (xhr, resp, text) {
                     console.log(text);
-                    notify('An error occured. User was not created.', true);
+                    notify('An error occured. The user was not created.', true);
                 }
             });
-
         }
+    });
 
+    //event handlers
+    $('#dataTable tbody').on('click', 'span', function () {
+        const xType = this.getAttribute('x-type');
+        const uId = this.getAttribute('x-id');
+
+        if (xType === 'events') {
+            handleEvents(uId);
+        } else if (xType === 'edit') {
+            handleEdit(uId);
+        } else if (xType === 'delete') {
+            handleDelete(uId);
+        }
     });
 
     $('#createBtn').on('click', function () {
-
         $('#formHeader').html('Create a new user.');
         toggleDataTable();
         return false;
-
     });
 
     $('#resetBtn').on('click', function () {
-
         if (formState != null) {
             $('#userId').val(formState['id']);
             $('#firstName').val(formState['firstName']);
@@ -134,20 +148,36 @@ $(function () {
     });
 
     $('#cancelBtn').on('click', function () {
-
         toggleDataTable();
         return false;
-
     });
+
+    $('#labelsToggle').on('click', function () {
+        const text = $(this).html();
+        if (text === 'Show Labels') {
+            $(this).html('Hide Labels');
+        } else {
+            $(this).html('Show Labels');
+        }
+        $('label[for="firstName"]').toggle();
+        $('label[for="lastName"]').toggle();
+        $('label[for="notes"]').toggle();
+
+        validator.resetForm();
+        return false;
+    });
+
+    //functions
     function handleEvents(uId) {
-        console.log(`events ${uId}`);
+        window.location.assign(
+            `users/events?uId=${uId}`
+        );
     };
 
     function handleEdit(uId) {
-        var data = table.row(`#row_${uId}`).data();
+        const data = table.row(`#row_${uId}`).data();
 
         $('#formHeader').html('Update current user.');
-
         $('#userId').val(data['id']);
         $('#firstName').val(data['firstName']);
         $('#lastName').val(data['lastName']);
@@ -172,29 +202,29 @@ $(function () {
         });
     };
 
-    function notify(message, isError = false) {
-        let notification = $('#notification');
+    function notify(message, isError = false, duration = 3000) {
+        const notification = $('#notification');
 
         if (isError == true) {
             notification.removeClass('success').addClass('error');
             notification
                 .html(message)
                 .show(500)
-                .delay(1500)
+                .delay(duration)
                 .hide(500);
         } else {
             notification.removeClass('error').addClass('success');
             notification
                 .html(message)
                 .show(500)
-                .delay(1500)
+                .delay(duration)
                 .hide(500);
         }
     }
 
     function toggleDataTable() {
-        let table = $('#dTableWrapper');
-        let form = $('#dFormWrapper');
+        const table = $('#dataTableWrapper');
+        const form = $('#dataFormWrapper');
 
         if (table.is(':visible')) {
             table.fadeOut(400, function () {
@@ -202,7 +232,6 @@ $(function () {
             });
         } else {
             form.fadeOut(400, function () {
-
                 $('#userId').val(0);
                 $('#firstName').val('');
                 $('#lastName').val('');
@@ -214,7 +243,5 @@ $(function () {
                 table.fadeIn(400);
             });
         }
-
     }
-
 });

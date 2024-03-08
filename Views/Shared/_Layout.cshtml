@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <title>@ViewData["Title"] - Landed MVC</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.0/css/responsive.dataTables.min.css" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <noscript><link rel="stylesheet" href="~/css/noscript.css" asp-append-version="true" /></noscript>
@@ -20,8 +21,8 @@
                     <li>
                         <a asp-action="index" asp-controller="users" target="_blank">MVC</a>
                         <ul>
-                            <li><a asp-action="index" asp-controller="users" target="_blank">Users</a></li>
-                            <li><a asp-action="index" asp-controller="users" target="_blank">Events</a></li>
+                            <li><a asp-action="index" asp-controller="users">Users</a></li>
+                            <li><a asp-action="index" asp-controller="events">Events</a></li>
                         </ul>
                     </li>
                     <li>

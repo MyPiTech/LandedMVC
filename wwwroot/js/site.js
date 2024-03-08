@@ -8,3 +8,4 @@
     // Return the boolean value
     return isSmallScreen;
 }
+

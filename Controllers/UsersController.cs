@@ -26,23 +26,23 @@ namespace LandedMVC.Controllers
 	public class UsersController : Controller
     {
 		/// <summary>
-		/// The logger
-		/// </summary>
-		private readonly ILogger<UsersController> _logger;
-		/// <summary>
 		/// The user API service
 		/// </summary>
 		private readonly ApiService<UserDto> _apiService;
 
 		/// <summary>
+		/// The user API service
+		/// </summary>
+		private readonly ApiService<UserEventDto> _eventApiService;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="UsersController"/> class.
 		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="apiService">The user API service.</param>
-		public UsersController(ILogger<UsersController> logger, ApiService<UserDto> apiService)
+		/// <param name="apiService">The model API service.</param>
+		public UsersController(ApiService<UserDto> apiService, ApiService<UserEventDto> eventApiService)
         {
-            _logger = logger;
             _apiService = apiService;
+			_eventApiService = eventApiService;
         }
 
 		/// <summary>
@@ -54,29 +54,36 @@ namespace LandedMVC.Controllers
 			return View();
 		}
 
+		public async Task<IActionResult> EventsAsync(int uId, CancellationToken token)
+		{
+			var user = await _apiService.GetOneAsync(() => new UserDto { Id = uId }, token);
+			if(user == null) { 
+				return BadRequest($"No user was found with id:{uId}"); 
+			}
+			return View(user?.ToModel() ?? default);
+		}
+
 		/// <summary>
 		/// Get all users as an asynchronous operation.
 		/// </summary>
 		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <returns>A collection of user dtos representing the results of the asynchronous operation.</returns>
+		/// <returns>A collection of model dtos representing the results of the asynchronous operation.</returns>
 		[HttpGet]
-        public async Task<IActionResult> UsersAsync(CancellationToken token)
+        public async Task<IActionResult> GetAllAsync(CancellationToken token)
         {
-            var users = await _apiService.GetAllAsync(token);
-            return Json(users);
+            var results = await _apiService.GetAllAsync(token);
+            return Json(results);
         }
 
-		/// <summary>
-		/// Get user as an asynchronous operation.
-		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <summary>Get all user events as an asynchronous operation.</summary>
+		/// <param name="uId">The user ID.</param>
 		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <returns>A user dto representing the results of the asynchronous operation.</returns>
+		/// <returns>A collection of event dtos representing the results of the asynchronous operation.</returns>
 		[HttpGet]
-		public async Task<IActionResult> UserAsync(int id, CancellationToken token)
+		public async Task<IActionResult> GetAllEventsAsync(int uId, CancellationToken token)
 		{
-			var user = await _apiService.GetOneAsync(() => new UserDto { Id = id }, token);
-			return View(user?.ToModel() ?? default);
+			var results = await _eventApiService.GetAllAsync(() => new UserEventDto { UserId = uId }, token);
+			return Json(results);
 		}
 
 		/// <summary>
@@ -91,33 +98,73 @@ namespace LandedMVC.Controllers
         }
 
 		/// <summary>
-		/// Add or update a User as an asynchronous operation.
+		/// Delete user as an asynchronous operation.
 		/// </summary>
-		/// <param name="user">The user.</param>
+		/// <param name="id">The identifier.</param>
+		/// <param name="userId">The user identifier.</param>
 		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <returns>A user dto representing the results of the asynchronous operation.</returns>
+		[HttpDelete]
+		public async Task DeleteEventAsync(int id, int userId, CancellationToken token)
+		{
+			await _eventApiService.DeleteAsync(() => new UserEventDto { Id = id, UserId = userId }, token);
+		}
+
+		/// <summary>
+		/// Add or update a user as an asynchronous operation.
+		/// </summary>
+		/// <param name="model">The user model.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A model dto representing the results of the asynchronous operation.</returns>
 		[HttpPost]
-        public async Task<IActionResult> UserAsync(UserModel user, CancellationToken token)
+        public async Task<IActionResult> UpsertAsync(UserModel model, CancellationToken token)
         {
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-            if (user.Id == 0)
+            if (model.Id == 0)
             {
-				var userDto = await _apiService.AddAsync(user.ToDto(), token);
-				if(userDto != null)
+				var dto = await _apiService.AddAsync(model.ToDto(), token);
+				if(dto != null)
 				{
-					user = userDto.ToModel();
+					model = dto.ToModel();
 				}
             }
             else { 
-                await _apiService.EditAsync(user.ToDto(), token); 
+                await _apiService.EditAsync(model.ToDto(), token); 
             }
-			return Json(user);
+			return Json(model);
 		}
 
-		
+		/// <summary>
+		/// Add or update a user event as an asynchronous operation.
+		/// </summary>
+		/// <param name="model">The user model.</param>
+		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>A model dto representing the results of the asynchronous operation.</returns>
+		[HttpPost]
+		public async Task<IActionResult> UpsertEventAsync(EventModel model, CancellationToken token)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			if (model.Id == 0)
+			{
+				var dto = await _eventApiService.AddAsync(model.ToUserEventDto(), token);
+				if (dto != null)
+				{
+					model = dto.ToModel();
+				}
+			}
+			else
+			{
+				await _eventApiService.EditAsync(model.ToUserEventDto(), token);
+			}
+			return Json(model);
+		}
+
 	}
 }

@@ -27,6 +27,12 @@ builder.Services.AddHttpClient<ApiService<EmailDto>>(
 		client.BaseAddress = new Uri(apiBase);
 		client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 	});
+builder.Services.AddHttpClient<ApiService<EventDto>>(
+	client =>
+	{
+		client.BaseAddress = new Uri(apiBase);
+		client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+	});
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
