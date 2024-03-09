@@ -143,3 +143,10 @@
     .inline{
         display:inline;
     }
+
+    .error{
+        color: #e44c65;
+    }
+        .error.light {
+            color: #ffffff;
+        }

@@ -28,11 +28,6 @@
 						<p>
 							I am using the jQuery DataTables library and an AJAX request to the users' controller. That, in turn, makes a call to the API. Which, of course, retrieves the data from the database.
 						</p>
-						<footer>
-							<ul class="actions">
-								<li><a href="#continue" class="button scrolly">Keep Reeding</a></li>
-							</ul>
-						</footer>
 					</section>
 				</section>
 
@@ -125,6 +120,8 @@
 	<script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/plug-ins/2.0.0/dataRender/ellipsis.js"></script>
 	<script src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
+	<script src="~/js/views/users/vars/index.js"></script>
     <script src="~/js/views/users/index.js"></script>
+	<script src="~/js/views/users/functions/index.js"></script>
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

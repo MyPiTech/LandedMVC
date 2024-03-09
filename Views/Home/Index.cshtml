@@ -98,6 +98,9 @@
 			<p>
 				I created two tables in my database. Users and Events. They represent a common one-to-many relationship.
 			</p>
+			<p>
+				The choice to use Users and Events was completely arbitrary. They are not tied to anything functional. So feel free to add, edit, or delete them without fear.
+			</p>
 		</header>
 		<div class="box alt">
 			<div class="row gtr-uniform">
@@ -109,7 +112,7 @@
 				<section class="col-4 col-6-medium col-12-xsmall">
 					<a asp-action="index" asp-controller="events"  class="icon solid major fa-calendar"></a>
 					<h3>Events</h3>
-					<p>From here you can access all the events without going through the parent user first. (Under Construction)</p>
+					<p>From here you can access all the events without going through the parent user first.</p>
 				</section>
 				<section class="col-4 col-6-medium col-12-xsmall">
 					<a href="https://swcoretestapi.azurewebsites.net/swagger/index.html" target="_blank" class="icon solid major fa-database"></a>
@@ -129,6 +132,7 @@
 <!-- Five -->
 <section id="five" class="wrapper style2 special fade">
 	<div class="container">
+		<div id="notification" class="notification light"></div>
 		<header>
 			<h2>Lets talk...</h2>
 			<p>Send me an email the easy way. This form uses an endpoint in my API to send me an email.</p>
@@ -136,7 +140,7 @@
 		
 		<form id="contactForm" method="post" action="#" class="cta">
 			<div class="col-12">
-				<div id="notification" class="notification"></div>
+				
 				<div class="col-8 col-12-xsmall"><input type="text" name="name" id="name" placeholder="*Your Name" /></div>
 				<textarea name="message" id="message" placeholder="*Enter your message" rows="6"></textarea><br />
 			</div>
