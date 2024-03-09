@@ -59,7 +59,7 @@ function addRowId(row, data) {
 }
 
 function hideTablePagination(oSettings) {
-    if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay()) {
+    if (oSettings._iDisplayLength >= oSettings.fnRecordsDisplay()) {
         $(oSettings.nTableWrapper).find('.dt-paging').hide();
     } else {
         $(oSettings.nTableWrapper).find('.dt-paging').show();

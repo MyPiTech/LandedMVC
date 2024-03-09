@@ -19,21 +19,13 @@
 				<!-- Sidebar -->
 				<section id="sidebar">
 					<section>
-						<h3>Events Table</h3>
+						<h3> User Event's Table</h3>
 						<p>
-							I know jQuery is old and out of vogue, but you can still accomplish a pretty impressive, responsive UI. I am also aware that a lot of what makes jQuery so useful is now implemented in vanilla JS. So it's likely that some of what I am using it for could be done without it.
+							This is mostly the same technology and pattern as the User's table. I did stray a bit from jQuery and used some standard ES13 event handlers and the fetch API for some AJAX. I guess jQuery has reached its final days. In another decade, it will probably be as dead as Adobe Flash...
 						</p>
 						<p>
-							Thus is the nature of web technology. Just about the time you gain some expertise, something new has come along... Remember Flash? lol
+							All of the events here are filtered by the parent user. You can only create, read, edit and delete events for that user. 
 						</p>
-						<p>
-							I am using the jQuery DataTables library and an AJAX request to the users' controller. That, in turn, makes a call to the API. Which, of course, retrieves the data from the database.
-						</p>
-						<footer>
-							<ul class="actions">
-								<li><a href="#continue" class="button scrolly">Keep Reeding</a></li>
-							</ul>
-						</footer>
 					</section>
 				</section>
 
@@ -102,23 +94,14 @@
 					<hr />
 					<section id="continue">
 
-						<h3>Users Table</h3>
+						<h3>User Event's Table Notes</h3>
 						<p>
 							Some things to take note of:
 							<ol>
-								<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, hire me. &#128516; </li>
+								<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, improve my budget and hire me. &#128516; </li>
 								<li>By using AJAX to populate the table. We allow for the rest of the page to load. Despite any delays on the table.</li>
 								<li>This is a fairly simple implementation of the DataTables library. I am loading the complete record set and letting the data table handle all of the searching, pagination, etc. client-side. This can be changed to be server-side, if performance is an issue.</li>
 							</ol>
-						</p>
-						<p>
-							The heavy use of AJAX and JQuery here pretty much circumvents the whole "model" part of the model, view, controller framework. That said, the server side is almost identical to my other MVC demo. We are still binding the requests to the model and using the model. As well as, it's state to perform server-side validation.
-						</p>
-						<p>
-							So why not use React or Angular, you ask? I'm glad you asked... lol. The answer is that there is no reason not to. Though arguably there is also no reason to use it here either. JS frameworks do bring some impressive stuff to the table. However, in this case, they are probably overkill.
-						</p>
-						<p>
-							I do intend to create a React/Typescript version of this same project. So I guess, in summary, I'm not using it here because it's not "needed" and because it is a completely separate tech stack. I am only trying to demonstrate a "senior" level grasp of responsive MVC with this project.
 						</p>
 					</section>
 
