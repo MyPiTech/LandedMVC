@@ -14,7 +14,8 @@ const DT_ID_COLUMN = { data: 'id' };
 
 const DT_ACTION_COLUMN = {
     data: null,
-    orderable: false
+    orderable: false,
+    className: 'tdAction'
 };
 
 function toggleDataTable(clearForm) {

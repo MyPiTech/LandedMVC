@@ -7,15 +7,18 @@ const DT_COLUMNS = [
     { data: 'userId' },
     {
         data: 'title',
-        render: DataTable.render.ellipsis(10)
+        render: DataTable.render.ellipsis(10),
+        className: 'tdNoWrap'
     },
     {
         data: 'location',
-        render: DataTable.render.ellipsis(10)
+        render: DataTable.render.ellipsis(10),
+        className: 'tdNoWrap'
     },
     {
         data: 'start',
-        render: DataTable.render.datetime()
+        render: DataTable.render.datetime(),
+        className: 'tdNoWrap'
     },
     { data: 'duration' },
     DT_ACTION_COLUMN

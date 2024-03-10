@@ -6,16 +6,19 @@ const DT_COLUMNS = [
     DT_ID_COLUMN,
     {
         data: 'lastName',
-        render: DataTable.render.ellipsis(10)
+        render: DataTable.render.ellipsis(10),
+        className: 'tdNoWrap'
     },
     {
         data: 'firstName',
-        render: DataTable.render.ellipsis(10)
+        render: DataTable.render.ellipsis(10),
+        className: 'tdNoWrap'
     },
     {
         data: 'notes',
         orderable: false,
-        render: DataTable.render.ellipsis(20)
+        render: DataTable.render.ellipsis(20),
+        className: 'tdNoWrap'
     },
     DT_ACTION_COLUMN
 ];

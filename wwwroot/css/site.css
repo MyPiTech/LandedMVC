@@ -150,3 +150,12 @@
         .error.light {
             color: #ffffff;
         }
+
+    .tdNoWrap{
+        white-space: nowrap;
+    }
+
+    .tdAction{
+        display:inline-block;
+        white-space: nowrap;
+    }
