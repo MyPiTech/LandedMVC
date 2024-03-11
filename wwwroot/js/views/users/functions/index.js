@@ -126,6 +126,7 @@ function formHandler(form) {
                 setTimeout(function () {
                     table.row.add(result);
                     table.columns.adjust().draw(false);
+                    table.responsive.recalc();
                 }, 1000);
             }
 
