@@ -104,6 +104,7 @@ function lablesHandler() {
     } else {
         $(this).html('Show Labels');
     }
+    $('label[for="userInput"]').toggle();
     $('label[for="title"]').toggle();
     $('label[for="location"]').toggle();
 

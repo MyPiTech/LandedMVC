@@ -1,6 +1,4 @@
-﻿@model LandedMVC.Models.UserModel;
-
-@{
+﻿@{
 	ViewData["Title"] = "User Events";
 	var usersTitle = $"{Model.FirstName} {Model.LastName}'s Cruddy Events";
 	var uId = Model.Id;
@@ -59,6 +57,7 @@
 								<h4 id="formHeader" class="inline">Create a new event.</h4> - <a id="labelsToggle" href="#" class="">Show Labels</a>
 							</div>
 							<div class="col-12">
+								<label for="userInput" class="hide">*User</label>
 								<input list="usersList" name="userInput" id="userInput" type="text" placeholder="*User" disabled/>
 								<datalist id="usersList"></datalist>
 							</div>
