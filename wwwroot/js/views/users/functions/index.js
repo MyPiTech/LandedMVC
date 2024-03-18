@@ -102,12 +102,14 @@ function clearForm() {
     $('#firstName').val('');
     $('#lastName').val('');
     $('#notes').val('');
+    $("#submitBtn").prop("disabled", false);
 
     validator.resetForm();
     formState = null;
 }
 
 function formHandler(form) {
+    $("#submitBtn").prop("disabled", true);
     $.ajax({
         url: 'users/upsert',
         method: 'POST',
@@ -134,6 +136,7 @@ function formHandler(form) {
             toggleDataTable(clearForm);
         },
         error: function (xhr, resp, text) {
+            $("#submitBtn").prop("disabled", false);
             console.log(text);
             notify('An error occured. The user was not created.', true);
         }

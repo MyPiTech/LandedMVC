@@ -149,12 +149,14 @@ function clearForm() {
     $('#location').val('');
     $('#start').val('');
     $('#duration').val('');
+    $("#submitBtn").prop("disabled", false);
 
     validator.resetForm();
     formState = null;
 }
 
 function formHandler(form) {
+    $("#submitBtn").prop("disabled", true);
     $.ajax({
         url: 'upsertEvent',
         method: 'POST',
@@ -181,6 +183,7 @@ function formHandler(form) {
             toggleDataTable(clearForm);
         },
         error: function (xhr, resp, text) {
+            $("#submitBtn").prop("disabled", false);
             console.log(text);
             notify('An error occurred. The event was not created.', true);
         }
