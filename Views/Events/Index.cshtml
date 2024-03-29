@@ -11,7 +11,6 @@
 		</header>
 		<div class="row gtr-150">
 			<div class="col-4 col-12-medium">
-
 				<!-- Sidebar -->
 				<section id="sidebar">
 					<section>
@@ -24,9 +23,7 @@
 						</p>
 					</section>
 				</section>
-
 			</div>
-			
 			<div class="col-8 col-12-medium imp-medium">
 				<!-- Content -->
 				<section id="content">
@@ -49,9 +46,7 @@
 							<tbody></tbody>
 						</table>		
 					</div>
-						
 					<form method="post" id="dataForm" action="">
-					
 						<div id="dataFormWrapper" class="row gtr-uniform gtr-50" style="display:none;">
 							<div class="col-12">
 								<h4 id="formHeader" class="inline">Create a new event.</h4> - <a id="labelsToggle" href="#" class="">Show Labels</a>
@@ -77,7 +72,6 @@
 								<label for="start">*Event Duration (Minutes)</label>
 								<input type="number" id="duration" name="duration" min="10" max="100" step="10" />
 							</div>
-
 							<div class="col-12">
 								<ul class="actions">
 									<li><input id="submitBtn" type="submit" value="Submit" /></li>
@@ -89,38 +83,113 @@
 							<input type="hidden" name="id" id="eventId" value="0" />
 						</div>
 					</form>
-					
                     <hr />
 					<section id="continue">
-
-						<h3>Event's Table Notes</h3>
-						<p>
-							Some things to take note of:
-							<ol>
-								<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, improve my budget and hire me. &#128516; </li>
-								<li>By using AJAX to populate the table. We allow for the rest of the page to load. Despite any delays on the table.</li>
-								<li>This is a fairly simple implementation of the DataTables library. I am loading the complete record set and letting the data table handle all of the searching, pagination, etc. client-side. This can be changed to be server-side, if performance is an issue.</li>
-							</ol>
-						</p>
-						<p>
-							The heavy use of AJAX and JQuery here pretty much circumvents the whole "model" part of the model, view, controller framework. That said, the server side is almost identical to my other MVC demo. We are still binding the POST requests to a model and using the model server-side for validation and business logic.
-						</p>
-						<p>
-							So why not use React or Angular, you ask? I'm glad you asked... lol. The answer is that there is no reason not to. Though arguably there is also no reason to use it here either. JS frameworks do bring some impressive stuff to the table. Notably, adherence to DRY with reusable components. That said, they bring bloat and complexity that is often unnecessary. Especially in simple applications like this one.
-						</p>
-						<p>
-							I do intend to create a React/Typescript version of this same project. So I guess, in summary, I'm not using it here because it's not "needed" and because it is a completely separate tech stack. I am only trying to demonstrate a "senior" level grasp of responsive MVC with this project.
-						</p>
+						<h3>Event's Table Information</h3>
+						<div id="accordion" class="ui-accordion ui-widget ui-helper-reset">
+							<h6>Notes</h6>
+							<div>
+								<p>
+									Some things to take note of:
+									<ol>
+										<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, improve my budget and hire me. &#128516; </li>
+										<li>The tabs below will allow you to peruse some of the code that makes this page work. It's just not practical to show it all, and if you want to see the rest, then please check out the repositories. Links to all of my repositories are available in the "My Other Projects" menu.</li>
+										<li>By using AJAX to populate the table. We allow for the rest of the page to load. Despite any delays on the table.</li>
+										<li>This is a fairly simple implementation of the DataTables library. I am loading the complete record set and letting the data table handle all of the searching, pagination, etc. client-side. This can be changed to be server-side, if performance is an issue.</li>
+									</ol>
+								</p>
+								<p>
+									The heavy use of AJAX and JQuery here pretty much circumvents the whole "model" part of the model, view, controller framework. That said, the server side is almost identical to my other MVC demo. We are still binding the POST requests to a model and using the model server-side for validation and business logic.
+								</p>
+								<p>
+									So why not use React or Angular, you ask? I'm glad you asked... lol. The answer is that there is no reason not to. Though arguably there is also no reason to use it here either. JS frameworks do bring some impressive stuff to the table. Notably, adherence to DRY with reusable components. That said, they bring bloat and complexity that is often unnecessary. Especially in simple applications like this one.
+								</p>
+								<p>
+									I do intend to create a React/Typescript version of this same project. So I guess, in summary, I'm not using it here because it's not "needed" and because it is a completely separate tech stack. I am only trying to demonstrate a "senior" level grasp of responsive MVC with this project.
+								</p>
+							</div>
+							<h6>Client-Side Code</h6>
+							<div class="codeDiv">
+								<div id="ctabs" class="ui-tabs ui-corner-all ui-widget ui-widget-content">
+									<ul>
+										<li><a href="#ctabs-1">cshtml</a></li>
+										<li><a href="#ctabs-2">javascript</a></li>
+										<li><a href="#ctabs-3">variables</a></li>
+										<li><a href="#ctabs-4">functions</a></li>
+									</ul>
+									<div id="ctabs-1">
+										<strong>/Events/Index.cshtml</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/Views/Events/Index.cshtml" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cshtml" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/Views/Events/Index.cshtml">Loading...</pre>
+									</div>
+									<div id="ctabs-2">
+										<strong>/events/index.js</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/wwwroot/js/views/events/index.js" target="_blank">Repository</a>
+										<pre class="codeBlock lang-js" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/wwwroot/js/views/events/index.js">Loading...</pre>
+									</div>
+									<div id="ctabs-3">
+										<strong>/events/vars/index.js</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/wwwroot/js/views/events/vars/index.js" target="_blank">Repository</a>
+										<pre class="codeBlock lang-js" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/wwwroot/js/views/events/vars/index.js">Loading...</pre>
+									</div>
+									<div id="ctabs-4">
+										<strong>/events/functions/index.js</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/wwwroot/js/views/events/functions/index.js" target="_blank">Repository</a>
+										<pre class="codeBlock lang-js" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/wwwroot/js/views/events/functions/index.js">Loading...</pre>
+									</div>
+								</div>
+							</div>
+							<h6>Server-Side Code</h6>
+							<div class="codeDiv">
+								<div id="stabs" class="ui-tabs ui-corner-all ui-widget ui-widget-content">
+									<ul>
+										<li><a href="#stabs-1">model</a></li>
+										<li><a href="#stabs-2">controller</a></li>
+										<li><a href="#stabs-3">dto</a></li>
+										<li><a href="#stabs-4">api service</a></li>
+									</ul>
+									<div id="stabs-1">
+										<strong>/Models/EventModel.cs</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/Models/EventModel.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/Models/EventModel.cs">Loading...</pre>
+									</div>
+									<div id="stabs-2">
+										<strong>/Controllers/EventsController.cs</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/Controllers/EventsController.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/Controllers/EventsController.cs">Loading...</pre>
+									</div>
+									<div id="stabs-3">
+										<strong>/Dtos/EventDto.cs</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/Dtos/EventDto.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/Dtos/EventDto.cs">Loading...</pre>
+									</div>
+									<div id="stabs-4">
+										<strong>/Services/ApiService.cs</strong> - <a href="https://github.com/MyPiTech/LandedMVC/blob/master/Services/ApiService.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/LandedMVC/master/Services/ApiService.cs">Loading...</pre>
+									</div>
+								</div>
+							</div>
+							<h6>API Code</h6>
+							<div class="codeDiv">
+								<div id="atabs" class="ui-tabs ui-corner-all ui-widget ui-widget-content">
+									<ul>
+										<li><a href="#atabs-1">dto</a></li>
+										<li><a href="#atabs-2">controller</a></li>
+										<li><a href="#atabs-3">service</a></li>
+									</ul>
+									<div id="atabs-1">
+										<strong>/Dtos/CreateEventDto.cs</strong> - <a href="https://github.com/MyPiTech/DotNetCoreTestApi/blob/master/TestApi/Dtos/CreateEventDto.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/DotNetCoreTestApi/master/TestApi/Dtos/CreateEventDto.cs">Loading...</pre>
+									</div>
+									<div id="atabs-2">
+										<strong>/Controllers/EventsController.cs</strong> - <a href="https://github.com/MyPiTech/DotNetCoreTestApi/blob/master/TestApi/Controllers/EventsController.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/DotNetCoreTestApi/master/TestApi/Controllers/EventsController.cs">Loading...</pre>
+									</div>
+									<div id="atabs-3">
+										<strong>/Services/EventService.cs</strong> - <a href="https://github.com/MyPiTech/DotNetCoreTestApi/blob/master/TestApi/Services/EventService.cs" target="_blank">Repository</a>
+										<pre class="codeBlock lang-cs" data-src="https://raw.githubusercontent.com/MyPiTech/DotNetCoreTestApi/master/TestApi/Services/EventService.cs">Loading...</pre>
+									</div>
+								</div>
+							</div>
+						</div>
 					</section>
-
 				</section>
-
 			</div>
-
 		</div>
-
 	</div>
-
 </div>
 
 @section Scripts {

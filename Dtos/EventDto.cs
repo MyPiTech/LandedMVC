@@ -14,9 +14,10 @@ namespace LandedMVC.Dtos
         public DateTime Start { get; set; }
         public int Duration { get; set; }
 
-        public EventModel ToModel() => new() { 
-            Id = Id, 
-            UserId = UserId, 
+		public EventModel ToModel() => new()
+		{
+			Id = Id,
+			UserId = UserId, 
             Title = Title, 
             Location = Location, 
             Start = Start, 
