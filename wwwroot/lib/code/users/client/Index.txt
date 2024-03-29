@@ -84,7 +84,6 @@
 									Some things to take note of:
 									<ol>
 										<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, improve my budget and hire me. &#128516; </li>
-										<li>The tabs below will allow you to peruse some of the code that makes this page work. It's just not practical to show it all, and if you want to see the rest, then please check out the repositories. Links to all of my repositories are available in the "My Other Projects" menu.</li>
 										<li>By using AJAX to populate the table. We allow for the rest of the page to load. Despite any delays on the table.</li>
 										<li>This is a fairly simple implementation of the DataTables library. I am loading the complete record set and letting the data table handle all of the searching, pagination, etc. client-side. This can be changed to be server-side, if performance is an issue.</li>
 									</ol>

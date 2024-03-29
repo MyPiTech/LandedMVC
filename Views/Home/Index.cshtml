@@ -147,8 +147,9 @@
 </section>
 
 @section Scripts {
-	<script src="~/js/views/home/index.js"></script>
 	@{
+		await Html.RenderPartialAsync("_DataTablesUIPartial");
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+	<script src="~/js/views/home/index.js"></script>
 }

@@ -115,16 +115,14 @@
 </div>
 
 @section Scripts {
-	<script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/plug-ins/2.0.0/dataRender/ellipsis.js"></script>
-	<script src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
+	@{
+		await Html.RenderPartialAsync("_DataTablesUIPartial");
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 	<script>
 		var uId = @(uId);
 	</script>
 	<script src="~/js/views/users/vars/events.js"></script>
 	<script src="~/js/views/users/events.js"></script>
 	<script src="~/js/views/users/functions/events.js"></script>
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
 }

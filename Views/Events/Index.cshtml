@@ -38,7 +38,7 @@
 								<tr>
 									<th></th>
 									<th>ID</th>
-									<th>User ID</th>
+									<th class="tdNoWrap">User ID</th>
 									<th>Title</th>
 									<th>Location</th>
 									<th>Start</th>
@@ -124,11 +124,11 @@
 </div>
 
 @section Scripts {
-	<script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/plug-ins/2.0.0/dataRender/ellipsis.js"></script>
-	<script src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
+	@{
+		await Html.RenderPartialAsync("_DataTablesUIPartial");
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 	<script src="~/js/views/events/vars/index.js"></script>
 	<script src="~/js/views/events/index.js"></script>
 	<script src="~/js/views/events/functions/index.js"></script>
-	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

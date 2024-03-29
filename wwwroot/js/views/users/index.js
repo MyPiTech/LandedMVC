@@ -1,4 +1,5 @@
 $(function () {
+
     //table
     DT_ACTION_COLUMN.mRender = actions;
     $.fn.dataTable.ext.errMode = dataTableError;
@@ -33,4 +34,5 @@ $(function () {
     $('#cancelBtn').on('click', cancelHandler);
 
     $('#labelsToggle').on('click', lablesHandler);
+
 });

@@ -70,3 +70,50 @@ function hideTablePagination(oSettings) {
 function dataTableError(settings, helpPage, message) {
     notify(`An error occurred loading table. <br/> <br/> Error: ${message}`, true, 5000);
 }
+
+$(function () {
+    $('#ctabs').tabs();
+    $('#stabs').tabs();
+    $('#atabs').tabs();
+    $('#accordion').accordion({
+        collapsible: true,
+        active: false,
+        heightStyle: 'auto'
+    });
+    $('pre[data-src]').each(function () {
+        const elem = $(this);
+        const src = elem.attr('data-src');
+
+        $.ajax({
+            url: src,
+            dataType: 'text',
+            type: 'GET',
+            async: true,
+            success: function (result) {
+                let rText = result.replaceAll('&', '&amp;').replaceAll('<', '&lt;');
+                elem.html(`<code>${rText}</code>`);
+                Prism.highlightAll();
+            },
+            error: function (jqXHR, status, errorThrown) {
+                alert('error');
+            }
+        });
+    });
+});
+
+Prism.plugins.NormalizeWhitespace.setDefaults({
+    'break-lines': 500,
+    'indent': 0,
+    'remove-initial-line-feed': true
+});
+/*Prism.plugins.NormalizeWhitespace.setDefaults({
+    'remove-trailing': true,
+    'remove-indent': true,
+    'left-trim': true,
+    'right-trim': true,
+    'break-lines': 500,
+    'indent': 0,
+    'remove-initial-line-feed': true,
+    'tabs-to-spaces': 2,
+    'spaces-to-tabs': 2
+});*/

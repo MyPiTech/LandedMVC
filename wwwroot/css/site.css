@@ -39,6 +39,11 @@
             text-shadow: 1px 0 0 #e44c65, -1px 0 0 #e44c65, 0 1px 0 #e44c65, 0 -1px 0 #e44c65;
             cursor: pointer;
         }
+        a.ui-tabs-anchor:hover {
+            color: #ffffff !important;
+            text-shadow: 1px 0 0 #e44c65, -1px 0 0 #e44c65, 0 1px 0 #e44c65, 0 -1px 0 #e44c65;
+            cursor: pointer;
+        }
 
     span.icon {
         -moz-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -157,4 +162,17 @@
 
     .tdAction{
         white-space: nowrap;
+    }
+
+    :not(pre) > code[class*=language-], pre[class*=language-] {
+        background: #000 !important;
+    }
+
+    .codeBlock{
+        height:100%;
+    }
+
+    .codeDiv {
+        padding: 1em 1em !important;
+        /*height: 100% !important;*/
     }

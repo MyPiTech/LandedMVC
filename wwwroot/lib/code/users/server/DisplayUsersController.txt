@@ -16,14 +16,14 @@ using LandedMVC.Dtos;
 using LandedMVC.Models;
 using LandedMVC.Services;
 
-namespace LandedMVC.Controllers
+namespace Display.LandedMVC.Controllers
 {
 	/// <summary>
 	/// Class UsersController.
 	/// Implements the <see cref="Controller" />
 	/// </summary>
 	/// <seealso cref="Controller" />
-	public class UsersController : Controller
+	public class DisplayUsersController : Controller
     {
 		/// <summary>
 		/// The user API service
@@ -36,10 +36,10 @@ namespace LandedMVC.Controllers
 		private readonly ApiService<UserEventDto> _eventApiService;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UsersController"/> class.
+		/// Initializes a new instance of the <see cref="DisplayUsersController"/> class.
 		/// </summary>
 		/// <param name="apiService">The model API service.</param>
-		public UsersController(ApiService<UserDto> apiService, ApiService<UserEventDto> eventApiService)
+		public DisplayUsersController(ApiService<UserDto> apiService, ApiService<UserEventDto> eventApiService)
         {
             _apiService = apiService;
 			_eventApiService = eventApiService;

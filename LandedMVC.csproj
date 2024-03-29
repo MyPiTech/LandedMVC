@@ -6,4 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\code\DisplayApiService.txt" />
+    <Content Remove="wwwroot\lib\code\users\server\DisplayUserDto.txt" />
+    <Content Remove="wwwroot\lib\code\users\server\DisplayUserModel.txt" />
+    <Content Remove="wwwroot\lib\code\users\server\DisplayUsersController.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="wwwroot\lib\code\DisplayApiService.txt" />
+    <Compile Include="wwwroot\lib\code\users\server\DisplayUserModel.txt" />
+    <Compile Include="wwwroot\lib\code\users\server\DisplayUsersController.txt" />
+    <Compile Include="wwwroot\lib\code\users\server\DisplayUserDto.txt" />
+  </ItemGroup>
+
 </Project>
