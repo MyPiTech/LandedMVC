@@ -31,7 +31,7 @@ namespace LandedMVC.Controllers
 		private readonly ApiService<UserDto> _apiService;
 
 		/// <summary>
-		/// The user API service
+		/// The user event API service
 		/// </summary>
 		private readonly ApiService<UserEventDto> _eventApiService;
 

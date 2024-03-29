@@ -1,6 +1,5 @@
 ﻿using LandedMVC.Dtos;
 using System.ComponentModel.DataAnnotations;
-using TestApi.Dtos;
 
 namespace LandedMVC.Models
 {

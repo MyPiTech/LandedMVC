@@ -1,7 +1,7 @@
 ﻿using LandedMVC.Attributes;
 using System.Text.Json.Serialization;
 
-namespace TestApi.Dtos
+namespace LandedMVC.Dtos
 {
 	[ApiRoute("/Email")]
 	public class EmailDto
