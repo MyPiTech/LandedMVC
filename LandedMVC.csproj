@@ -1,23 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\lib\code\dspApiSrvc.txt" />
-    <Content Remove="wwwroot\lib\code\users\srvr\DisplayUserModel.txt" />
-    <Content Remove="wwwroot\lib\code\users\srvr\DisplayUsersController.txt" />
-    <Content Remove="wwwroot\lib\code\users\srvr\dudt.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="wwwroot\lib\code\dspApiSrvc.txt" />
-    <Compile Include="wwwroot\lib\code\users\srvr\DisplayUserModel.txt" />
-    <Compile Include="wwwroot\lib\code\users\srvr\DisplayUsersController.txt" />
-    <Compile Include="wwwroot\lib\code\users\srvr\dudt.txt" />
-  </ItemGroup>
 
 </Project>
