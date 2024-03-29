@@ -95,7 +95,9 @@ $(function () {
                 Prism.highlightAll();
             },
             error: function (jqXHR, status, errorThrown) {
-                alert('error');
+                console.log(jqXHR);
+                console.log(status);
+                console.log(errorThrown);
             }
         });
     });
