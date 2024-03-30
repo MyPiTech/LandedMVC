@@ -72,9 +72,21 @@ function dataTableError(settings, helpPage, message) {
 }
 
 $(function () {
-    $('#ctabs').tabs();
-    $('#stabs').tabs();
-    $('#atabs').tabs();
+    $('#ctabs').tabs({
+        activate: function (event, ui) {
+            $('.scroll-div').scrollLeft(0).scrollTop(0);
+        }
+    });
+    $('#stabs').tabs({
+        activate: function (event, ui) {
+            $('.scroll-div').scrollLeft(0).scrollTop(0);
+        }
+    });
+    $('#atabs').tabs({
+        activate: function (event, ui) {
+            $('.scroll-div').scrollLeft(0).scrollTop(0);
+        }
+    });
     $('#accordion').accordion({
         collapsible: true,
         active: false,
@@ -101,6 +113,28 @@ $(function () {
             }
         });
     });
+
+    let cursordown = false;
+    let cursorypos = 0;
+    let cursorxpos = 0;
+    $('.code-tabs').on('mouseenter', 'div', function (e) {
+        $(this).css('user-select', 'none').css('cursor', 'grab');
+    }).on('mouseleave', 'div', function (e) {
+        cursordown = false;
+        $(this).css('user-select', 'auto').css('cursor', 'auto');
+    }).on('mousedown', 'div', function (e) {
+        $(this).css('cursor', 'grabbing');
+        cursordown = true;
+        cursorxpos = $(this).scrollLeft() + e.clientX;
+        cursorypos = $(this).scrollTop() + e.clientY;
+    }).on('mousemove', 'div', function (e) {
+        if (!cursordown) return;
+        try { $(this).scrollLeft(cursorxpos - e.clientX); } catch (e) { }
+        try { $(this).scrollTop(cursorypos - e.clientY); } catch (e) { }
+    }).on('mouseup', 'div', end = function (e) {
+        $(this).css('cursor', 'grab');
+        cursordown = false;
+    });
 });
 
 Prism.plugins.NormalizeWhitespace.setDefaults({
@@ -119,3 +153,6 @@ Prism.plugins.NormalizeWhitespace.setDefaults({
     'tabs-to-spaces': 2,
     'spaces-to-tabs': 2
 });*/
+
+
+

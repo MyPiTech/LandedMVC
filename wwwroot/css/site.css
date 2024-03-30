@@ -2,7 +2,9 @@
     input:-webkit-autofill:focus {
         transition: background-color 0s 600000s, color 0s 600000s !important;
     }
-
+    code {
+        font-size: .8em !important;
+    }
     input[type="datetime-local"]{
         color-scheme: dark;
     }
@@ -168,11 +170,24 @@
         background: #000 !important;
     }
 
-    .codeBlock{
+    .code-block{
+        height:100%;
+        width:fit-content;
+    }
+
+    .code-div {
+        padding: 1em 1em !important;
         height:100%;
     }
 
-    .codeDiv {
-        padding: 1em 1em !important;
-        /*height: 100% !important;*/
+    .code-tabs{
+        /*overflow:auto; */
+        height:100%;
+        overflow:hidden;
+    }
+
+    .scroll-div{
+        height: 94%;
+        width: 100%;
+        overflow:auto; 
     }
