@@ -4121,5 +4121,90 @@ textarea {
 				margin: 0;
 				padding: 0;
 			}
+}
 
+
+.object, .object0, .object1, .object2, .object3, .object4 
+{
+	display: inline-grid;
+	position: relative;
+	color: #cc99cd;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.objectKey {
+	color: #999;
+	cursor: default;
+	/*color: #cc99cd;*/
+}
+
+.object-content, .object-content0, .object-content1, .object-content2, .object-content3, .object-content4 {
+	list-style-type: none;
+	display: none;
+	position: absolute;
+	background-color: #000;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(150,150,150,0.3);
+	padding: 15px 15px;
+	top: 25px;
+	left: 25px;
+	z-index: 1;
+	cursor: default;
+}
+
+.object:hover .object-content, .object0:hover .object-content0, .object1:hover .object-content1, .object2:hover .object-content2, .object3:hover .object-content3, .object4:hover .object-content4
+{
+	display: block;
+}
+
+.console-div {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}
+
+.console-view {
+	height: 100%;
+	width: fit-content;
+	white-space: nowrap;
+}
+
+	.console-view > .info {
+		color: #39c088;
+	}
+
+	.console-view > .warn {
+		color: #5480f1;
+	}
+
+	.console-view > .error {
+		color: #e44c65;
+	}
+
+.console-string {
+	color: #ffffff;
+	font-weight: bold;
+	cursor: default;
+}
+
+.console-number {
+	color: #e2777a;
+	font-weight: bold;
+	cursor: default;
+}
+.console-bool {
+	color: #f8c555;
+	font-weight: bold;
+	cursor: default;
+}
+.console-array {
+	color: #f08d49;
+	font-weight: bold;
+	cursor: default;
+}
+.console-date {
+	color: #7ec699;
+	font-weight: bold;
+	cursor: default;
 }
