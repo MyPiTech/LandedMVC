@@ -68,6 +68,7 @@ function hideTablePagination(oSettings) {
 }
 
 function dataTableError(settings, helpPage, message) {
+    console.error(message);
     notify(`An error occurred loading table. <br/> <br/> Error: ${message}`, true, 5000);
 }
 
@@ -92,6 +93,7 @@ $(function () {
         active: false,
         heightStyle: 'auto'
     });
+
     $('pre[data-src]').each(function () {
         const elem = $(this);
         const src = elem.attr('data-src');
@@ -107,9 +109,9 @@ $(function () {
                 Prism.highlightAll();
             },
             error: function (jqXHR, status, errorThrown) {
-                console.log(jqXHR);
-                console.log(status);
-                console.log(errorThrown);
+                console.info(jqXHR);
+                console.warn(status);
+                console.error(errorThrown);
             }
         });
     });
@@ -135,6 +137,13 @@ $(function () {
         $(this).css('cursor', 'grab');
         cursordown = false;
     });
+
+    $('.console-view').on('mouseenter mouseleave', 'div.object', function () {
+        $(this).children('.object-content').toggle('fast');
+    });
+    $('.console-view').on('mouseenter mouseleave', 'div.console-array', function () {
+        $(this).children('.array-data').toggle('fast');
+    });
 });
 
 Prism.plugins.NormalizeWhitespace.setDefaults({
@@ -142,6 +151,7 @@ Prism.plugins.NormalizeWhitespace.setDefaults({
     'indent': 0,
     'remove-initial-line-feed': true
 });
+
 /*Prism.plugins.NormalizeWhitespace.setDefaults({
     'remove-trailing': true,
     'remove-indent': true,

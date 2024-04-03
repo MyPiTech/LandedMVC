@@ -187,7 +187,9 @@
     }
 
     .scroll-div{
-        height: 94%;
+        height: 93%;
         width: 100%;
         overflow:auto; 
     }
+
+    

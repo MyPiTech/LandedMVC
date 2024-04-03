@@ -1,9 +1,11 @@
 using LandedMVC.Dtos;
+using LandedMVC.Hubs;
 using LandedMVC.Services;
 using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSignalR();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -53,4 +55,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+app.MapHub<ConsoleHub>("/console");
 app.Run();

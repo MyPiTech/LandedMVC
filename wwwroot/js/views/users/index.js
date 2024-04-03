@@ -36,3 +36,4 @@ $(function () {
     $('#labelsToggle').on('click', lablesHandler);
 
 });
+

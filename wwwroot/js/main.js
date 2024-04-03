@@ -248,3 +248,199 @@
 			._parallax();
 
 })(jQuery);
+
+function consoleFormat(obj, level, multi = false) {
+
+	level = level ?? 0;
+	let tag = (level) ? 'span' : 'div';
+	let nextLevel = (level || 0) + 1;
+	let display = (multi) ? 'inline' : 'block';
+
+	// strings
+	if (typeof obj == 'string') {
+		return `<${tag} class="console-string" style="display: ${display};">${obj}</${tag}>`;
+	}
+	// booleans, null and undefined
+	else if (typeof obj == 'boolean' || obj === null || obj === undefined) {
+		return `<${tag} style="display: ${display};"><em class="console-bool">${obj}</em></${tag}>`;
+	}
+	// numbers
+	else if (typeof obj == 'number') {
+		return `<${tag} class="console-number" style="display: ${display};">${obj}</${tag}>`;
+	}
+	// dates
+	else if (Object.prototype.toString.call(obj) == '[object Date]') {
+		//console.info(obj);
+		return `<${tag} class="console-date" style="display: ${display};">${obj.toJSON()}</${tag}>`;
+	}
+	// arrays
+	else if (Array.isArray(obj)) {
+
+		let result = obj.map((oData, i, data) => {
+			return consoleFormat(oData, null, true);
+		});
+		let rtn = `<div class="console-array" style="display: ${display};">Array: [`;
+
+		if (!obj.length) {
+			return `${rtn}]</div>`;
+		}
+
+		rtn += `<div class="array-data">${result.join(',</br>')}</div>`;
+
+		return `${rtn}]</${tag}>`;
+	}
+	// objects
+	else if (obj && typeof obj == 'object') {
+
+		let rtn = '',
+			len = Object.keys(obj).length;
+
+		if (level && !len) {
+			return `<${tag} class="object" style="display: ${display}-grid;">Object: {}</${tag}>`;
+		}
+
+		rtn += `<div class="object" style="display: ${display}-grid;">Object: {}<ul class="object-content">`;
+		for (var key in obj) {
+			if (typeof obj[key] != 'function') {
+				rtn += `<li><div class="object-data"><span class="object-key" >${key}:</span> ${consoleFormat(obj[key], nextLevel, true)}</div></li>`;
+			}
+		}
+		rtn += `</ul></div>`;
+
+		return rtn;
+	}
+
+	return '';
+}
+
+const isDev = true;
+const console = (function (defaultConsole) {
+	const consoleView = document.getElementById('console');
+	return {
+		debug: function (...data) {
+			defaultConsole.debug(...data);
+		},
+		log: function (...data) {
+			defaultConsole.log(...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('log', ...data);;
+			}
+		},
+		serverLog: function (src, ...data) {
+			defaultConsole.log('server', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('server-log', src, ...data);;
+			}
+		},
+		info: function (...data) {
+			defaultConsole.info(...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('info', ...data);
+			}
+		},
+		serverInfo: function (...data) {
+			defaultConsole.info('server', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('server-info', ...data);
+			}
+		},
+		warn: function (...data) {
+			defaultConsole.warn(...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('warn', ...data);
+			}
+		},
+		serverWarn: function (...data) {
+			defaultConsole.warn('server', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('server-warn', ...data);
+			}
+		},
+		error: function (...data) {
+			defaultConsole.error(...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('error', ...data);
+			}
+		},
+		serverError: function (...data) {
+			defaultConsole.error('server', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('server-error', ...data);
+			}
+		}
+	};
+}(window.console));
+
+window.console = console;
+
+function formatData(type,...data) {
+	let title;
+	let dataClass;
+	let consoleDate = new Date().toJSON()
+
+	switch (type) {
+		case 'log':
+			title = '[LOG]';
+			dataClass = 'log';
+			break;
+		case 'server-log':
+			title = '[LOG][SERVER]';
+			dataClass = 'log';
+			break;
+		case 'info':
+			title = '[INFO]';
+			dataClass = 'info';
+			break;
+		case 'server-info':
+			title = '[INFO][SERVER]';
+			dataClass = 'info';
+			break;
+		case 'warn':
+			title = '[WARN]';
+			dataClass = 'warn';
+			break;
+		case 'server-warn':
+			title = '[WARN][SERVER]';
+			dataClass = 'warn';
+			break;
+		case 'error':
+			title = '[ERROR]';
+			dataClass = 'error';
+			break;
+		case 'server-error':
+			title = '[ERROR][SERVER]';
+			dataClass = 'error';
+			break;
+		default:
+			title = '[LOG]';
+			dataClass = 'log';
+			break;
+	}
+
+	title += `[${consoleDate}]`;
+
+	let result = data.map((consoleData) => {
+		return consoleFormat(consoleData, null, true);
+	});
+
+	return `<div class="${dataClass}">${title} ${result.join(' ')}</div>`;
+}
+
+"use strict";
+
+var connection = new signalR.HubConnectionBuilder().withUrl("/console").build();
+connection.start();
+connection.on("SendLogAsync", function (data) {
+	console.serverLog(...data);
+});
+connection.on("SendInfoAsync", function (data) {
+
+	console.serverInfo(...data);
+});
+connection.on("SendWarnAsync", function (data) {
+
+	console.serverWarn(...data);
+});
+connection.on("SendErrorAsync", function (data) {
+	console.serverError(...data);
+});

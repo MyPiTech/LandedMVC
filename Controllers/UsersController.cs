@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using LandedMVC.Dtos;
 using LandedMVC.Models;
 using LandedMVC.Services;
+using Microsoft.AspNetCore.SignalR;
+using LandedMVC.Hubs;
 
 namespace LandedMVC.Controllers
 {
@@ -35,14 +37,17 @@ namespace LandedMVC.Controllers
 		/// </summary>
 		private readonly ApiService<UserEventDto> _eventApiService;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="UsersController"/> class.
-		/// </summary>
-		/// <param name="apiService">The model API service.</param>
-		public UsersController(ApiService<UserDto> apiService, ApiService<UserEventDto> eventApiService)
+		private readonly IHubContext<ConsoleHub, IConsoleHub> _consoleHub;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UsersController"/> class.
+        /// </summary>
+        /// <param name="apiService">The model API service.</param>
+        public UsersController(ApiService<UserDto> apiService, ApiService<UserEventDto> eventApiService, IHubContext<ConsoleHub, IConsoleHub> consoleHub)
         {
             _apiService = apiService;
 			_eventApiService = eventApiService;
+			_consoleHub = consoleHub;
         }
 
 		/// <summary>
@@ -61,10 +66,15 @@ namespace LandedMVC.Controllers
 		public async Task<IActionResult> EventsAsync(int uId, CancellationToken token)
 		{
 			var user = await _apiService.GetOneAsync(() => new UserDto { Id = uId }, token);
-			if(user == null) { 
-				return BadRequest($"No user was found with id:{uId}"); 
+			if (user == null)
+			{
+				var response = BadRequest($"No user was found with id:{uId}");
+				await _consoleHub.Clients.All.SendWarnAsync("UsersController\\EventsAsync - bad request", response);
+				return response;
 			}
-			return View(user?.ToModel() ?? default);
+			var result = View(user?.ToModel() ?? default);
+			await _consoleHub.Clients.All.SendInfoAsync("UsersController\\EventsAsync", result);
+			return result;
 		}
 
 		/// <summary>
@@ -75,8 +85,11 @@ namespace LandedMVC.Controllers
 		[HttpGet]
         public async Task<IActionResult> GetAllAsync(CancellationToken token)
         {
+			
             var results = await _apiService.GetAllAsync(token);
-            return Json(results);
+            var jsonResult = Json(results);
+            await _consoleHub.Clients.All.SendInfoAsync("UsersController\\GetAllAsync", jsonResult);
+            return jsonResult;
         }
 
 		/// <summary>Get all user events as an asynchronous operation.</summary>
@@ -87,7 +100,9 @@ namespace LandedMVC.Controllers
 		public async Task<IActionResult> GetAllEventsAsync(int uId, CancellationToken token)
 		{
 			var results = await _eventApiService.GetAllAsync(() => new UserEventDto { UserId = uId }, token);
-			return Json(results);
+            var jsonResult = Json(results);
+            await _consoleHub.Clients.All.SendInfoAsync("UsersController\\GetAllEventsAsync", jsonResult);
+            return Json(results);
 		}
 
 		/// <summary>
@@ -99,7 +114,9 @@ namespace LandedMVC.Controllers
         public async Task DeleteAsync(int id, CancellationToken token)
         {
             await _apiService.DeleteAsync(() => new UserDto { Id = id }, token);
-        }
+            await _consoleHub.Clients.All.SendInfoAsync("UsersController\\DeleteAsync", id);
+
+		}
 
 		/// <summary>
 		/// Delete event as an asynchronous operation.
@@ -111,6 +128,7 @@ namespace LandedMVC.Controllers
 		public async Task DeleteEventAsync(int id, int userId, CancellationToken token)
 		{
 			await _eventApiService.DeleteAsync(() => new UserEventDto { Id = id, UserId = userId }, token);
+			await _consoleHub.Clients.All.SendInfoAsync("UsersController\\DeleteEventAsync", id, userId);
 		}
 
 		/// <summary>
@@ -124,7 +142,9 @@ namespace LandedMVC.Controllers
         {
 			if (!ModelState.IsValid)
 			{
-				return BadRequest(ModelState);
+				var response = BadRequest(ModelState);
+				await _consoleHub.Clients.All.SendWarnAsync("UsersController\\UpsertAsync - bad request", response);
+				return response;
 			}
 
             if (model.Id == 0)
@@ -133,10 +153,12 @@ namespace LandedMVC.Controllers
 				if(dto != null)
 				{
 					model = dto.ToModel();
-				}
+                    await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertAsync - add", model);
+                }
             }
             else { 
-                await _apiService.EditAsync(model.ToDto(), token); 
+                await _apiService.EditAsync(model.ToDto(), token);
+                await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertAsync - update", model);
             }
 			return Json(model);
 		}
@@ -152,7 +174,9 @@ namespace LandedMVC.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return BadRequest(ModelState);
+				var response = BadRequest(ModelState);
+				await _consoleHub.Clients.All.SendWarnAsync("UsersController\\UpsertEventAsync - bad request", response);
+				return response;
 			}
 
 			if (model.Id == 0)
@@ -161,11 +185,13 @@ namespace LandedMVC.Controllers
 				if (dto != null)
 				{
 					model = dto.ToModel();
+					await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertEventAsync - add", model);
 				}
 			}
 			else
 			{
 				await _eventApiService.EditAsync(model.ToUserEventDto(), token);
+				await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertEventAsync - update", model);
 			}
 			return Json(model);
 		}

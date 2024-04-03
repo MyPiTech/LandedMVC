@@ -3,6 +3,7 @@ function actionsHandler() {
     const xType = this.getAttribute('x-type');
     const id = this.getAttribute('x-id');
 
+    console.info(`${xType} action selected`);
     if (xType === 'events') {
         handleEvents(id);
     } else if (xType === 'edit') {
@@ -37,9 +38,12 @@ function handleDelete(id) {
         success: function (result) {
             table.row(`#row_${id}`).remove().draw('page');
             notify('The User was successfully deleted.');
+            console.log(result);
+            console.info(`Item id:${id} was successfully deleted.`, result);
         },
         error: function (xhr, resp, text) {
             notify('An error occured. User was not deleted.', true);
+            console.error(`Item id:${id} was not deleted.`, text);
         }
     });
 };
@@ -52,9 +56,19 @@ function actions(data) {
     return `${editAction}&nbsp;&nbsp;${eventsAction}&nbsp;&nbsp;${deleteAction}`;
 }
 
+const dateVar = new Date('August 19, 1975 23:15:30');
 
 //form
 function createHandler() {
+    let test2 = { firstName: "John", lastName: "Doe", age: 50, array: ["Apple", "Banana", ["Apple", "Banana"]], eyeColor: "blue" };
+    let aTest = [1, 2, 'apple', test2, 'banana', dateVar];
+    let test = { firstName: "John", bool: true, number: 50, array: aTest, date: dateVar };
+    
+    console.log('log', 'test', test, test2);
+    console.info('info', 'test', test, test2);
+    console.warn('warn', 'test', test, test2);
+    console.error('error', 'test', test, test2);
+
     $('#formHeader').html('Create a new user.');
     toggleDataTable(clearForm);
     return false;
@@ -130,14 +144,15 @@ function formHandler(form) {
                     table.columns.adjust().draw(false);
                     table.responsive.recalc();
                 }, 1000);
+                 
             }
-
+            console.info(`Item ${action} successfully.`, result);
             notify(`The user was successfully ${action}.`);
             toggleDataTable(clearForm);
         },
         error: function (xhr, resp, text) {
             $("#submitBtn").prop("disabled", false);
-            console.log(text);
+            console.error(text);
             notify('An error occured. The user was not created.', true);
         }
     });
