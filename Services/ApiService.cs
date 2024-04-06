@@ -14,8 +14,8 @@
 using System.Reflection;
 using System.Text.Json;
 using LandedMVC.Attributes;
+using LandedMVC.Extensions;
 using LandedMVC.Hubs;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace LandedMVC.Services
@@ -26,17 +26,20 @@ namespace LandedMVC.Services
 	/// </summary>
 	/// <typeparam name="DTO">The type of the dto.</typeparam>
 	public sealed class ApiService<DTO> where DTO : class
-    {
+	{
 		/// <summary>
 		/// The logger
 		/// </summary>
 		private readonly ILogger<ApiService<DTO>> _logger;
 
-        private readonly IHubContext<ConsoleHub, IConsoleHub> _consoleHub;
-        /// <summary>
-        /// The client
-        /// </summary>
-        private readonly HttpClient _client;
+		/// <summary>
+		/// The console hub
+		/// </summary>
+		private readonly IHubContext<ConsoleHub, IConsoleHub> _consoleHub;
+		/// <summary>
+		/// The client
+		/// </summary>
+		private readonly HttpClient _client;
 		/// <summary>
 		/// The json read options
 		/// </summary>
@@ -51,10 +54,11 @@ namespace LandedMVC.Services
 		private const string NO_RECORDS = "\"No records were found.\"";
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ApiService{DTO}"/> class.
+		/// Initializes a new instance of the <see cref="ApiService{DTO}" /> class.
 		/// </summary>
 		/// <param name="httpClient">The HTTP client.</param>
 		/// <param name="logger">The logger.</param>
+		/// <param name="consoleHub">The console hub.</param>
 		public ApiService(HttpClient httpClient, ILogger<ApiService<DTO>> logger, IHubContext<ConsoleHub, IConsoleHub> consoleHub)
         {
             _client = httpClient;
@@ -71,10 +75,17 @@ namespace LandedMVC.Services
 		/// <returns>A Task&lt;DTO[]&gt; representing the asynchronous operation.</returns>
 		public async Task<DTO[]?> GetAllAsync(CancellationToken token = default)
         {
-			var results = await GetAllAsync(null, token);
-			await _consoleHub.Clients.All.SendLogAsync("ApiService\\GetAllAsync", results ?? []);
-			return results;
-
+			try
+			{
+				var results = await GetAllAsync(null, token);
+				await _logger.LogInformationAsync("ApiService\\GetAllAsync", _consoleHub, results ?? []);
+				return results;
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "ApiService\\GetAllAsync", _consoleHub);
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -101,13 +112,12 @@ namespace LandedMVC.Services
 
 				response.EnsureSuccessStatusCode();
 				var results = await response.Content.ReadFromJsonAsync<DTO[]>(token);
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\GetAllAsync - dto", results ?? []);
+				await _logger.LogInformationAsync("ApiService\\GetAllAsync - fDto", _consoleHub, results ?? []);
 				return results;
             }
             catch (Exception ex)
             {
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\GetAllAsync - error", ex);
-				_logger.LogError(ex.Message);
+				await _logger.LogErrorAsync(ex, "ApiService\\GetAllAsync - fDto", _consoleHub);
 				throw;
 			}
         }
@@ -125,13 +135,12 @@ namespace LandedMVC.Services
                 var apiRoute = GetRoute(fDto, true);
 
                 DTO? response = await _client.GetFromJsonAsync<DTO>(apiRoute, _JsonReadOptions, token);
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\GetOneAsync", response ?? fDto());
+				await _logger.LogInformationAsync("ApiService\\GetOneAsync", _consoleHub, response  ?? fDto());
 				return response;
             }
             catch (Exception ex)
             {
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\GetOneAsync - error", ex);
-				_logger.LogError(ex.Message);
+				await _logger.LogErrorAsync(ex, "ApiService\\GetOneAsync", _consoleHub);
 				throw;
 			}
         }
@@ -149,13 +158,12 @@ namespace LandedMVC.Services
                 var apiRoute = GetRoute(() => dto);
                 var response = await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
 				response.EnsureSuccessStatusCode();
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\AddAsync", response);
+				await _logger.LogInformationAsync("ApiService\\AddAsync", _consoleHub, response);
 				return await response.Content.ReadFromJsonAsync<DTO>(token);
 			}
             catch (Exception ex)
             {
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\AddAsync - error", ex);
-				_logger.LogError(ex.Message);
+				await _logger.LogErrorAsync(ex, "ApiService\\AddAsync", _consoleHub);
 				throw;
 			}
         }
@@ -175,11 +183,11 @@ namespace LandedMVC.Services
 
 				response.EnsureSuccessStatusCode();
 				await _consoleHub.Clients.All.SendLogAsync("ApiService\\EditAsync", response);
+				await _logger.LogInformationAsync("ApiService\\EditAsync", _consoleHub, response);
 			}
             catch (Exception ex)
             {
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\EditAsync - error", ex);
-				_logger.LogError(ex.Message);
+				await _logger.LogErrorAsync(ex, "ApiService\\EditAsync", _consoleHub);
 				throw;
 			}
         }
@@ -197,12 +205,11 @@ namespace LandedMVC.Services
                 var apiRoute = GetRoute(fDto, true);
 				var response = await _client.DeleteAsync(apiRoute, token);
 				response.EnsureSuccessStatusCode();
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\DeleteAsync", response);
+				await _logger.LogInformationAsync("ApiService\\DeleteAsync", _consoleHub, response);
 			}
             catch (Exception ex)
             {
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\DeleteAsync - error", ex);
-				_logger.LogError(ex.Message);
+				await _logger.LogErrorAsync(ex, "ApiService\\DeleteAsync", _consoleHub);
 				throw;
 			}
         }
@@ -221,13 +228,12 @@ namespace LandedMVC.Services
 				var response = await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
 
 				response.EnsureSuccessStatusCode();
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\PostAsync", response);
+				await _logger.LogInformationAsync("ApiService\\PostAsync", _consoleHub, response);
 				return response;
 			}
 			catch (Exception ex)
 			{
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\PostAsync - error", ex);
-				_logger.LogError(ex.Message);
+				await _logger.LogErrorAsync(ex, "ApiService\\PostAsync", _consoleHub);
 				throw;
 			}
 		}
@@ -254,6 +260,7 @@ namespace LandedMVC.Services
 		/// <param name="dto">The dto.</param>
 		/// <param name="appendPrimary">if set to <c>true</c> [append primary].</param>
 		/// <returns>System.String.</returns>
+		/// <exception cref="Exception">Route not found.</exception>
 		/// <exception cref="System.Exception">Route not found.</exception>
 		private static string GetRouteString(DTO? dto, bool appendPrimary = false)
         {

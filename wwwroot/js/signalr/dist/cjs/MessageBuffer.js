@@ -45,7 +45,7 @@ class MessageBuffer {
         }
         try {
             // If this is set it means we are reconnecting or resending
-            // We don't want to send on a disconnected connection
+            // We don't want to send on a disconnected server_connection
             // And we don't want to send if resend is running since that would mean sending
             // this message twice
             if (!this._reconnectInProgress) {
@@ -176,7 +176,7 @@ class MessageBuffer {
                     if (!this._reconnectInProgress) {
                         await this._connection.send(this._protocol.writeMessage({ type: IHubProtocol_1.MessageType.Ack, sequenceId: this._latestReceivedSequenceId }));
                     }
-                    // Ignore errors, that means the connection is closed and we don't care about the Ack message anymore.
+                    // Ignore errors, that means the server_connection is closed and we don't care about the Ack message anymore.
                 }
                 catch { }
                 clearTimeout(this._ackTimerHandle);

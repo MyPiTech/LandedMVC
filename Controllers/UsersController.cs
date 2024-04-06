@@ -17,6 +17,7 @@ using LandedMVC.Models;
 using LandedMVC.Services;
 using Microsoft.AspNetCore.SignalR;
 using LandedMVC.Hubs;
+using LandedMVC.Extensions;
 
 namespace LandedMVC.Controllers
 {
@@ -25,7 +26,7 @@ namespace LandedMVC.Controllers
 	/// Implements the <see cref="Controller" />
 	/// </summary>
 	/// <seealso cref="Controller" />
-	public class UsersController : Controller
+	public class UsersController : ControllerBase<UsersController>
     {
 		/// <summary>
 		/// The user API service
@@ -37,18 +38,23 @@ namespace LandedMVC.Controllers
 		/// </summary>
 		private readonly ApiService<UserEventDto> _eventApiService;
 
-		private readonly IHubContext<ConsoleHub, IConsoleHub> _consoleHub;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UsersController"/> class.
-        /// </summary>
-        /// <param name="apiService">The model API service.</param>
-        public UsersController(ApiService<UserDto> apiService, ApiService<UserEventDto> eventApiService, IHubContext<ConsoleHub, IConsoleHub> consoleHub)
-        {
-            _apiService = apiService;
+		/// <summary>Initializes a new instance of the <see cref="T:LandedMVC.Controllers.UsersController" /> class.</summary>
+		/// <param name="apiService">The model API service.</param>
+		/// <param name="eventApiService"></param>
+		/// <param name="consoleHub"></param>
+		/// <param name="logger"></param>
+		/// <param name="configuration"></param>
+		public UsersController(
+			ApiService<UserDto> apiService, 
+			ApiService<UserEventDto> eventApiService, 
+			IHubContext<ConsoleHub, IConsoleHub> consoleHub, 
+			ILogger<UsersController> logger,
+			IConfiguration configuration
+		) : base(configuration, logger, consoleHub)
+		{
+			_apiService = apiService;
 			_eventApiService = eventApiService;
-			_consoleHub = consoleHub;
-        }
+		}
 
 		/// <summary>
 		/// Default index view.
@@ -56,7 +62,7 @@ namespace LandedMVC.Controllers
 		/// <returns>IActionResult.</returns>
 		public IActionResult Index()
         {
-			return View();
+			return View(new ApiModel { ApiBase = _apiBase });
 		}
 
 		/// <summary>Gets user events as an asynchronous operation.</summary>
@@ -65,16 +71,27 @@ namespace LandedMVC.Controllers
 		/// <returns>A Task&lt;IActionResult&gt; representing the asynchronous operation.</returns>
 		public async Task<IActionResult> EventsAsync(int uId, CancellationToken token)
 		{
-			var user = await _apiService.GetOneAsync(() => new UserDto { Id = uId }, token);
-			if (user == null)
+			try
 			{
-				var response = BadRequest($"No user was found with id:{uId}");
-				await _consoleHub.Clients.All.SendWarnAsync("UsersController\\EventsAsync - bad request", response);
-				return response;
+				var user = await _apiService.GetOneAsync(() => new UserDto { Id = uId }, token);
+				if (user == null)
+				{
+					var response = BadRequest($"No user was found with id:{uId}");
+					await _logger.LogWarningAsync("UsersController\\EventsAsync", _consoleHub, response);
+					return response;
+				}
+				var model = user.ToModel();
+				model.ApiBase = _apiBase;
+
+				var result = View(model);
+				await _logger.LogDebugAsync("UsersController\\EventsAsync", _consoleHub, result);
+				return result;
 			}
-			var result = View(user?.ToModel() ?? default);
-			await _consoleHub.Clients.All.SendInfoAsync("UsersController\\EventsAsync", result);
-			return result;
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "UsersController\\EventsAsync", _consoleHub);
+				return BadRequest(ex.Message);
+			}
 		}
 
 		/// <summary>
@@ -85,11 +102,18 @@ namespace LandedMVC.Controllers
 		[HttpGet]
         public async Task<IActionResult> GetAllAsync(CancellationToken token)
         {
-			
-            var results = await _apiService.GetAllAsync(token);
-            var jsonResult = Json(results);
-            await _consoleHub.Clients.All.SendInfoAsync("UsersController\\GetAllAsync", jsonResult);
-            return jsonResult;
+			try
+			{
+				var results = await _apiService.GetAllAsync(token);
+				var result = Json(results);
+				await _logger.LogDebugAsync("UsersController\\GetAllAsync", _consoleHub, result);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "UsersController\\GetAllAsync", _consoleHub);
+				return BadRequest(ex.Message);
+			}
         }
 
 		/// <summary>Get all user events as an asynchronous operation.</summary>
@@ -99,10 +123,18 @@ namespace LandedMVC.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllEventsAsync(int uId, CancellationToken token)
 		{
-			var results = await _eventApiService.GetAllAsync(() => new UserEventDto { UserId = uId }, token);
-            var jsonResult = Json(results);
-            await _consoleHub.Clients.All.SendInfoAsync("UsersController\\GetAllEventsAsync", jsonResult);
-            return Json(results);
+			try
+			{
+				var results = await _eventApiService.GetAllAsync(() => new UserEventDto { UserId = uId }, token);
+				var result = Json(results);
+				await _logger.LogDebugAsync("UsersController\\GetAllEventsAsync", _consoleHub, result);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "UsersController\\GetAllEventsAsync", _consoleHub);
+				return BadRequest(ex.Message);
+			}
 		}
 
 		/// <summary>
@@ -113,8 +145,15 @@ namespace LandedMVC.Controllers
 		[HttpDelete]
         public async Task DeleteAsync(int id, CancellationToken token)
         {
-            await _apiService.DeleteAsync(() => new UserDto { Id = id }, token);
-            await _consoleHub.Clients.All.SendInfoAsync("UsersController\\DeleteAsync", id);
+			try
+			{
+				await _apiService.DeleteAsync(() => new UserDto { Id = id }, token);
+				await _logger.LogInformationAsync("UsersController\\DeleteAsync - id:", _consoleHub, id);
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "UsersController\\DeleteAsync", _consoleHub);
+			}
 
 		}
 
@@ -127,8 +166,15 @@ namespace LandedMVC.Controllers
 		[HttpDelete]
 		public async Task DeleteEventAsync(int id, int userId, CancellationToken token)
 		{
-			await _eventApiService.DeleteAsync(() => new UserEventDto { Id = id, UserId = userId }, token);
-			await _consoleHub.Clients.All.SendInfoAsync("UsersController\\DeleteEventAsync", id, userId);
+			try
+			{
+				await _eventApiService.DeleteAsync(() => new UserEventDto { Id = id, UserId = userId }, token);
+				await _logger.LogInformationAsync("UsersController\\DeleteEventAsync - ids:", _consoleHub, id, userId);
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "UsersController\\DeleteEventAsync", _consoleHub);
+			}
 		}
 
 		/// <summary>
@@ -140,27 +186,36 @@ namespace LandedMVC.Controllers
 		[HttpPost]
         public async Task<IActionResult> UpsertAsync(UserModel model, CancellationToken token)
         {
-			if (!ModelState.IsValid)
+			try
 			{
-				var response = BadRequest(ModelState);
-				await _consoleHub.Clients.All.SendWarnAsync("UsersController\\UpsertAsync - bad request", response);
-				return response;
-			}
-
-            if (model.Id == 0)
-            {
-				var dto = await _apiService.AddAsync(model.ToDto(), token);
-				if(dto != null)
+				if (!ModelState.IsValid)
 				{
-					model = dto.ToModel();
-                    await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertAsync - add", model);
-                }
-            }
-            else { 
-                await _apiService.EditAsync(model.ToDto(), token);
-                await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertAsync - update", model);
-            }
-			return Json(model);
+					var response = BadRequest(ModelState);
+					await _logger.LogWarningAsync("UsersController\\UpsertAsync", _consoleHub, response);
+					return response;
+				}
+
+				if (model.Id == 0)
+				{
+					var dto = await _apiService.AddAsync(model.ToDto(), token);
+					if (dto != null)
+					{
+						model = dto.ToModel();
+						await _logger.LogInformationAsync("UsersController\\UpsertAsync - add", _consoleHub, model);
+					}
+				}
+				else
+				{
+					await _apiService.EditAsync(model.ToDto(), token);
+					await _logger.LogInformationAsync("UsersController\\UpsertAsync - update", _consoleHub, model);
+				}
+				return Json(model);
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "UsersController\\UpsertAsync", _consoleHub);
+				return BadRequest(ex.Message);
+			}
 		}
 
 		/// <summary>
@@ -172,28 +227,36 @@ namespace LandedMVC.Controllers
 		[HttpPost]
 		public async Task<IActionResult> UpsertEventAsync(EventModel model, CancellationToken token)
 		{
-			if (!ModelState.IsValid)
+			try
 			{
-				var response = BadRequest(ModelState);
-				await _consoleHub.Clients.All.SendWarnAsync("UsersController\\UpsertEventAsync - bad request", response);
-				return response;
-			}
-
-			if (model.Id == 0)
-			{
-				var dto = await _eventApiService.AddAsync(model.ToUserEventDto(), token);
-				if (dto != null)
+				if (!ModelState.IsValid)
 				{
-					model = dto.ToModel();
-					await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertEventAsync - add", model);
+					var response = BadRequest(ModelState);
+					await _logger.LogWarningAsync("UsersController\\UpsertEventAsync", _consoleHub, response);
+					return response;
 				}
+
+				if (model.Id == 0)
+				{
+					var dto = await _eventApiService.AddAsync(model.ToUserEventDto(), token);
+					if (dto != null)
+					{
+						model = dto.ToModel();
+						await _logger.LogInformationAsync("UsersController\\UpsertEventAsync - add", _consoleHub, model);
+					}
+				}
+				else
+				{
+					await _eventApiService.EditAsync(model.ToUserEventDto(), token);
+					await _logger.LogInformationAsync("UsersController\\UpsertEventAsync - update", _consoleHub, model);
+				}
+				return Json(model);
 			}
-			else
+			catch (Exception ex)
 			{
-				await _eventApiService.EditAsync(model.ToUserEventDto(), token);
-				await _consoleHub.Clients.All.SendInfoAsync("UsersController\\UpsertEventAsync - update", model);
+				await _logger.LogErrorAsync(ex, "UsersController\\UpsertEventAsync", _consoleHub);
+				return BadRequest(ex.Message);
 			}
-			return Json(model);
 		}
 
 	}

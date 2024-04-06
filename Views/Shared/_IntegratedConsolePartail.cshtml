@@ -1,0 +1,42 @@
+﻿<script>
+	"use strict";
+
+	const server_connection = new signalR.HubConnectionBuilder().withUrl('/console').build();
+	server_connection.start();
+	server_connection.on("SendLogAsync", function (data) {
+		console.serverLog(...data);
+	});
+	server_connection.on("SendInfoAsync", function (data) {
+
+		console.serverInfo(...data);
+	});
+	server_connection.on("SendWarnAsync", function (data) {
+
+		console.serverWarn(...data);
+	});
+	server_connection.on("SendErrorAsync", function (data) {
+		console.serverError(...data);
+	});
+
+	const api_connection = new signalR.HubConnectionBuilder().withUrl(`${api_base}console`,
+	{
+		skipNegotiation: true,
+		transport: signalR.HttpTransportType.WebSockets
+	}).build();
+	api_connection.start();
+	api_connection.on("SendApiLogAsync", function (data) {
+		console.apiLog(...data);
+	});
+	api_connection.on("SendApiInfoAsync", function (data) {
+
+		console.apiInfo(...data);
+	});
+	api_connection.on("SendApiWarnAsync", function (data) {
+
+		console.apiWarn(...data);
+	});
+	api_connection.on("SendApiErrorAsync", function (data) {
+		console.apiError(...data);
+	});
+</script>
+

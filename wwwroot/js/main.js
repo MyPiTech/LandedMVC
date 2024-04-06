@@ -285,7 +285,7 @@ function consoleFormat(obj, level, multi = false) {
 			return `${rtn}]</div>`;
 		}
 
-		rtn += `<div class="array-data">${result.join(',</br>')}</div>`;
+		rtn += `...<div class="array-data">${result.join(',</br>')}</div>`;
 
 		return `${rtn}]</${tag}>`;
 	}
@@ -299,7 +299,7 @@ function consoleFormat(obj, level, multi = false) {
 			return `<${tag} class="object" style="display: ${display}-grid;">Object: {}</${tag}>`;
 		}
 
-		rtn += `<div class="object" style="display: ${display}-grid;">Object: {}<ul class="object-content">`;
+		rtn += `<div class="object" style="display: ${display}-grid;">Object: {...}<ul class="object-content">`;
 		for (var key in obj) {
 			if (typeof obj[key] != 'function') {
 				rtn += `<li><div class="object-data"><span class="object-key" >${key}:</span> ${consoleFormat(obj[key], nextLevel, true)}</div></li>`;
@@ -332,6 +332,12 @@ const console = (function (defaultConsole) {
 				consoleView.innerHTML += formatData('server-log', src, ...data);;
 			}
 		},
+		apiLog: function (src, ...data) {
+			defaultConsole.log('api', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('api-log', src, ...data);;
+			}
+		},
 		info: function (...data) {
 			defaultConsole.info(...data);
 			if (consoleView != null) {
@@ -342,6 +348,12 @@ const console = (function (defaultConsole) {
 			defaultConsole.info('server', ...data);
 			if (consoleView != null) {
 				consoleView.innerHTML += formatData('server-info', ...data);
+			}
+		},
+		apiInfo: function (...data) {
+			defaultConsole.info('api', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('api-info', ...data);
 			}
 		},
 		warn: function (...data) {
@@ -356,6 +368,12 @@ const console = (function (defaultConsole) {
 				consoleView.innerHTML += formatData('server-warn', ...data);
 			}
 		},
+		apiWarn: function (...data) {
+			defaultConsole.warn('api', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('api-warn', ...data);
+			}
+		},
 		error: function (...data) {
 			defaultConsole.error(...data);
 			if (consoleView != null) {
@@ -366,6 +384,12 @@ const console = (function (defaultConsole) {
 			defaultConsole.error('server', ...data);
 			if (consoleView != null) {
 				consoleView.innerHTML += formatData('server-error', ...data);
+			}
+		},
+		apiError: function (...data) {
+			defaultConsole.error('api', ...data);
+			if (consoleView != null) {
+				consoleView.innerHTML += formatData('api-error', ...data);
 			}
 		}
 	};
@@ -387,12 +411,20 @@ function formatData(type,...data) {
 			title = '[LOG][SERVER]';
 			dataClass = 'log';
 			break;
+		case 'api-log':
+			title = '[LOG][API]';
+			dataClass = 'log';
+			break;
 		case 'info':
 			title = '[INFO]';
 			dataClass = 'info';
 			break;
 		case 'server-info':
 			title = '[INFO][SERVER]';
+			dataClass = 'info';
+			break;
+		case 'api-info':
+			title = '[INFO][API]';
 			dataClass = 'info';
 			break;
 		case 'warn':
@@ -403,6 +435,10 @@ function formatData(type,...data) {
 			title = '[WARN][SERVER]';
 			dataClass = 'warn';
 			break;
+		case 'api-warn':
+			title = '[WARN][API]';
+			dataClass = 'warn';
+			break;
 		case 'error':
 			title = '[ERROR]';
 			dataClass = 'error';
@@ -411,13 +447,17 @@ function formatData(type,...data) {
 			title = '[ERROR][SERVER]';
 			dataClass = 'error';
 			break;
+		case 'api-error':
+			title = '[ERROR][API]';
+			dataClass = 'error';
+			break;
 		default:
 			title = '[LOG]';
 			dataClass = 'log';
 			break;
 	}
 
-	title += `[${consoleDate}]`;
+	/*title += `[${consoleDate}]`;*/
 
 	let result = data.map((consoleData) => {
 		return consoleFormat(consoleData, null, true);
@@ -426,21 +466,3 @@ function formatData(type,...data) {
 	return `<div class="${dataClass}">${title} ${result.join(' ')}</div>`;
 }
 
-"use strict";
-
-var connection = new signalR.HubConnectionBuilder().withUrl("/console").build();
-connection.start();
-connection.on("SendLogAsync", function (data) {
-	console.serverLog(...data);
-});
-connection.on("SendInfoAsync", function (data) {
-
-	console.serverInfo(...data);
-});
-connection.on("SendWarnAsync", function (data) {
-
-	console.serverWarn(...data);
-});
-connection.on("SendErrorAsync", function (data) {
-	console.serverError(...data);
-});

@@ -1,18 +1,18 @@
 import { IStreamResult } from "./Stream";
 /** Describes the current state of the {@link HubConnection} to the server. */
 export declare enum HubConnectionState {
-    /** The hub connection is disconnected. */
+    /** The hub server_connection is disconnected. */
     Disconnected = "Disconnected",
-    /** The hub connection is connecting. */
+    /** The hub server_connection is connecting. */
     Connecting = "Connecting",
-    /** The hub connection is connected. */
+    /** The hub server_connection is connected. */
     Connected = "Connected",
-    /** The hub connection is disconnecting. */
+    /** The hub server_connection is disconnecting. */
     Disconnecting = "Disconnecting",
-    /** The hub connection is reconnecting. */
+    /** The hub server_connection is reconnecting. */
     Reconnecting = "Reconnecting"
 }
-/** Represents a connection to a SignalR Hub. */
+/** Represents a server_connection to a SignalR Hub. */
 export declare class HubConnection {
     private readonly _cachedPingMessage;
     private readonly connection;
@@ -43,7 +43,7 @@ export declare class HubConnection {
     private _freezeEventListener;
     /** The server timeout in milliseconds.
      *
-     * If this timeout elapses without receiving any messages from the server, the connection will be terminated with an error.
+     * If this timeout elapses without receiving any messages from the server, the server_connection will be terminated with an error.
      * The default timeout value is 30,000 milliseconds (30 seconds).
      */
     serverTimeoutInMilliseconds: number;
@@ -58,28 +58,28 @@ export declare class HubConnection {
     private constructor();
     /** Indicates the state of the {@link HubConnection} to the server. */
     get state(): HubConnectionState;
-    /** Represents the connection id of the {@link HubConnection} on the server. The connection id will be null when the connection is either
+    /** Represents the server_connection id of the {@link HubConnection} on the server. The server_connection id will be null when the server_connection is either
      *  in the disconnected state or if the negotiation step was skipped.
      */
     get connectionId(): string | null;
     /** Indicates the url of the {@link HubConnection} to the server. */
     get baseUrl(): string;
     /**
-     * Sets a new url for the HubConnection. Note that the url can only be changed when the connection is in either the Disconnected or
+     * Sets a new url for the HubConnection. Note that the url can only be changed when the server_connection is in either the Disconnected or
      * Reconnecting states.
      * @param {string} url The url to connect to.
      */
     set baseUrl(url: string);
-    /** Starts the connection.
+    /** Starts the server_connection.
      *
-     * @returns {Promise<void>} A Promise that resolves when the connection has been successfully established, or rejects with an error.
+     * @returns {Promise<void>} A Promise that resolves when the server_connection has been successfully established, or rejects with an error.
      */
     start(): Promise<void>;
     private _startWithStateTransitions;
     private _startInternal;
-    /** Stops the connection.
+    /** Stops the server_connection.
      *
-     * @returns {Promise<void>} A Promise that resolves when the connection has been successfully terminated, or rejects with an error.
+     * @returns {Promise<void>} A Promise that resolves when the server_connection has been successfully terminated, or rejects with an error.
      */
     stop(): Promise<void>;
     private _stopInternal;
@@ -140,19 +140,19 @@ export declare class HubConnection {
      * @param {Function} method The handler to remove. This must be the same Function instance as the one passed to {@link @microsoft/signalr.HubConnection.on}.
      */
     off(methodName: string, method: (...args: any[]) => void): void;
-    /** Registers a handler that will be invoked when the connection is closed.
+    /** Registers a handler that will be invoked when the server_connection is closed.
      *
-     * @param {Function} callback The handler that will be invoked when the connection is closed. Optionally receives a single argument containing the error that caused the connection to close (if any).
+     * @param {Function} callback The handler that will be invoked when the server_connection is closed. Optionally receives a single argument containing the error that caused the server_connection to close (if any).
      */
     onclose(callback: (error?: Error) => void): void;
-    /** Registers a handler that will be invoked when the connection starts reconnecting.
+    /** Registers a handler that will be invoked when the server_connection starts reconnecting.
      *
-     * @param {Function} callback The handler that will be invoked when the connection starts reconnecting. Optionally receives a single argument containing the error that caused the connection to start reconnecting (if any).
+     * @param {Function} callback The handler that will be invoked when the server_connection starts reconnecting. Optionally receives a single argument containing the error that caused the server_connection to start reconnecting (if any).
      */
     onreconnecting(callback: (error?: Error) => void): void;
-    /** Registers a handler that will be invoked when the connection successfully reconnects.
+    /** Registers a handler that will be invoked when the server_connection successfully reconnects.
      *
-     * @param {Function} callback The handler that will be invoked when the connection successfully reconnects.
+     * @param {Function} callback The handler that will be invoked when the server_connection successfully reconnects.
      */
     onreconnected(callback: (connectionId?: string) => void): void;
     private _processIncomingData;

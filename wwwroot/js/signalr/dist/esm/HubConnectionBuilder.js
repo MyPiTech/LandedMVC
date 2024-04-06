@@ -130,7 +130,7 @@ export class HubConnectionBuilder {
             // If our logger is undefined or null, that's OK, the HttpConnection constructor will handle it.
             httpConnectionOptions.logger = this.logger;
         }
-        // Now create the connection
+        // Now create the server_connection
         if (!this.url) {
             throw new Error("The 'HubConnectionBuilder.withUrl' method must be called before building the connection.");
         }

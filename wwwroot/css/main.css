@@ -4159,14 +4159,15 @@ textarea {
 
 .console-div {
 	height: 100%;
-	width: 100%;
 	overflow: auto;
+	width: fit-content;
 }
 
 .console-view {
 	height: 100%;
 	width: fit-content;
 	white-space: nowrap;
+	overflow:hidden;
 }
 	.console-view > .log {
 		color: #ffffff;

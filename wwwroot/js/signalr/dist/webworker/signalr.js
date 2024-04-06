@@ -1014,7 +1014,7 @@ class MessageBuffer {
         }
         try {
             // If this is set it means we are reconnecting or resending
-            // We don't want to send on a disconnected connection
+            // We don't want to send on a disconnected server_connection
             // And we don't want to send if resend is running since that would mean sending
             // this message twice
             if (!this._reconnectInProgress) {
@@ -1145,7 +1145,7 @@ class MessageBuffer {
                     if (!this._reconnectInProgress) {
                         await this._connection.send(this._protocol.writeMessage({ type: MessageType.Ack, sequenceId: this._latestReceivedSequenceId }));
                     }
-                    // Ignore errors, that means the connection is closed and we don't care about the Ack message anymore.
+                    // Ignore errors, that means the server_connection is closed and we don't care about the Ack message anymore.
                 }
                 catch { }
                 clearTimeout(this._ackTimerHandle);
@@ -1180,18 +1180,18 @@ const DEFAULT_STATEFUL_RECONNECT_BUFFER_SIZE = 100000;
 /** Describes the current state of the {@link HubConnection} to the server. */
 var HubConnectionState;
 (function (HubConnectionState) {
-    /** The hub connection is disconnected. */
+    /** The hub server_connection is disconnected. */
     HubConnectionState["Disconnected"] = "Disconnected";
-    /** The hub connection is connecting. */
+    /** The hub server_connection is connecting. */
     HubConnectionState["Connecting"] = "Connecting";
-    /** The hub connection is connected. */
+    /** The hub server_connection is connected. */
     HubConnectionState["Connected"] = "Connected";
-    /** The hub connection is disconnecting. */
+    /** The hub server_connection is disconnecting. */
     HubConnectionState["Disconnecting"] = "Disconnecting";
-    /** The hub connection is reconnecting. */
+    /** The hub server_connection is reconnecting. */
     HubConnectionState["Reconnecting"] = "Reconnecting";
 })(HubConnectionState || (HubConnectionState = {}));
-/** Represents a connection to a SignalR Hub. */
+/** Represents a server_connection to a SignalR Hub. */
 class HubConnection {
     /** @internal */
     // Using a public static factory method means we can have a private constructor and an _internal_
@@ -1234,7 +1234,7 @@ class HubConnection {
     get state() {
         return this._connectionState;
     }
-    /** Represents the connection id of the {@link HubConnection} on the server. The connection id will be null when the connection is either
+    /** Represents the server_connection id of the {@link HubConnection} on the server. The server_connection id will be null when the server_connection is either
      *  in the disconnected state or if the negotiation step was skipped.
      */
     get connectionId() {
@@ -1245,7 +1245,7 @@ class HubConnection {
         return this.connection.baseUrl || "";
     }
     /**
-     * Sets a new url for the HubConnection. Note that the url can only be changed when the connection is in either the Disconnected or
+     * Sets a new url for the HubConnection. Note that the url can only be changed when the server_connection is in either the Disconnected or
      * Reconnecting states.
      * @param {string} url The url to connect to.
      */
@@ -1258,9 +1258,9 @@ class HubConnection {
         }
         this.connection.baseUrl = url;
     }
-    /** Starts the connection.
+    /** Starts the server_connection.
      *
-     * @returns {Promise<void>} A Promise that resolves when the connection has been successfully established, or rejects with an error.
+     * @returns {Promise<void>} A Promise that resolves when the server_connection has been successfully established, or rejects with an error.
      */
     start() {
         this._startPromise = this._startWithStateTransitions();
@@ -1275,7 +1275,7 @@ class HubConnection {
         try {
             await this._startInternal();
             if (Platform.isBrowser) {
-                // Log when the browser freezes the tab so users know why their connection unexpectedly stopped working
+                // Log when the browser freezes the tab so users know why their server_connection unexpectedly stopped working
                 window.document.addEventListener("freeze", this._freezeEventListener);
             }
             this._connectionState = HubConnectionState.Connected;
@@ -1291,7 +1291,7 @@ class HubConnection {
     async _startInternal() {
         this._stopDuringStartError = undefined;
         this._receivedHandshakeResponse = false;
-        // Set up the promise before any connection is (re)started otherwise it could race with received messages
+        // Set up the promise before any server_connection is (re)started otherwise it could race with received messages
         const handshakePromise = new Promise((resolve, reject) => {
             this._handshakeResolver = resolve;
             this._handshakeRejecter = reject;
@@ -1318,7 +1318,7 @@ class HubConnection {
             await handshakePromise;
             // It's important to check the stopDuringStartError instead of just relying on the handshakePromise
             // being rejected on close, because this continuation can run after both the handshake completed successfully
-            // and the connection was closed.
+            // and the server_connection was closed.
             if (this._stopDuringStartError) {
                 // It's important to throw instead of returning a rejected promise, because we don't want to allow any state
                 // transitions to occur between now and the calling code observing the exceptions. Returning a rejected promise
@@ -1350,12 +1350,12 @@ class HubConnection {
             throw e;
         }
     }
-    /** Stops the connection.
+    /** Stops the server_connection.
      *
-     * @returns {Promise<void>} A Promise that resolves when the connection has been successfully terminated, or rejects with an error.
+     * @returns {Promise<void>} A Promise that resolves when the server_connection has been successfully terminated, or rejects with an error.
      */
     async stop() {
-        // Capture the start promise before the connection might be restarted in an onclose callback.
+        // Capture the start promise before the server_connection might be restarted in an onclose callback.
         const startPromise = this._startPromise;
         this.connection.features.reconnect = false;
         this._stopPromise = this._stopInternal();
@@ -1381,7 +1381,7 @@ class HubConnection {
         this._connectionState = HubConnectionState.Disconnecting;
         this._logger.log(LogLevel.Debug, "Stopping HubConnection.");
         if (this._reconnectDelayHandle) {
-            // We're in a reconnect delay which means the underlying connection is currently already stopped.
+            // We're in a reconnect delay which means the underlying server_connection is currently already stopped.
             // Just clear the handle to stop the reconnect loop (which no one is waiting on thankfully) and
             // fire the onclose callbacks.
             this._logger.log(LogLevel.Debug, "Connection stopped during reconnect delay. Done reconnecting.");
@@ -1571,27 +1571,27 @@ class HubConnection {
             delete this._methods[methodName];
         }
     }
-    /** Registers a handler that will be invoked when the connection is closed.
+    /** Registers a handler that will be invoked when the server_connection is closed.
      *
-     * @param {Function} callback The handler that will be invoked when the connection is closed. Optionally receives a single argument containing the error that caused the connection to close (if any).
+     * @param {Function} callback The handler that will be invoked when the server_connection is closed. Optionally receives a single argument containing the error that caused the server_connection to close (if any).
      */
     onclose(callback) {
         if (callback) {
             this._closedCallbacks.push(callback);
         }
     }
-    /** Registers a handler that will be invoked when the connection starts reconnecting.
+    /** Registers a handler that will be invoked when the server_connection starts reconnecting.
      *
-     * @param {Function} callback The handler that will be invoked when the connection starts reconnecting. Optionally receives a single argument containing the error that caused the connection to start reconnecting (if any).
+     * @param {Function} callback The handler that will be invoked when the server_connection starts reconnecting. Optionally receives a single argument containing the error that caused the server_connection to start reconnecting (if any).
      */
     onreconnecting(callback) {
         if (callback) {
             this._reconnectingCallbacks.push(callback);
         }
     }
-    /** Registers a handler that will be invoked when the connection successfully reconnects.
+    /** Registers a handler that will be invoked when the server_connection successfully reconnects.
      *
-     * @param {Function} callback The handler that will be invoked when the connection successfully reconnects.
+     * @param {Function} callback The handler that will be invoked when the server_connection successfully reconnects.
      */
     onreconnected(callback) {
         if (callback) {
@@ -1641,7 +1641,7 @@ class HubConnection {
                         this._logger.log(LogLevel.Information, "Close message received from server.");
                         const error = message.error ? new Error("Server returned an error on close: " + message.error) : undefined;
                         if (message.allowReconnect === true) {
-                            // It feels wrong not to await connection.stop() here, but processIncomingData is called as part of an onreceive callback which is not async,
+                            // It feels wrong not to await server_connection.stop() here, but processIncomingData is called as part of an onreceive callback which is not async,
                             // this is already the behavior for serverTimeout(), and HttpConnection.Stop() should catch and log all possible exceptions.
                             // eslint-disable-next-line @typescript-eslint/no-floating-promises
                             this.connection.stop(error);
@@ -1723,7 +1723,7 @@ class HubConnection {
                         }
                         catch {
                             // We don't care about the error. It should be seen elsewhere in the client.
-                            // The connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
+                            // The server_connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
                             this._cleanupPingTimer();
                         }
                     }
@@ -1734,7 +1734,7 @@ class HubConnection {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     serverTimeout() {
         // The server hasn't talked to us in a while. It doesn't like us anymore ... :(
-        // Terminate the connection, but we don't need to wait on the promise. This could trigger reconnecting.
+        // Terminate the server_connection, but we don't need to wait on the promise. This could trigger reconnecting.
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.connection.stop(new Error("Server timeout elapsed without receiving a message from the server."));
     }
@@ -1869,7 +1869,7 @@ class HubConnection {
             catch (e) {
                 this._logger.log(LogLevel.Error, `An onreconnecting callback called with error '${error}' threw error '${e}'.`);
             }
-            // Exit early if an onreconnecting callback called connection.stop().
+            // Exit early if an onreconnecting callback called server_connection.stop().
             if (this._connectionState !== HubConnectionState.Reconnecting) {
                 this._logger.log(LogLevel.Debug, "Connection left the reconnecting state in onreconnecting callback. Done reconnecting.");
                 return;
@@ -2188,12 +2188,12 @@ var HttpTransportType;
     /** Specifies the Long Polling transport. */
     HttpTransportType[HttpTransportType["LongPolling"] = 4] = "LongPolling";
 })(HttpTransportType || (HttpTransportType = {}));
-/** Specifies the transfer format for a connection. */
+/** Specifies the transfer format for a server_connection. */
 var TransferFormat;
 (function (TransferFormat) {
-    /** Specifies that only text data will be transmitted over the connection. */
+    /** Specifies that only text data will be transmitted over the server_connection. */
     TransferFormat[TransferFormat["Text"] = 1] = "Text";
-    /** Specifies that binary data will be transmitted over the connection. */
+    /** Specifies that binary data will be transmitted over the server_connection. */
     TransferFormat[TransferFormat["Binary"] = 2] = "Binary";
 })(TransferFormat || (TransferFormat = {}));
 
@@ -2273,7 +2273,7 @@ class LongPollingTransport {
             pollOptions.responseType = "arraybuffer";
         }
         // Make initial long polling request
-        // Server uses first long polling request to finish initializing connection and it returns without data
+        // Server uses first long polling request to finish initializing server_connection and it returns without data
         const pollUrl = `${url}&_=${Date.now()}`;
         this._logger.log(LogLevel.Trace, `(LongPolling transport) polling: ${pollUrl}.`);
         const response = await this._httpClient.get(pollUrl, pollOptions);
@@ -2330,7 +2330,7 @@ class LongPollingTransport {
                             this._logger.log(LogLevel.Trace, "(LongPolling transport) Poll timed out, reissuing.");
                         }
                         else {
-                            // Close the connection with the error as the result.
+                            // Close the server_connection with the error as the result.
                             this._closeError = e;
                             this._running = false;
                         }
@@ -2604,7 +2604,7 @@ class WebSocketTransport {
                 }
             };
             webSocket.onclose = (event) => {
-                // Don't call close handler if connection was never established
+                // Don't call close handler if server_connection was never established
                 // We'll reject the connect call instead
                 if (opened) {
                     this._close(event);
@@ -2823,7 +2823,7 @@ class HttpConnection {
         try {
             if (this._options.skipNegotiation) {
                 if (this._options.transport === HttpTransportType.WebSockets) {
-                    // No need to add a connection ID in this case
+                    // No need to add a server_connection ID in this case
                     this.transport = this._constructTransport(HttpTransportType.WebSockets);
                     // We should just call connect directly in this case.
                     // No fallback or negotiate in this case.
@@ -2838,7 +2838,7 @@ class HttpConnection {
                 let redirects = 0;
                 do {
                     negotiateResponse = await this._getNegotiationResponse(url);
-                    // the user tries to stop the connection when it is being started
+                    // the user tries to stop the server_connection when it is being started
                     if (this._connectionState === "Disconnecting" /* ConnectionState.Disconnecting */ || this._connectionState === "Disconnected" /* ConnectionState.Disconnected */) {
                         throw new AbortError("The connection was stopped during negotiation.");
                     }
@@ -2856,7 +2856,7 @@ class HttpConnection {
                         // the returned access token
                         const accessToken = negotiateResponse.accessToken;
                         this._accessTokenFactory = () => accessToken;
-                        // set the factory to undefined so the AccessTokenHttpClient won't retry with the same token, since we know it won't change until a connection restart
+                        // set the factory to undefined so the AccessTokenHttpClient won't retry with the same token, since we know it won't change until a server_connection restart
                         this._httpClient._accessToken = accessToken;
                         this._httpClient._accessTokenFactory = undefined;
                     }
@@ -2871,7 +2871,7 @@ class HttpConnection {
                 this.features.inherentKeepAlive = true;
             }
             if (this._connectionState === "Connecting" /* ConnectionState.Connecting */) {
-                // Ensure the connection transitions to the connected state prior to completing this.startInternalPromise.
+                // Ensure the server_connection transitions to the connected state prior to completing this.startInternalPromise.
                 // start() will handle the case when stop was called and startInternal exits still in the disconnecting state.
                 this._logger.log(LogLevel.Debug, "The HttpConnection connected successfully.");
                 this._connectionState = "Connected" /* ConnectionState.Connected */;
@@ -3492,7 +3492,7 @@ class HubConnectionBuilder {
             // If our logger is undefined or null, that's OK, the HttpConnection constructor will handle it.
             httpConnectionOptions.logger = this.logger;
         }
-        // Now create the connection
+        // Now create the server_connection
         if (!this.url) {
             throw new Error("The 'HubConnectionBuilder.withUrl' method must be called before building the connection.");
         }

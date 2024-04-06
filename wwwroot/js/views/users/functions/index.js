@@ -3,7 +3,7 @@ function actionsHandler() {
     const xType = this.getAttribute('x-type');
     const id = this.getAttribute('x-id');
 
-    console.info(`${xType} action selected`);
+    console.log(`${xType} action selected`);
     if (xType === 'events') {
         handleEvents(id);
     } else if (xType === 'edit') {
@@ -18,6 +18,7 @@ function handleEvents(id) {
 };
 
 function handleEdit(id) {
+    console.log('Editing user:', id);
     const data = table.row(`#row_${id}`).data();
 
     $('#formHeader').html('Update current user.');
@@ -38,8 +39,7 @@ function handleDelete(id) {
         success: function (result) {
             table.row(`#row_${id}`).remove().draw('page');
             notify('The User was successfully deleted.');
-            console.log(result);
-            console.info(`Item id:${id} was successfully deleted.`, result);
+            console.log(`Item id:${id} was successfully deleted.`, result);
         },
         error: function (xhr, resp, text) {
             notify('An error occured. User was not deleted.', true);
@@ -60,16 +60,8 @@ const dateVar = new Date('August 19, 1975 23:15:30');
 
 //form
 function createHandler() {
-    let test2 = { firstName: "John", lastName: "Doe", age: 50, array: ["Apple", "Banana", ["Apple", "Banana"]], eyeColor: "blue" };
-    let aTest = [1, 2, 'apple', test2, 'banana', dateVar];
-    let test = { firstName: "John", bool: true, number: 50, array: aTest, date: dateVar };
-    
-    console.log('log', 'test', test, test2);
-    console.info('info', 'test', test, test2);
-    console.warn('warn', 'test', test, test2);
-    console.error('error', 'test', test, test2);
-
     $('#formHeader').html('Create a new user.');
+    console.log('Creating a new user.');
     toggleDataTable(clearForm);
     return false;
 }
@@ -77,8 +69,10 @@ function createHandler() {
 function lablesHandler() {
     const text = $(this).html();
     if (text === 'Show Labels') {
+        console.log('Show Labels');
         $(this).html('Hide Labels');
     } else {
+        console.log('Hide Labels');
         $(this).html('Show Labels');
     }
     $('label[for="firstName"]').toggle();
@@ -91,15 +85,14 @@ function lablesHandler() {
 
 function resetHandler() {
     if (formState != null) {
+        console.log('Reset form to last state:', formState);
         $('#userId').val(formState.id);
         $('#firstName').val(formState.firstName);
         $('#lastName').val(formState.lastName);
         $('#notes').val(formState.notes);
     } else {
-        $('#userId').val(0);
-        $('#firstName').val('');
-        $('#lastName').val('');
-        $('#notes').val('');
+        console.log('Reset form to last state: (Clear)');
+        clearForm();
     }
 
     validator.resetForm();

@@ -3,7 +3,7 @@ using LandedMVC.Dtos;
 
 namespace LandedMVC.Models
 {
-    public class UserModel
+    public class UserModel : ApiModel
     {
 
 		public int Id { get; set; }

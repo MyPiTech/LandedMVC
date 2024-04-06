@@ -12,9 +12,11 @@
 // <summary></summary>
 // ***********************************************************************
 using LandedMVC.Dtos;
+using LandedMVC.Hubs;
 using LandedMVC.Models;
 using LandedMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LandedMVC.Controllers
 {
@@ -23,7 +25,7 @@ namespace LandedMVC.Controllers
 	/// Implements the <see cref="Controller" />
 	/// </summary>
 	/// <seealso cref="Controller" />
-	public class EventsController : Controller
+	public class EventsController: ControllerBase<EventsController>
 	{
 		/// <summary>
 		/// The event API service
@@ -34,7 +36,11 @@ namespace LandedMVC.Controllers
 		/// Initializes a new instance of the <see cref="EventsController"/> class.
 		/// </summary>
 		/// <param name="apiService">The API service.</param>
-		public EventsController(ApiService<EventDto> apiService)
+		public EventsController(ApiService<EventDto> apiService,
+			IHubContext<ConsoleHub, IConsoleHub> consoleHub,
+			ILogger<EventsController> logger,
+			IConfiguration configuration
+		) : base(configuration, logger, consoleHub)
 		{
 			_apiService = apiService;
 		}
@@ -45,7 +51,7 @@ namespace LandedMVC.Controllers
 		/// <returns>IActionResult.</returns>
 		public IActionResult Index()
 		{
-			return View();
+			return View(new ApiModel { ApiBase = _apiBase });
 		}
 
 		/// <summary>

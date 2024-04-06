@@ -1,5 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "Users";
+	ViewData["Title"] = "Users";
+	var apiBase = Model.ApiBase;
 }
 
 <div id="main" class="wrapper style1">
@@ -184,7 +185,9 @@
 							</div>
 							<h6>Console</h6>
 							<div class="code-div">
-								<p>This is an experimental integrated console. I am using a combination of a custom client-side console and SignalR to display data in the browser's console from both client-side and server-side sources (and eventually from the API). It's still a work in progress, so anticipate potential limitations like race conditions and bugs.</p>
+								<div>
+									<p>This is an experimental integrated console. I am using a combination of a custom client-side console and SignalR to display data in the browser's console from both client-side and server-side sources (and eventually from the API). It's still a work in progress, so anticipate potential limitations like race conditions and bugs.</p>
+								</div>
 								<div class="console-div">
 									<div id="console" class="console-view"></div>
 								</div>
@@ -198,10 +201,15 @@
 </div>
 
 @section Scripts {
+	<script>
+		var api_base = '@(apiBase)';
+	</script>
 	@{
 		await Html.RenderPartialAsync("_DataTablesUIPartial");
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		await Html.RenderPartialAsync("_IntegratedConsolePartail");
 	}
+	
 	<script src="~/js/views/users/vars/index.js"></script>
     <script src="~/js/views/users/index.js"></script>
 	<script src="~/js/views/users/functions/index.js"></script>
