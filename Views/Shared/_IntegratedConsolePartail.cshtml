@@ -8,10 +8,8 @@
 
 	// Start the connection.
 
-	const server_connection = new signalR.HubConnectionBuilder().withUrl('/console', {
-		skipNegotiation: true,
-		transport: signalR.HttpTransportType.WebSockets
-	}).configureLogging(signalR.LogLevel.Information).build();
+	const server_connection = new signalR.HubConnectionBuilder().withUrl('/console')
+	.configureLogging(signalR.LogLevel.Information).build();
 	server_connection.on('SendLogAsync', function (data) {
 		console.serverLog(...data);
 	});
