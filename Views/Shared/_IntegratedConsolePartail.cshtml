@@ -1,42 +1,80 @@
 ﻿<script>
-	"use strict";
+	'use strict';
 
-	const server_connection = new signalR.HubConnectionBuilder().withUrl('/console').build();
-	server_connection.start();
-	server_connection.on("SendLogAsync", function (data) {
+	/*const connection = new signalR.HubConnectionBuilder()
+		.withUrl("/chathub")
+		.configureLogging(signalR.LogLevel.Information)
+		.build();*/
+
+	// Start the connection.
+
+	const server_connection = new signalR.HubConnectionBuilder().withUrl('/console', {
+		skipNegotiation: true,
+		transport: signalR.HttpTransportType.WebSockets
+	}).configureLogging(signalR.LogLevel.Information).build();
+	server_connection.on('SendLogAsync', function (data) {
 		console.serverLog(...data);
 	});
-	server_connection.on("SendInfoAsync", function (data) {
+	server_connection.on('SendInfoAsync', function (data) {
 
 		console.serverInfo(...data);
 	});
-	server_connection.on("SendWarnAsync", function (data) {
+	server_connection.on('SendWarnAsync', function (data) {
 
 		console.serverWarn(...data);
 	});
-	server_connection.on("SendErrorAsync", function (data) {
+	server_connection.on('SendErrorAsync', function (data) {
 		console.serverError(...data);
 	});
 
+	console.info(`API SignalR Route: ${api_base}console`);
 	const api_connection = new signalR.HubConnectionBuilder().withUrl(`${api_base}console`,
 	{
 		skipNegotiation: true,
 		transport: signalR.HttpTransportType.WebSockets
-	}).build();
-	api_connection.start();
-	api_connection.on("SendApiLogAsync", function (data) {
+	}).configureLogging(signalR.LogLevel.Information).build();
+	api_connection.on('SendApiLogAsync', function (data) {
 		console.apiLog(...data);
 	});
-	api_connection.on("SendApiInfoAsync", function (data) {
+	api_connection.on('SendApiInfoAsync', function (data) {
 
 		console.apiInfo(...data);
 	});
-	api_connection.on("SendApiWarnAsync", function (data) {
+	api_connection.on('SendApiWarnAsync', function (data) {
 
 		console.apiWarn(...data);
 	});
-	api_connection.on("SendApiErrorAsync", function (data) {
+	api_connection.on('SendApiErrorAsync', function (data) {
 		console.apiError(...data);
 	});
+
+	async function startServer() {
+		try {
+			await server_connection.start();
+			console.log("SignalR Server Connected.");
+		} catch (err) {
+			console.error(err);
+			setTimeout(start, 5000);
+		}
+	};
+	async function startApi() {
+		try {
+			await api_connection.start();
+			console.log("SignalR API Connected.");
+		} catch (err) {
+			console.error(err);
+			setTimeout(start, 5000);
+		}
+	};
+
+	server_connection.onclose(async () => {
+		await startServer();
+	});
+	api_connection.onclose(async () => {
+		await startApi();
+	});
+
+	startServer();
+	startApi();
 </script>
 
