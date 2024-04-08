@@ -192,4 +192,16 @@
         overflow:auto; 
     }
 
-    
+.ui-icon-copy, .ui-icon-document {
+    -ms-transform: scale(1.3); 
+    -webkit-transform: scale(1.3); 
+    transform: scale(1.3);
+}
+
+.accordion-content {
+    max-height: 700px;
+}
+
+.tab-menu {
+    float: right !important;
+}

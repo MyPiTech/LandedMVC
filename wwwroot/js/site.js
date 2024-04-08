@@ -3,6 +3,12 @@ const DT_PAGE_LENGTH = 5;
 const DT_LENGTH_MENU = [5, 10];
 const DT_PAGING_TYPE = 'first_last_numbers';
 
+const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/MyPiTech/';
+const RAW_GITHUB_BRANCH = '/master/';
+const GITHUB_BASE = 'https://github.com/MyPiTech/';
+const GITHUB_BRANCH = '/blob/master/';
+
+
 const DT_CONTROL_COLUMN = {
     className: 'dtr-control',
     orderable: false,
@@ -97,9 +103,12 @@ $(function () {
     $('pre[data-src]').each(function () {
         const elem = $(this);
         const src = elem.attr('data-src');
+        let repo = elem.attr('data-repo');
+
+        repo += RAW_GITHUB_BRANCH;
 
         $.ajax({
-            url: src,
+            url: `${RAW_GITHUB_BASE}${repo}${src}`,
             dataType: 'text',
             type: 'GET',
             async: true,
@@ -108,10 +117,10 @@ $(function () {
                 elem.html(`<code>${rText}</code>`);
                 Prism.highlightAll();
             },
-            error: function (jqXHR, status, errorThrown) {
+            error: function (jqXHR, status, error) {
                 console.info(jqXHR);
                 console.warn(status);
-                console.error(errorThrown);
+                console.error(error);
             }
         });
     });
@@ -144,6 +153,65 @@ $(function () {
     $('.console-view').on('mouseenter mouseleave', 'div.console-array', function () {
         $(this).children('.array-data').toggle('fast');
     });
+
+    //event handlers
+    $('#dataTable tbody').on('click', 'span', actionsHandler);
+
+    $('#createBtn').on('click', createHandler);
+
+    $('#resetBtn').on('click', resetHandler);
+
+    $('#cancelBtn').on('click', cancelHandler);
+
+    $('#labelsToggle').on('click', lablesHandler);
+
+    $('#ctabs-copy, #stabs-copy, #atabs-copy').on('click', copyHandler);
+
+    $('#ctabs-repo, #stabs-repo, #atabs-repo').on('click', repoHandler);
+
+    //code viewer
+    function repoHandler() {
+        const pId = $(this).closest('div').attr('id');
+        const selected = $(`#${pId}`).tabs('option', 'active') + 1;
+        const elem = $(`#${pId}-${selected} pre`);
+        const src = elem.attr('data-src');
+        let repo = elem.attr('data-repo');
+
+        repo += GITHUB_BRANCH;
+        console.log('repo:', `${GITHUB_BASE}${repo}${src}`);
+        window.open(`${GITHUB_BASE}${repo}${src}`, '_blank').focus();
+    }
+
+    function copyHandler() {
+        var pId = $(this).closest('div').attr('id');
+        var selected = $(`#${pId}`).tabs('option', 'active') + 1;
+        const elem = $(`#${pId}-${selected} pre`);
+        const src = elem.attr('data-src');
+        let repo = elem.attr('data-repo');
+
+        repo += RAW_GITHUB_BRANCH;
+        console.log('copy:', `${RAW_GITHUB_BASE}${repo}${src}`);
+        $.ajax({
+            url: `${RAW_GITHUB_BASE}${repo}${src}`,
+            dataType: 'text',
+            type: 'GET',
+            async: true,
+            success: function (result) {
+                navigator.clipboard.writeText(result).then(function () {
+                    notify('Repository code copied to clipboard.');
+                }, function () {
+                    notify('Failed to copy code to clipboard. Check permissions for clipboard.', true);
+                });
+            },
+            error: function (jqXHR, status, error) {
+                console.info(jqXHR);
+                console.warn(status);
+                console.error(error);
+            }
+        });
+
+        return false;
+    }
 });
 
 Prism.plugins.NormalizeWhitespace.setDefaults({

@@ -137,7 +137,7 @@ function formHandler(form) {
                     table.columns.adjust().draw(false);
                     table.responsive.recalc();
                 }, 1000);
-                 
+
             }
             console.info(`Item ${action} successfully.`, result);
             notify(`The user was successfully ${action}.`);
@@ -148,5 +148,5 @@ function formHandler(form) {
             console.error(text);
             notify('An error occured. The user was not created.', true);
         }
-    });
+    })
 }
