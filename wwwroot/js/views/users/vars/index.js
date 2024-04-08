@@ -7,18 +7,18 @@ const DT_COLUMNS = [
     {
         data: 'lastName',
         render: DataTable.render.ellipsis(10),
-        className: 'tdNoWrap'
+        className: 'td-nowrap'
     },
     {
         data: 'firstName',
         render: DataTable.render.ellipsis(10),
-        className: 'tdNoWrap'
+        className: 'td-nowrap'
     },
     {
         data: 'notes',
         orderable: false,
         render: DataTable.render.ellipsis(20),
-        className: 'tdNoWrap'
+        className: 'td-nowrap'
     },
     DT_ACTION_COLUMN
 ];

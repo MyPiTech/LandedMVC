@@ -7,17 +7,17 @@ const DT_COLUMNS = [
     {
         data: 'title',
         render: DataTable.render.ellipsis(10),
-        className: 'tdNoWrap'
+        className: 'td-nowrap'
     },
     {
         data: 'location',
         render: DataTable.render.ellipsis(10),
-        className: 'tdNoWrap'
+        className: 'td-nowrap'
     },
     {
         data: 'start',
         render: DataTable.render.datetime(),
-        className: 'tdNoWrap'
+        className: 'td-nowrap'
     },
     { data: 'duration' },
     DT_ACTION_COLUMN
