@@ -77,9 +77,6 @@
             cursor: pointer;
         }
 
-    .dataTables_wrapper {
-        width: 100%
-    }
 
     .dt-container {
         width: 100%
@@ -133,7 +130,7 @@
             color: #ffffff;
         }
 
-    .createBtn {
+    .create-btn {
         margin: 0 0 2em 0;
         padding: 0 0 0 0 !important;
         display: block;
@@ -158,11 +155,11 @@
             color: #ffffff;
         }
 
-    .tdNoWrap{
+    .td-nowrap{
         white-space: nowrap;
     }
 
-    .tdAction{
+    .td-action{
         white-space: nowrap;
     }
 
@@ -181,13 +178,13 @@
     }
 
     .code-tabs{
-        /*overflow:auto; */
         height:100%;
         overflow:hidden;
+        padding-bottom: 58px !important;
     }
 
     .scroll-div{
-        height: 93%;
+        height: 100%;
         width: 100%;
         overflow:auto; 
     }
