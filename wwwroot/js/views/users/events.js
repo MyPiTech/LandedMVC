@@ -31,4 +31,5 @@ $(function () {
         return this.optional(element) || valid;
     }, 'You must enter/select the name of an exisitng user.');
 
+    $('#backBtn').on('click', handleBack);
 });

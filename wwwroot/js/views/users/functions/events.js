@@ -11,6 +11,7 @@ function actionsHandler() {
 }
 
 function handleBack() {
+    console.log('Back to users.');
     history.back();
     return false;
 };
@@ -156,7 +157,7 @@ function clearForm() {
 }
 
 function formHandler(form) {
-    $("#submitBtn").prop("disabled", true);
+    $('#submitBtn').prop('disabled', true);
     $.ajax({
         url: 'upsertEvent',
         method: 'POST',
@@ -183,7 +184,7 @@ function formHandler(form) {
             toggleDataTable(clearForm);
         },
         error: function (xhr, resp, text) {
-            $("#submitBtn").prop("disabled", false);
+            $('#submitBtn').prop('disabled', false);
             console.log(text);
             notify('An error occurred. The event was not created.', true);
         }

@@ -31,10 +31,7 @@ $(function () {
                 },
                 error: function (xhr, resp, text) {
                     notify('An error occurred. The email was not sent.', true);
-                }
-            });
-
+            }});
         }
-
     });
 });

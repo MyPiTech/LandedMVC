@@ -154,17 +154,6 @@ $(function () {
         $(this).children('.array-data').toggle('fast');
     });
 
-    //event handlers
-    $('#dataTable tbody').on('click', 'span', actionsHandler);
-
-    $('#createBtn').on('click', createHandler);
-
-    $('#resetBtn').on('click', resetHandler);
-
-    $('#cancelBtn').on('click', cancelHandler);
-
-    $('#labelsToggle').on('click', lablesHandler);
-
     $('#ctabs-copy, #stabs-copy, #atabs-copy').on('click', copyHandler);
 
     $('#ctabs-repo, #stabs-repo, #atabs-repo').on('click', repoHandler);

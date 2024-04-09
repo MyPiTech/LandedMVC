@@ -214,7 +214,7 @@
 									</div>
 								</div>
 							</div>
-							<h6>Console</h6>
+							<h6>Integrated Console</h6>
 							<div class="code-div">
 								<div>
 									<p>This is an experimental integrated console. I am using a combination of a custom client-side console and SignalR to display log data in the browser's console from client-side, server-side, and API sources.</p>
@@ -238,6 +238,7 @@
 	@{
 		await Html.RenderPartialAsync("_DataTablesUIPartial");
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		await Html.RenderPartialAsync("_EventListenersPartial");
 		await Html.RenderPartialAsync("_IntegratedConsolePartail");
 	}
 	
