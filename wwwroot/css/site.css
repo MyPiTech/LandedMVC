@@ -212,3 +212,94 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataT
     .label-toggle:active {
         color: #e44c65 !important;
     }
+
+
+
+p.console-notes {
+    margin: 0 0 1em 0;
+}
+
+.console-div {
+    position: relative;
+    height: 85%;
+    overflow: auto;
+    width: 100%;
+}
+
+.console-view {
+    height: fit-content;
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+    .console-view > .log {
+        color: #ffffff;
+        font-weight: bold;
+        cursor: default;
+    }
+
+    .console-view > .info {
+        color: #39c088;
+        font-weight: bold;
+        cursor: default;
+    }
+
+    .console-view > .warn {
+        color: #f08d49;
+        font-weight: bold;
+        cursor: default;
+    }
+
+    .console-view > .error {
+        color: #e44c65;
+        font-weight: bold;
+        cursor: default;
+    }
+
+.console-string {
+    font-weight: bold;
+    cursor: default;
+}
+
+.console-number {
+    color: #e2777a;
+    font-weight: bold;
+    cursor: default;
+}
+
+.console-bool {
+    color: #f8c555;
+    font-weight: bold;
+    cursor: default;
+}
+
+.console-array {
+    color: #f08d49;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+}
+
+.console-date {
+    color: #7ec699;
+    font-weight: bold;
+    cursor: default;
+}
+
+.array-data {
+    position: absolute;
+    cursor: default;
+    display: none;
+    color: #ffffff;
+    padding: 15px 15px;
+    left: 25px;
+    z-index: 1;
+    background-color: #000;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(150,150,150,0.3);
+    padding: 15px 15px;
+    top: 25px;
+    left: 25px;
+    z-index: 1;
+}
