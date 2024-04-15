@@ -12,6 +12,7 @@
 // <summary></summary>
 // ***********************************************************************
 using LandedMVC.Dtos;
+using LandedMVC.Extensions;
 using LandedMVC.Hubs;
 using LandedMVC.Models;
 using LandedMVC.Services;
@@ -39,8 +40,9 @@ namespace LandedMVC.Controllers
 		public EventsController(ApiService<EventDto> apiService,
 			IHubContext<ConsoleHub, IConsoleHub> consoleHub,
 			ILogger<EventsController> logger,
-			IConfiguration configuration
-		) : base(configuration, logger, consoleHub)
+			IConfiguration configuration,
+			IHttpContextAccessor accessor
+		) : base(configuration, logger, consoleHub, accessor)
 		{
 			_apiService = apiService;
 		}
@@ -49,9 +51,17 @@ namespace LandedMVC.Controllers
 		/// Default index view.
 		/// </summary>
 		/// <returns>IActionResult.</returns>
-		public IActionResult Index()
+		public async Task<IActionResult> IndexAsync()
 		{
-			return View(new ApiModel { ApiBase = _apiBase });
+			try
+			{
+				return View(new ApiModel { ApiBase = _apiBase });
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "EventsController\\IndexAsync");
+				return BadRequest(ex.Message);
+			}
 		}
 
 		/// <summary>
@@ -62,8 +72,18 @@ namespace LandedMVC.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllAsync(CancellationToken token)
 		{
-			var results = await _apiService.GetAllAsync(token);
-			return Json(results);
+			try
+			{
+				var results = await _apiService.GetAllAsync(token);
+				var result = Ok(results);
+				await _logger.LogDebugAsync("EventsController\\GetAllAsync", result);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "EventsController\\GetAllAsync");
+				return BadRequest(ex.Message);
+			}
 		}
 
 		// <summary>
@@ -74,7 +94,16 @@ namespace LandedMVC.Controllers
 		[HttpDelete]
 		public async Task DeleteAsync(int id, CancellationToken token)
 		{
-			await _apiService.DeleteAsync(() => new EventDto { Id = id }, token);
+			try
+			{
+				await _apiService.DeleteAsync(() => new EventDto { Id = id }, token);
+				// TODO: merge Id into string.
+				await _logger.LogInformationAsync("EventsController\\DeleteAsync - id:", id);
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "EventsController\\DeleteAsync");
+			}
 		}
 
 		/// <summary>
@@ -86,25 +115,36 @@ namespace LandedMVC.Controllers
 		[HttpPost]
 		public async Task<IActionResult> UpsertAsync(EventModel model, CancellationToken token)
 		{
-			if (!ModelState.IsValid)
+			try
 			{
-				return BadRequest(ModelState);
-			}
-
-			if (model.Id == 0)
-			{
-				var dto = await _apiService.AddAsync(model.ToDto(), token);
-				if (dto != null)
+				if (!ModelState.IsValid)
 				{
-					model = dto.ToModel();
+					var response = BadRequest(ModelState);
+					await _logger.LogWarningAsync("EventsController\\UpsertAsync", response);
+					return response;
 				}
-			}
-			else
-			{
-				await _apiService.EditAsync(model.ToDto(), token);
-			}
-			return Json(model);
-		}
 
+				if (model.Id == 0)
+				{
+					var dto = await _apiService.AddAsync(model.ToDto(), token);
+					if (dto != null)
+					{
+						model = dto.ToModel();
+						await _logger.LogInformationAsync("EventsController\\UpsertAsync - add", model);
+					}
+				}
+				else
+				{
+					await _apiService.EditAsync(model.ToDto(), token);
+					await _logger.LogInformationAsync("EventsController\\UpsertAsync - update", model);
+				}
+				return Ok(model);
+			}
+			catch (Exception ex)
+			{
+				await _logger.LogErrorAsync(ex, "EventsController\\UpsertAsync");
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }

@@ -21,7 +21,7 @@ const DT_ID_COLUMN = { data: 'id' };
 const DT_ACTION_COLUMN = {
     data: null,
     orderable: false,
-    className: 'tdAction'
+    className: 'td-action'
 };
 
 function toggleDataTable(clearForm) {
@@ -74,7 +74,7 @@ function hideTablePagination(oSettings) {
 }
 
 function dataTableError(settings, helpPage, message) {
-    console.error(message);
+    console.error(settings, helpPage, message);
     notify(`An error occurred loading table. <br/> <br/> Error: ${message}`, true, 5000);
 }
 

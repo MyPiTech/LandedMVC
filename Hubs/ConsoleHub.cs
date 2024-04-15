@@ -4,7 +4,6 @@ namespace LandedMVC.Hubs
 {
     public class ConsoleHub : Hub<IConsoleHub>
     {
-       
         public async Task SendLogAsync(object? data)
         {
             await Clients.All.SendLogAsync(data ?? string.Empty);

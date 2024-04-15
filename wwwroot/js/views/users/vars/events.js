@@ -22,7 +22,7 @@ const DT_COLUMNS = [
     { data: 'duration' },
     DT_ACTION_COLUMN
 ];
-const DT_AJAX = { url: `/users/getAllEvents?uId=${uId}`, dataSrc: '' };
+const DT_AJAX = { url: `/users/${uId}/getAll`, dataSrc: '' };
 
 //form
 let validator = null;

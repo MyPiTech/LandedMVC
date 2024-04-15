@@ -3,6 +3,7 @@ function actionsHandler() {
     const xType = this.getAttribute('x-type');
     const id = this.getAttribute('x-id');
 
+    console.log(`${xType} action selected`);
     if (xType === 'edit') {
         handleEdit(id);
     } else if (xType === 'delete') {
@@ -17,6 +18,7 @@ function handleBack() {
 };
 
 function handleEdit(id) {
+    console.log('Editing:', id);
     const data = table.row(`#row_${id}`).data();
     const user = users.find(u => u.id === data.userId);
 
@@ -37,15 +39,17 @@ function handleEdit(id) {
 
 function handleDelete(id) {
     $.ajax({
-        url: 'deleteEvent',
+        url: `/users/${uId}/delete`,
         type: 'DELETE',
-        data: `id=${id}&userId=${uId}`,
+        data: `eId=${id}`,
         success: function (result) {
             table.row(`#row_${id}`).remove().draw('page');
             notify('The Event was successfully deleted.');
+            console.info(`Item id:${id} was successfully deleted.`, result);
         },
         error: function (xhr, resp, text) {
             notify('An error occurred. Event was not deleted.', true);
+            console.error(`Item id:${id} was not deleted.`, xhr, resp, text);
         }
     });
 };
@@ -61,7 +65,8 @@ function actions(data) {
 //form
 async function fetchUsersAsync() {
     try {
-        const response = await fetch("getAll");
+        console.info('Fetching users.');
+        const response = await fetch('/users/getAll');
         const result = await response.json();
 
         users = result.map(u => ({ name: `${u.firstName} ${u.lastName}`, id: u.id }));
@@ -73,8 +78,8 @@ async function fetchUsersAsync() {
             list.appendChild(option);
         });
     } catch (error) {
-        console.log(error);
         notify(`An error occurred loading users. <br/> <br/> Error: ${error}`, true, 5000);
+        console.error('An error occurred loading users. <br/> <br/> Error:', error);
     }
 }
 
@@ -89,8 +94,8 @@ const userInputHandler = function (e) {
 userInput.addEventListener('input', userInputHandler);
 
 function createHandler() {
+    console.log('Creating.');
     const user = users.find(u => u.id === uId);
-
     $('#formHeader').html('Create a new event.');
     $('#userId').val(uId);
     $('#userInput').val(user.name);
@@ -99,6 +104,7 @@ function createHandler() {
 }
 
 function lablesHandler() {
+    console.log('Label toggle.');
     const text = $(this).html();
     if (text === 'Show Labels') {
         $(this).html('Hide Labels');
@@ -116,6 +122,7 @@ function lablesHandler() {
 function resetHandler() {
     const user = users.find(u => u.id === uId);
     if (formState != null) {
+        console.log('Reset form to last state:', formState);
         $('#userId').val(formState.userId);
         $('#eventId').val(formState.id);
         $('#userInput').val(formState.name);
@@ -124,6 +131,7 @@ function resetHandler() {
         $('#start').val(formState.start);
         $('#duration').val(formState.duration);
     } else {
+        console.log('Reset form to last state: (Clear)');
         $('#userId').val(uId);
         $('#userInput').val(user.name);
         $('#eventId').val(0);
@@ -138,6 +146,7 @@ function resetHandler() {
 }
 
 function cancelHandler() {
+    console.log('Form cancelled.');
     toggleDataTable(clearForm);
     return false;
 }
@@ -159,7 +168,7 @@ function clearForm() {
 function formHandler(form) {
     $('#submitBtn').prop('disabled', true);
     $.ajax({
-        url: 'upsertEvent',
+        url: `/users/${uId}/upsert`,
         method: 'POST',
         data: $(form).serialize(),
         success: function (result) {
@@ -179,14 +188,14 @@ function formHandler(form) {
                     table.responsive.recalc();
                 }, 1000);
             }
-
+            console.info(`Item ${action} successfully.`, result);
             notify(`The event was successfully ${action}.`);
             toggleDataTable(clearForm);
         },
         error: function (xhr, resp, text) {
             $('#submitBtn').prop('disabled', false);
-            console.log(text);
             notify('An error occurred. The event was not created.', true);
+            console.error('An error occured. The event was not created.', xhr, resp, text);
         }
     });
 }

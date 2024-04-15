@@ -31,11 +31,6 @@ namespace LandedMVC.Services
 		/// The logger
 		/// </summary>
 		private readonly ILogger<ApiService<DTO>> _logger;
-
-		/// <summary>
-		/// The console hub
-		/// </summary>
-		private readonly IHubContext<ConsoleHub, IConsoleHub> _consoleHub;
 		/// <summary>
 		/// The client
 		/// </summary>
@@ -43,15 +38,21 @@ namespace LandedMVC.Services
 		/// <summary>
 		/// The json read options
 		/// </summary>
-		private readonly JsonSerializerOptions _JsonReadOptions;
+		private readonly JsonSerializerOptions _jsonReadOptions;
 		/// <summary>
 		/// The json write options
 		/// </summary>
-		private readonly JsonSerializerOptions _JsonWriteOptions;
+		private readonly JsonSerializerOptions _jsonWriteOptions;
 		/// <summary>
 		/// No records message
 		/// </summary>
 		private const string NO_RECORDS = "\"No records were found.\"";
+		/// <summary>
+		/// The hub connection identifier
+		/// </summary>
+		private string _hubConnectionId = string.Empty;
+
+		private readonly IHubContext<ConsoleHub, IConsoleHub> _consoleHub;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApiService{DTO}" /> class.
@@ -59,14 +60,18 @@ namespace LandedMVC.Services
 		/// <param name="httpClient">The HTTP client.</param>
 		/// <param name="logger">The logger.</param>
 		/// <param name="consoleHub">The console hub.</param>
-		public ApiService(HttpClient httpClient, ILogger<ApiService<DTO>> logger, IHubContext<ConsoleHub, IConsoleHub> consoleHub)
+		public ApiService(
+			HttpClient httpClient, 
+			ILogger<ApiService<DTO>> logger, 
+			IHubContext<ConsoleHub, IConsoleHub> consoleHub
+		)
         {
             _client = httpClient;
             _logger = logger;
-            _JsonReadOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-            _JsonWriteOptions = new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never };
+            _jsonReadOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+            _jsonWriteOptions = new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never };
 			_consoleHub = consoleHub;
-        }
+		}
 
 		/// <summary>
 		/// Get all as an asynchronous operation.
@@ -78,12 +83,12 @@ namespace LandedMVC.Services
 			try
 			{
 				var results = await GetAllAsync(null, token);
-				await _logger.LogInformationAsync("ApiService\\GetAllAsync", _consoleHub, results ?? []);
+				await _logger.LogInformationAsync("ApiService\\GetAllAsync", results ?? []);
 				return results;
 			}
 			catch (Exception ex)
 			{
-				await _logger.LogErrorAsync(ex, "ApiService\\GetAllAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\GetAllAsync");
 				throw;
 			}
 		}
@@ -112,12 +117,12 @@ namespace LandedMVC.Services
 
 				response.EnsureSuccessStatusCode();
 				var results = await response.Content.ReadFromJsonAsync<DTO[]>(token);
-				await _logger.LogInformationAsync("ApiService\\GetAllAsync - fDto", _consoleHub, results ?? []);
+				await _logger.LogInformationAsync("ApiService\\GetAllAsync - fDto", results ?? []);
 				return results;
             }
             catch (Exception ex)
             {
-				await _logger.LogErrorAsync(ex, "ApiService\\GetAllAsync - fDto", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\GetAllAsync - fDto");
 				throw;
 			}
         }
@@ -134,13 +139,13 @@ namespace LandedMVC.Services
             {
                 var apiRoute = GetRoute(fDto, true);
 
-                DTO? response = await _client.GetFromJsonAsync<DTO>(apiRoute, _JsonReadOptions, token);
-				await _logger.LogInformationAsync("ApiService\\GetOneAsync", _consoleHub, response  ?? fDto());
+                DTO? response = await _client.GetFromJsonAsync<DTO>(apiRoute, _jsonReadOptions, token);
+				await _logger.LogInformationAsync("ApiService\\GetOneAsync", response  ?? fDto());
 				return response;
             }
             catch (Exception ex)
             {
-				await _logger.LogErrorAsync(ex, "ApiService\\GetOneAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\GetOneAsync");
 				throw;
 			}
         }
@@ -156,14 +161,15 @@ namespace LandedMVC.Services
             try
             {
                 var apiRoute = GetRoute(() => dto);
-                var response = await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+                var response = await _client.PostAsJsonAsync(apiRoute, dto, _jsonWriteOptions, token);
 				response.EnsureSuccessStatusCode();
-				await _logger.LogInformationAsync("ApiService\\AddAsync", _consoleHub, response);
-				return await response.Content.ReadFromJsonAsync<DTO>(token);
+				var result = await response.Content.ReadFromJsonAsync<DTO>(token);
+				await _logger.LogInformationAsync("ApiService\\AddAsync", result);
+				return result;
 			}
             catch (Exception ex)
             {
-				await _logger.LogErrorAsync(ex, "ApiService\\AddAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\AddAsync");
 				throw;
 			}
         }
@@ -179,15 +185,14 @@ namespace LandedMVC.Services
             try
             {
                 var apiRoute = GetRoute(() => dto, true);
-				var response = await _client.PutAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+				var response = await _client.PutAsJsonAsync(apiRoute, dto, _jsonWriteOptions, token);
 
 				response.EnsureSuccessStatusCode();
-				await _consoleHub.Clients.All.SendLogAsync("ApiService\\EditAsync", response);
-				await _logger.LogInformationAsync("ApiService\\EditAsync", _consoleHub, response);
+				await _logger.LogInformationAsync("ApiService\\EditAsync", response);
 			}
             catch (Exception ex)
             {
-				await _logger.LogErrorAsync(ex, "ApiService\\EditAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\EditAsync");
 				throw;
 			}
         }
@@ -205,11 +210,11 @@ namespace LandedMVC.Services
                 var apiRoute = GetRoute(fDto, true);
 				var response = await _client.DeleteAsync(apiRoute, token);
 				response.EnsureSuccessStatusCode();
-				await _logger.LogInformationAsync("ApiService\\DeleteAsync", _consoleHub, response);
+				await _logger.LogInformationAsync("ApiService\\DeleteAsync", response);
 			}
             catch (Exception ex)
             {
-				await _logger.LogErrorAsync(ex, "ApiService\\DeleteAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\DeleteAsync");
 				throw;
 			}
         }
@@ -225,15 +230,15 @@ namespace LandedMVC.Services
 			try
 			{
 				var apiRoute = GetRoute(() => dto);
-				var response = await _client.PostAsJsonAsync(apiRoute, dto, _JsonWriteOptions, token);
+				var response = await _client.PostAsJsonAsync(apiRoute, dto, _jsonWriteOptions, token);
 
 				response.EnsureSuccessStatusCode();
-				await _logger.LogInformationAsync("ApiService\\PostAsync", _consoleHub, response);
+				await _logger.LogInformationAsync("ApiService\\PostAsync", response);
 				return response;
 			}
 			catch (Exception ex)
 			{
-				await _logger.LogErrorAsync(ex, "ApiService\\PostAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "ApiService\\PostAsync");
 				throw;
 			}
 		}

@@ -4,13 +4,14 @@
 // Created          : 04-05-2024
 //
 // Last Modified By : Shawn Wheeler
-// Last Modified On : 04-06-2024
+// Last Modified On : 04-13-2024
 // ***********************************************************************
 // <copyright file="ControllerBase.cs" company="LandedMVC">
 //     Copyright (c) MyPiTech. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using LandedMVC.Extensions;
 using LandedMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -41,20 +42,23 @@ namespace LandedMVC.Controllers
 		protected readonly string _apiBase;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ControllerBase{C}"/> class.
+		/// Initializes a new instance of the <see cref="ControllerBase{C}" /> class.
 		/// </summary>
 		/// <param name="configuration">The configuration.</param>
 		/// <param name="logger">The logger.</param>
 		/// <param name="consoleHub">The console hub.</param>
+		/// <param name="accesor">The accesor.</param>
 		public ControllerBase(
 			IConfiguration configuration,
 			ILogger<C> logger,
-			IHubContext<ConsoleHub, IConsoleHub> consoleHub
+			IHubContext<ConsoleHub, IConsoleHub> consoleHub,
+			IHttpContextAccessor accesor
 		)
 		{
 			_apiBase = configuration.GetValue<string>("ApiBase") ?? string.Empty;
 			_consoleHub = consoleHub;
 			_logger = logger;
+			_logger.InitHub(_consoleHub);
 		}
 	}
 }

@@ -14,11 +14,11 @@ function actionsHandler() {
 }
 
 function handleEvents(id) {
-    window.location.assign(`users/events?uId=${id}`);
+    window.location.assign(`Users/${id}/Events`);
 };
 
 function handleEdit(id) {
-    console.log('Editing user:', id);
+    console.log('Editing:', id);
     const data = table.row(`#row_${id}`).data();
 
     $('#formHeader').html('Update current user.');
@@ -39,7 +39,7 @@ function handleDelete(id) {
         success: function (result) {
             table.row(`#row_${id}`).remove().draw('page');
             notify('The User was successfully deleted.');
-            console.log(`Item id:${id} was successfully deleted.`, result);
+            console.info(`Item id:${id} was successfully deleted.`, result);
         },
         error: function (xhr, resp, text) {
             notify('An error occured. User was not deleted.', true);
@@ -60,19 +60,18 @@ const dateVar = new Date('August 19, 1975 23:15:30');
 
 //form
 function createHandler() {
+    console.log('Creating.');
     $('#formHeader').html('Create a new user.');
-    console.log('Creating a new user.');
     toggleDataTable(clearForm);
     return false;
 }
 
 function lablesHandler() {
+    console.log('Label toggle.');
     const text = $(this).html();
     if (text === 'Show Labels') {
-        console.log('Show Labels');
         $(this).html('Hide Labels');
     } else {
-        console.log('Hide Labels');
         $(this).html('Show Labels');
     }
     $('label[for="firstName"]').toggle();
@@ -100,6 +99,7 @@ function resetHandler() {
 }
 
 function cancelHandler() {
+    console.log('Form cancelled.');
     toggleDataTable(clearForm);
     return false;
 }
@@ -145,8 +145,8 @@ function formHandler(form) {
         },
         error: function (xhr, resp, text) {
             $("#submitBtn").prop("disabled", false);
-            console.error(text);
             notify('An error occured. The user was not created.', true);
+            console.error('An error occured. The user was not created.', xhr, resp, text);
         }
     })
 }

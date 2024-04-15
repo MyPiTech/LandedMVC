@@ -33,63 +33,35 @@ namespace LandedMVC.Controllers
 		/// </summary>
 		private readonly ApiService<UserDto> _apiService;
 
-		/// <summary>
-		/// The user event API service
-		/// </summary>
-		private readonly ApiService<UserEventDto> _eventApiService;
-
 		/// <summary>Initializes a new instance of the <see cref="T:LandedMVC.Controllers.UsersController" /> class.</summary>
 		/// <param name="apiService">The model API service.</param>
-		/// <param name="eventApiService"></param>
 		/// <param name="consoleHub"></param>
 		/// <param name="logger"></param>
 		/// <param name="configuration"></param>
 		public UsersController(
-			ApiService<UserDto> apiService, 
-			ApiService<UserEventDto> eventApiService, 
+			ApiService<UserDto> apiService,  
 			IHubContext<ConsoleHub, IConsoleHub> consoleHub, 
 			ILogger<UsersController> logger,
-			IConfiguration configuration
-		) : base(configuration, logger, consoleHub)
+			IConfiguration configuration,
+			IHttpContextAccessor accessor
+		) : base(configuration, logger, consoleHub, accessor)
 		{
 			_apiService = apiService;
-			_eventApiService = eventApiService;
 		}
 
 		/// <summary>
 		/// Default index view.
 		/// </summary>
 		/// <returns>IActionResult.</returns>
-		public IActionResult Index()
+		public async Task<IActionResult> IndexAsync()
         {
-			return View(new ApiModel { ApiBase = _apiBase });
-		}
-
-		/// <summary>Gets user events as an asynchronous operation.</summary>
-		/// <param name="uId">The user identifier.</param>
-		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <returns>A Task&lt;IActionResult&gt; representing the asynchronous operation.</returns>
-		public async Task<IActionResult> EventsAsync(int uId, CancellationToken token)
-		{
 			try
 			{
-				var user = await _apiService.GetOneAsync(() => new UserDto { Id = uId }, token);
-				if (user == null)
-				{
-					var response = BadRequest($"No user was found with id:{uId}");
-					await _logger.LogWarningAsync("UsersController\\EventsAsync", _consoleHub, response);
-					return response;
-				}
-				var model = user.ToModel();
-				model.ApiBase = _apiBase;
-
-				var result = View(model);
-				await _logger.LogDebugAsync("UsersController\\EventsAsync", _consoleHub, result);
-				return result;
+				return View(new ApiModel { ApiBase = _apiBase });
 			}
 			catch (Exception ex)
 			{
-				await _logger.LogErrorAsync(ex, "UsersController\\EventsAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "UsersController\\IndexAsync");
 				return BadRequest(ex.Message);
 			}
 		}
@@ -106,36 +78,15 @@ namespace LandedMVC.Controllers
 			{
 				var results = await _apiService.GetAllAsync(token);
 				var result = Ok(results);
-				await _logger.LogDebugAsync("UsersController\\GetAllAsync", _consoleHub, result);
+				await _logger.LogDebugAsync("UsersController\\GetAllAsync", result);
 				return result;
 			}
 			catch (Exception ex)
 			{
-				await _logger.LogErrorAsync(ex, "UsersController\\GetAllAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "UsersController\\GetAllAsync");
 				return BadRequest(ex.Message);
 			}
         }
-
-		/// <summary>Get all user events as an asynchronous operation.</summary>
-		/// <param name="uId">The user ID.</param>
-		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <returns>A collection of event dtos representing the results of the asynchronous operation.</returns>
-		[HttpGet]
-		public async Task<IActionResult> GetAllEventsAsync(int uId, CancellationToken token)
-		{
-			try
-			{
-				var results = await _eventApiService.GetAllAsync(() => new UserEventDto { UserId = uId }, token);
-				var result = Json(results);
-				await _logger.LogDebugAsync("UsersController\\GetAllEventsAsync", _consoleHub, result);
-				return result;
-			}
-			catch (Exception ex)
-			{
-				await _logger.LogErrorAsync(ex, "UsersController\\GetAllEventsAsync", _consoleHub);
-				return BadRequest(ex.Message);
-			}
-		}
 
 		/// <summary>
 		/// Delete user as an asynchronous operation.
@@ -148,32 +99,11 @@ namespace LandedMVC.Controllers
 			try
 			{
 				await _apiService.DeleteAsync(() => new UserDto { Id = id }, token);
-				await _logger.LogInformationAsync("UsersController\\DeleteAsync - id:", _consoleHub, id);
+				await _logger.LogInformationAsync("UsersController\\DeleteAsync - id:", id);
 			}
 			catch (Exception ex)
 			{
-				await _logger.LogErrorAsync(ex, "UsersController\\DeleteAsync", _consoleHub);
-			}
-
-		}
-
-		/// <summary>
-		/// Delete event as an asynchronous operation.
-		/// </summary>
-		/// <param name="id">The identifier.</param>
-		/// <param name="userId">The user identifier.</param>
-		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		[HttpDelete]
-		public async Task DeleteEventAsync(int id, int userId, CancellationToken token)
-		{
-			try
-			{
-				await _eventApiService.DeleteAsync(() => new UserEventDto { Id = id, UserId = userId }, token);
-				await _logger.LogInformationAsync("UsersController\\DeleteEventAsync - ids:", _consoleHub, id, userId);
-			}
-			catch (Exception ex)
-			{
-				await _logger.LogErrorAsync(ex, "UsersController\\DeleteEventAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "UsersController\\DeleteAsync");
 			}
 		}
 
@@ -191,7 +121,7 @@ namespace LandedMVC.Controllers
 				if (!ModelState.IsValid)
 				{
 					var response = BadRequest(ModelState);
-					await _logger.LogWarningAsync("UsersController\\UpsertAsync", _consoleHub, response);
+					await _logger.LogWarningAsync("UsersController\\UpsertAsync", response);
 					return response;
 				}
 
@@ -201,63 +131,21 @@ namespace LandedMVC.Controllers
 					if (dto != null)
 					{
 						model = dto.ToModel();
-						await _logger.LogInformationAsync("UsersController\\UpsertAsync - add", _consoleHub, model);
+						await _logger.LogInformationAsync("UsersController\\UpsertAsync - add", model);
 					}
 				}
 				else
 				{
 					await _apiService.EditAsync(model.ToDto(), token);
-					await _logger.LogInformationAsync("UsersController\\UpsertAsync - update", _consoleHub, model);
+					await _logger.LogInformationAsync("UsersController\\UpsertAsync - update", model);
 				}
-				return Json(model);
+				return Ok(model);
 			}
 			catch (Exception ex)
 			{
-				await _logger.LogErrorAsync(ex, "UsersController\\UpsertAsync", _consoleHub);
+				await _logger.LogErrorAsync(ex, "UsersController\\UpsertAsync");
 				return BadRequest(ex.Message);
 			}
 		}
-
-		/// <summary>
-		/// Add or update a user event as an asynchronous operation.
-		/// </summary>
-		/// <param name="model">The user model.</param>
-		/// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <returns>A model dto representing the results of the asynchronous operation.</returns>
-		[HttpPost]
-		public async Task<IActionResult> UpsertEventAsync(EventModel model, CancellationToken token)
-		{
-			try
-			{
-				if (!ModelState.IsValid)
-				{
-					var response = BadRequest(ModelState);
-					await _logger.LogWarningAsync("UsersController\\UpsertEventAsync", _consoleHub, response);
-					return response;
-				}
-
-				if (model.Id == 0)
-				{
-					var dto = await _eventApiService.AddAsync(model.ToUserEventDto(), token);
-					if (dto != null)
-					{
-						model = dto.ToModel();
-						await _logger.LogInformationAsync("UsersController\\UpsertEventAsync - add", _consoleHub, model);
-					}
-				}
-				else
-				{
-					await _eventApiService.EditAsync(model.ToUserEventDto(), token);
-					await _logger.LogInformationAsync("UsersController\\UpsertEventAsync - update", _consoleHub, model);
-				}
-				return Json(model);
-			}
-			catch (Exception ex)
-			{
-				await _logger.LogErrorAsync(ex, "UsersController\\UpsertEventAsync", _consoleHub);
-				return BadRequest(ex.Message);
-			}
-		}
-
 	}
 }

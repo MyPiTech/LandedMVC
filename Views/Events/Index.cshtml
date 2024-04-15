@@ -30,7 +30,7 @@
 				<section id="content">
 
 					<div id="dataTableWrapper" class="row" >
-						<p class="dt-container"><a id="createBtn" href="#" class="button fit small">Create New Event</a></p>
+						<p class="dt-container"><span id="createBtn" class="button fit small">Create New Event</span></p>
 						<table id="dataTable" class="dt-container">
 							<thead>
 								<tr>
@@ -50,7 +50,8 @@
 					<form method="post" id="dataForm" action="">
 						<div id="dataFormWrapper" class="row gtr-uniform gtr-50" style="display:none;">
 							<div class="col-12">
-								<h4 id="formHeader" class="inline">Create a new event.</h4> - <a id="labelsToggle" href="#" class="">Show Labels</a>
+								<h4 id="formHeader" class="inline">Create a new event.</h4>
+								<span id="labelsToggle" class="label-toggle small">Show Labels</span>
 							</div>
 							<div class="col-12">
 								<label for="userInput" class="hide">*User</label>
@@ -76,8 +77,8 @@
 							<div class="col-12">
 								<ul class="actions">
 									<li><input id="submitBtn" type="submit" value="Submit" /></li>
-									<li><a id="resetBtn" href="#" class="button fit">Reset</a></li>
-									<li><a id="cancelBtn" href="#" class="button fit">Cancel</a></li>
+									<li><span id="resetBtn" class="button fit">Reset</span></li>
+									<li><span id="cancelBtn" class="button fit">Cancel</span></li>
 								</ul>
 							</div>
 							<input type="hidden" name="userId" id="userId" value="0" />

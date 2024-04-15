@@ -2,8 +2,7 @@
 	'use strict';
 
 	// Start the connection.
-
-	const server_connection = new signalR.HubConnectionBuilder().withUrl('/console')
+	const server_connection = new signalR.HubConnectionBuilder().withUrl(`/console`)
 	.configureLogging(signalR.LogLevel.Information).build();
 	server_connection.on('SendLogAsync', function (data) {
 		console.serverLog(...data);
@@ -20,7 +19,6 @@
 		console.serverError(...data);
 	});
 
-	console.info(`API SignalR Route: ${api_base}console`);
 	const api_connection = new signalR.HubConnectionBuilder().withUrl(`${api_base}console`,
 	{
 		skipNegotiation: true,
