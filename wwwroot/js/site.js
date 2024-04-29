@@ -147,13 +147,6 @@ $(function () {
         cursordown = false;
     });
 
-    $('.console-view').on('mouseenter mouseleave', 'div.object', function () {
-        $(this).children('.object-content').toggle('fast');
-    });
-    $('.console-view').on('mouseenter mouseleave', 'div.console-array', function () {
-        $(this).children('.array-data').toggle('fast');
-    });
-
     $('#ctabs-copy, #stabs-copy, #atabs-copy').on('click', copyHandler);
 
     $('#ctabs-repo, #stabs-repo, #atabs-repo').on('click', repoHandler);
@@ -201,6 +194,264 @@ $(function () {
 
         return false;
     }
+	function consoleFormat(obj, parent, indent = false) {
+		let parentDiv = document.getElementById(parent);
+		let newDiv = document.createElement('div');
+		parentDiv.append(newDiv);
+
+		newDiv.id = crypto.randomUUID();
+
+		// strings
+		if (typeof obj == 'string') {
+			newDiv.classList.add('console-string');
+			if (indent) {
+				newDiv.classList.add('indent');
+			}
+			newDiv.innerHTML += obj;
+		}
+		// booleans, null and undefined
+		else if (typeof obj == 'boolean' || obj === null || obj === undefined) {
+			newDiv.classList.add('console-bool');
+			if (indent) {
+				newDiv.classList.add('indent');
+			}
+			newDiv.innerHTML += obj;
+		}
+		// numbers
+		else if (typeof obj == 'number') {
+			newDiv.classList.add('console-number');
+			if (indent) {
+				newDiv.classList.add('indent');
+			}
+			newDiv.innerHTML += obj;
+		}
+		// dates
+		else if (Object.prototype.toString.call(obj) == '[object Date]') {
+			newDiv.classList.add('console-date');
+			if (indent) {
+				newDiv.classList.add('indent');
+			}
+			newDiv.innerHTML += obj;
+		}
+		// arrays
+		else if (Array.isArray(obj)) {
+			newDiv.classList.add('console-array');
+			newDiv.innerHTML += `Array(${obj.length})`;
+
+			if (indent) {
+				newDiv.classList.add('indent');
+			}
+
+			let iconSpan = document.createElement('span');
+			iconSpan.id = `ic-${newDiv.id}`;
+			iconSpan.classList.add('ui-icon', 'ui-icon-triangle-1-e');
+
+			let contentDiv = document.createElement('div');
+			contentDiv.id = `ac-${newDiv.id}`;
+			contentDiv.classList.add('hide');
+
+			newDiv.append(iconSpan);
+			newDiv.append(contentDiv);
+
+			for (const item of obj) {
+				consoleFormat(item, contentDiv.id, true);
+			}
+			newDiv.addEventListener('click', function (e) {
+				let contentElem = this.querySelector(`#ac-${this.id}`);
+				let iconElem = this.querySelector(`#ic-${this.id}`);
+				if (contentElem.checkVisibility()) {
+					iconElem.classList.replace('ui-icon-triangle-1-s', 'ui-icon-triangle-1-e');
+					contentElem.classList.replace('show', 'hide');
+				} else {
+					iconElem.classList.replace('ui-icon-triangle-1-e', 'ui-icon-triangle-1-s');
+					contentElem.classList.replace('hide', 'show');
+				}
+				e.stopPropagation();
+			});
+		}
+		// objects
+		else if (obj && typeof obj == 'object') {
+			let oEntries = Object.entries(obj);
+			newDiv.classList.add('console-object');
+			newDiv.innerHTML += `Object(${oEntries.length})`;
+
+			if (indent) {
+				newDiv.classList.add('indent');
+			}
+
+			let iconSpan = document.createElement('span');
+			iconSpan.id = `ic-${newDiv.id}`;
+			iconSpan.classList.add('ui-icon', 'ui-icon-triangle-1-e');
+
+			let contentDiv = document.createElement('div');
+			contentDiv.id = `oc-${newDiv.id}`;
+			contentDiv.classList.add('hide');
+
+			newDiv.append(iconSpan);
+			newDiv.append(contentDiv);
+
+			oEntries.forEach(([key, value]) => {
+				let entryDiv = document.createElement('div');
+				entryDiv.classList.add('object-entry');
+				
+				contentDiv.append(entryDiv);
+
+				let keySpan = document.createElement('span');
+				keySpan.classList.add('object-key');
+				keySpan.innerHTML += `${key}: `;
+				entryDiv.append(keySpan);
+
+				let valueSpan = document.createElement('span');
+				valueSpan.classList.add('object-value');
+				valueSpan.id = crypto.randomUUID();
+				entryDiv.append(valueSpan);
+
+				consoleFormat(value, valueSpan.id);
+			});
+			newDiv.addEventListener('click', function (e) {
+				let contentElem = this.querySelector(`#oc-${this.id}`);
+				let iconElem = this.querySelector(`#ic-${this.id}`);
+				if (contentElem.checkVisibility()) {
+					iconElem.classList.replace('ui-icon-triangle-1-s', 'ui-icon-triangle-1-e');
+					contentElem.classList.replace('show', 'hide');
+				} else {
+					iconElem.classList.replace('ui-icon-triangle-1-e', 'ui-icon-triangle-1-s');
+					contentElem.classList.replace('hide', 'show');
+				}
+				e.stopPropagation();
+			});
+		}
+		
+	}
+
+	const console = (function (defaultConsole) {
+		return {
+			debug: function (...data) {
+				defaultConsole.debug(...data);
+			},
+			log: function (...data) {
+				defaultConsole.log(...data);
+				formatData('log', ...data);
+			},
+			serverLog: function (src, ...data) {
+				defaultConsole.log('server', ...data);
+				formatData('server-log', src, ...data);
+			},
+			apiLog: function (src, ...data) {
+				defaultConsole.log('api', ...data);
+				formatData('api-log', src, ...data);
+			},
+			info: function (...data) {
+				defaultConsole.info(...data);
+				formatData('info', ...data);
+			},
+			serverInfo: function (...data) {
+				defaultConsole.info('server', ...data);
+				formatData('server-info', ...data);
+			},
+			apiInfo: function (...data) {
+				defaultConsole.info('api', ...data);
+				formatData('api-info', ...data);
+			},
+			warn: function (...data) {
+				defaultConsole.warn(...data);
+				formatData('warn', ...data);
+			},
+			serverWarn: function (...data) {
+				defaultConsole.warn('server', ...data);
+				formatData('server-warn', ...data);
+			},
+			apiWarn: function (...data) {
+				defaultConsole.warn('api', ...data);
+				formatData('api-warn', ...data);
+			},
+			error: function (...data) {
+				defaultConsole.error(...data);
+				formatData('error', ...data);
+			},
+			serverError: function (...data) {
+				defaultConsole.error('server', ...data);
+				formatData('server-error', ...data);
+			},
+			apiError: function (...data) {
+				defaultConsole.error('api', ...data);
+				formatData('api-error', ...data);
+			}
+		};
+	}(window.console));
+	window.console = console;
+
+	function formatData(type, ...data) {
+		let consoleDiv = document.getElementById('console');
+
+		let title;
+		let dataClass;
+
+		switch (type) {
+			case 'log':
+				title = '[CLIENT][LOG]';
+				dataClass = 'log';
+				break;
+			case 'server-log':
+				title = '[SERVER][LOG]';
+				dataClass = 'log';
+				break;
+			case 'api-log':
+				title = '[API][LOG]';
+				dataClass = 'log';
+				break;
+			case 'info':
+				title = '[CLIENT][INFO]';
+				dataClass = 'info';
+				break;
+			case 'server-info':
+				title = '[SERVER][INFO]';
+				dataClass = 'info';
+				break;
+			case 'api-info':
+				title = '[API][INFO]';
+				dataClass = 'info';
+				break;
+			case 'warn':
+				title = '[CLIENT][WARN]';
+				dataClass = 'warn';
+				break;
+			case 'server-warn':
+				title = '[SERVER][WARN]';
+				dataClass = 'warn';
+				break;
+			case 'api-warn':
+				title = '[API][WARN]';
+				dataClass = 'warn';
+				break;
+			case 'error':
+				title = '[CLIENT][ERROR]';
+				dataClass = 'error';
+				break;
+			case 'server-error':
+				title = '[SERVER][ERROR]';
+				dataClass = 'error';
+				break;
+			case 'api-error':
+				title = '[API][ERROR]';
+				dataClass = 'error';
+				break;
+			default:
+				title = '[CLIENT][LOG]';
+				dataClass = 'log';
+				break;
+		}
+
+		let newRow = document.createElement('div');
+		newRow.id = crypto.randomUUID();
+		newRow.classList.add(dataClass);
+		newRow.innerHTML += title;
+		consoleDiv.append(newRow);
+		data.map((consoleData) => {
+			consoleFormat(consoleData, newRow.id);
+		});
+	}
+
 });
 
 Prism.plugins.NormalizeWhitespace.setDefaults({

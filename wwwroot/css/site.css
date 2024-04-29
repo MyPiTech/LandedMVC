@@ -213,8 +213,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataT
         color: #e44c65 !important;
     }
 
-
-
 p.console-notes {
     margin: 0 0 1em 0;
 }
@@ -231,35 +229,42 @@ p.console-notes {
     width: fit-content;
     white-space: nowrap;
     overflow: hidden;
+    padding-right: 10px;
+    padding-bottom: 10px;
 }
-
     .console-view > .log {
-        color: #ffffff;
+        color: #5480f1;
         font-weight: bold;
         cursor: default;
+        display: flex;
+        column-gap: 5px;
     }
-
     .console-view > .info {
         color: #39c088;
         font-weight: bold;
         cursor: default;
+        display: flex;
+        column-gap: 5px;
     }
-
     .console-view > .warn {
-        color: #f08d49;
+        color: #f8c555;
         font-weight: bold;
         cursor: default;
+        display: flex;
+        column-gap: 5px;
     }
-
     .console-view > .error {
         color: #e44c65;
         font-weight: bold;
         cursor: default;
+        display: flex;
+        column-gap: 5px;
     }
 
 .console-string {
     font-weight: bold;
     cursor: default;
+    color: #ffffff;
 }
 
 .console-number {
@@ -269,7 +274,13 @@ p.console-notes {
 }
 
 .console-bool {
-    color: #f8c555;
+    color: #67cdcc;
+    font-weight: bold;
+    cursor: default;
+}
+
+.console-date {
+    color: #7ec699;
     font-weight: bold;
     cursor: default;
 }
@@ -279,12 +290,12 @@ p.console-notes {
     font-weight: bold;
     cursor: pointer;
     position: relative;
+    opacity: 1;
+    z-index: 1;
 }
 
-.console-date {
-    color: #7ec699;
-    font-weight: bold;
-    cursor: default;
+.indent {
+    padding-left: 1em;
 }
 
 .array-data {
@@ -292,14 +303,51 @@ p.console-notes {
     cursor: default;
     display: none;
     color: #ffffff;
-    padding: 15px 15px;
+    padding: 5px 5px;
     left: 25px;
-    z-index: 1;
     background-color: #000;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(150,150,150,0.3);
-    padding: 15px 15px;
+    width: fit-content;
+    padding: 5px 5px;
     top: 25px;
     left: 25px;
+    opacity: 1;
+    z-index: 2;
+}
+
+.console-object {
+    position: relative;
+    color: #f8c555;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 1;
     z-index: 1;
+}
+
+.object-content {
+    list-style-type: none;
+    display: none;
+    position: absolute;
+    background-color: #000;
+    width: fit-content;
+    padding: 5px 5px;
+    top: 25px;
+    left: 25px;
+    cursor: default;
+    opacity: 1;
+    z-index: 2;
+}
+.object-entry {
+    display: flex;
+    column-gap: 5px;
+    padding-left: 1em;
+}
+
+.object-key {
+    color: #cc99cd;
+    cursor: default;
+}
+
+.object-value {
+    color: #ffffff;
+    cursor: default;
 }

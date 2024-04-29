@@ -4122,36 +4122,3 @@ textarea {
 				padding: 0;
 			}
 }
-
-.object 
-{
-	display: inline-grid;
-	position: relative;
-	color: #cc99cd;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-	.object-content {
-		list-style-type: none;
-		display: none;
-		position: absolute;
-		background-color: #000;
-		min-width: 160px;
-		box-shadow: 0px 8px 16px 0px rgba(150,150,150,0.3);
-		padding: 15px 15px;
-		top: 25px;
-		left: 25px;
-		z-index: 1;
-		cursor: default;
-	}
-
-.object-key {
-	color: #cc99cd;
-	cursor: default;
-}
-
-.object-data {
-	color:  #ffffff;
-	cursor: default;
-}
