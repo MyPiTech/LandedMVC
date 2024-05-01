@@ -2,17 +2,35 @@
 	'use strict';
 
 	// Start the connection.
+	const dataTable_connection = new signalR.HubConnectionBuilder().withUrl(`/dataTable`)
+		.configureLogging(signalR.LogLevel.Information).build();
+
+	dataTable_connection.on('ItemAdded', function (data) {
+		table.row.add(data);
+		table.columns.adjust().draw(false);
+		table.responsive.recalc();
+		notify('New item added by other client.');
+	});
+	dataTable_connection.on('ItemDeleted', function (data) {
+		table.row(`#row_${data}`).remove().draw('page');
+		notify('Item deleted by other client.');
+	});
+	dataTable_connection.on('ItemUpdated', function (data) {
+		table.row(`#row_${data.id}`).data(data);
+		notify('Item updated by other client.');
+	});
+
+
 	const server_connection = new signalR.HubConnectionBuilder().withUrl(`/console`)
 	.configureLogging(signalR.LogLevel.Information).build();
+
 	server_connection.on('SendLogAsync', function (data) {
 		console.serverLog(...data);
 	});
 	server_connection.on('SendInfoAsync', function (data) {
-
 		console.serverInfo(...data);
 	});
 	server_connection.on('SendWarnAsync', function (data) {
-
 		console.serverWarn(...data);
 	});
 	server_connection.on('SendErrorAsync', function (data) {
@@ -24,21 +42,29 @@
 		skipNegotiation: true,
 		transport: signalR.HttpTransportType.WebSockets
 	}).configureLogging(signalR.LogLevel.Information).build();
+
 	api_connection.on('SendApiLogAsync', function (data) {
 		console.apiLog(...data);
 	});
 	api_connection.on('SendApiInfoAsync', function (data) {
-
 		console.apiInfo(...data);
 	});
 	api_connection.on('SendApiWarnAsync', function (data) {
-
 		console.apiWarn(...data);
 	});
 	api_connection.on('SendApiErrorAsync', function (data) {
 		console.apiError(...data);
 	});
 
+	async function startDataTable() {
+		try {
+			await dataTable_connection.start();
+			console.log("SignalR DataTable Connected.");
+		} catch (err) {
+			console.error(err);
+			setTimeout(startServer, 5000);
+		}
+	};
 	async function startServer() {
 		try {
 			await server_connection.start();
@@ -65,6 +91,7 @@
 		await startApi();
 	});
 
+	startDataTable();
 	startServer();
 	startApi();
 </script>

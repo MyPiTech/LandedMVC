@@ -1,5 +1,16 @@
-﻿
-
+﻿// ***********************************************************************
+// Assembly         : LandedMVC
+// Author           : Shawn Wheeler
+// Created          : 04-13-2024
+//
+// Last Modified By : Shawn Wheeler
+// Last Modified On : 04-30-2024
+// ***********************************************************************
+// <copyright file="ServiceConfig.cs" company="LandedMVC">
+//     Copyright (c) MyPiTech. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 using LandedMVC.Dtos;
 using LandedMVC.Hubs;
 using LandedMVC.Services;
@@ -7,8 +18,16 @@ using Microsoft.Net.Http.Headers;
 
 namespace LandedMVC
 {
+	/// <summary>
+	/// Class ServiceConfig.
+	/// </summary>
 	public static class ServiceConfig
 	{
+		/// <summary>
+		/// Configures the sevices.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <returns>WebApplicationBuilder.</returns>
 		public static WebApplicationBuilder ConfigureSevices(this WebApplicationBuilder builder) {
 			var apiBase = builder.Configuration.GetValue<string>("ApiBase") ?? string.Empty;
 
@@ -49,6 +68,10 @@ namespace LandedMVC
 				});
 			return builder;
 		}
+		/// <summary>
+		/// Configures the application and runs the app.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
 		public static void ConfigureAppAndRun(this WebApplicationBuilder builder)
 		{
 			var app = builder.Build();
@@ -71,6 +94,7 @@ namespace LandedMVC
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 
 			app.MapHub<ConsoleHub>("/console");
+			app.MapHub<DataTableHub>("/dataTable");
 			app.Run();
 		}
 	}

@@ -293,7 +293,6 @@ $(function () {
 			oEntries.forEach(([key, value]) => {
 				let entryDiv = document.createElement('div');
 				entryDiv.classList.add('object-entry');
-				
 				contentDiv.append(entryDiv);
 
 				let keySpan = document.createElement('span');
@@ -451,7 +450,6 @@ $(function () {
 			consoleFormat(consoleData, newRow.id);
 		});
 	}
-
 });
 
 Prism.plugins.NormalizeWhitespace.setDefaults({

@@ -37,6 +37,7 @@ function handleDelete(id) {
         type: 'DELETE',
         data: `id=${id}`,
         success: function (result) {
+            dataTable_connection.send('deleteItem', id);
             table.row(`#row_${id}`).remove().draw('page');
             notify('The User was successfully deleted.');
             console.info(`Item id:${id} was successfully deleted.`, result);
@@ -126,9 +127,11 @@ function formHandler(form) {
             let action = '';
             if (id > 0) {
                 action = 'updated';
+                dataTable_connection.send('updateItem', result);
                 table.row(`#row_${id}`).data(result);
             } else {
                 action = 'created';
+                dataTable_connection.send('addItem', result);
                 //when this occurs too quickly the table's pagination breaks
                 //this is a hacky solution
                 //I should probably make all datatables processing server-side
