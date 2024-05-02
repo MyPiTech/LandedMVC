@@ -336,6 +336,7 @@ p.console-notes {
     opacity: 1;
     z-index: 2;
 }
+
 .object-entry {
     display: flex;
     column-gap: 5px;
@@ -350,4 +351,13 @@ p.console-notes {
 .object-value {
     color: #ffffff;
     cursor: default;
+}
+
+pre[class*=language-] {
+    padding: 0em !important;
+    margin: 0em !important;
+}
+
+pre code {
+    padding: 0em !important;
 }
