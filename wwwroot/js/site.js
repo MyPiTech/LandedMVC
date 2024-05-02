@@ -123,7 +123,31 @@ $(function () {
                 console.error(error);
             }
         });
-    });
+	});
+
+	$('#no-users').dialog({
+		modal: true,
+		autoOpen: false,
+		open: function (event, ui) {   // It'll hide Close button
+			$(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+		},
+		width: '50%',
+		closeOnEscape: false,  
+		buttons: [
+			{
+				text: 'Create User',
+				click: function () {
+					window.location.assign(`Users`);
+				}
+			},
+			{
+				text: 'Back',
+				click: function () {
+					history.back();
+				}
+			}
+		]
+	});
 
     let cursordown = false;
     let cursorypos = 0;

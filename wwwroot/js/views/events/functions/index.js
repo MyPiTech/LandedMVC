@@ -60,9 +60,12 @@ function actions(data) {
 async function fetchUsersAsync() {
     try {
         console.info('Fetching users.');
-        const response = await fetch("users/getAll");
+        const response = await fetch('users/getAll');
         const result = await response.json();
-
+        if (result.length === 0) {
+            $('#no-users').dialog('open');
+            return;
+        }
         users = result.map(u => ({ name: `${u.firstName} ${u.lastName}`, id: u.id }));
 
         let list = document.getElementById('usersList');
@@ -73,7 +76,8 @@ async function fetchUsersAsync() {
         });
     } catch (error) {
         notify(`An error occurred loading users. <br/> <br/> Error: ${error}`, true, 5000);
-        console.error('An error occurred loading users. <br/> <br/> Error:', error);
+        console.error('An error occurred loading users:', error);
+
     }
 }
 

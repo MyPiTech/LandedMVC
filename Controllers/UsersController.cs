@@ -77,6 +77,10 @@ namespace LandedMVC.Controllers
 			try
 			{
 				var results = await _apiService.GetAllAsync(token);
+				if (results == null)
+				{
+					results = [];
+				}
 				var result = Ok(results);
 				await _logger.LogDebugAsync("UsersController\\GetAllAsync", result);
 				return result;
