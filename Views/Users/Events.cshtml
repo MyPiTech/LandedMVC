@@ -89,31 +89,13 @@
 					</form>
 					<hr />
 					<section id="continue">
-						<h3>User Event's Table Information</h3>
+						<h3>Programming Information</h3>
 						<div id="accordion" class="ui-accordion ui-widget ui-helper-reset">
-							<h6>Notes</h6>
-							<div class="accordion-content">
-								<p>
-									Some things to take note of:
-									<ol>
-										<li>Due to my budget of zero dollars. My database winds down when not in use. The first request will often take up to a minute to respond. It should be much faster after that. If you want better performance, improve my budget and hire me. &#128516; </li>
-										<li>The tabs below will allow you to peruse some of the code that makes this page work. It's just not practical to show it all, and if you want to see the rest, then please check out the repositories. Links to all of my repositories are available in the "My Other Projects" menu.</li>
-										<li>By using AJAX to populate the table. We allow for the rest of the page to load. Despite any delays on the table.</li>
-										<li>This is a fairly simple implementation of the DataTables library. I am loading the complete record set and letting the data table handle all of the searching, pagination, etc. client-side. This can be changed to be server-side, if performance is an issue.</li>
-									</ol>
-								</p>
-								<p>
-									The heavy use of AJAX and jQuery here pretty much circumvents the whole "model" part of the model, view, controller framework. That said, the server side is almost identical to my other MVC demo. We are still binding the POST requests to a model and using the model server-side for validation and business logic.
-								</p>
-								<p>
-									So why not use React or Angular, you ask? I'm glad you asked... lol. The answer is that there is no reason not to. Though arguably there is also no reason to use it here either. JS frameworks do bring some impressive stuff to the table. Notably, adherence to DRY with reusable components. That said, they bring bloat and complexity that is often unnecessary. Especially in simple applications like this one.
-								</p>
-								<p>
-									I do intend to create a React/Typescript version of this same project. So I guess, in summary, I'm not using it here because it's not "needed" and because it is a completely separate tech stack. I am only trying to demonstrate a "senior" level grasp of responsive MVC with this project.
-								</p>
-							</div>
 							<h6>Client-Side Code</h6>
 							<div class="code-div">
+								<div>
+									<p class="console-notes">This is the core code used by the client to create this page. The code viewer uses AJAX to pull the code directly from the GitHub repo.You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repo. The viewer itself is draggable to allow for more convenient viewing in limited space.</p>
+								</div>
 								<div id="ctabs" class="code-tabs ui-tabs ui-corner-all ui-widget ui-widget-content">
 									<ul>
 										<li><a href="#ctabs-1">cshtml</a></li>
@@ -153,6 +135,9 @@
 							</div>
 							<h6>Server-Side Code</h6>
 							<div class="code-div">
+								<div>
+									<p class="console-notes">This is the core code used by the server to create this page. The code viewer uses AJAX to pull the code directly from the GitHub repo.You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repo. The viewer itself is draggable to allow for more convenient viewing in limited space.</p>
+								</div>
 								<div id="stabs" class="code-tabs ui-tabs ui-corner-all ui-widget ui-widget-content">
 									<ul>
 										<li><a href="#stabs-1">model</a></li>
@@ -192,6 +177,9 @@
 							</div>
 							<h6>API Code</h6>
 							<div class="code-div">
+								<div>
+									<p class="console-notes">This is the core code used by the API to create this page. The code viewer uses AJAX to pull the code directly from the GitHub repo.You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repo. The viewer itself is draggable to allow for more convenient viewing in limited space.</p>
+								</div>
 								<div id="atabs" class="code-tabs ui-tabs ui-corner-all ui-widget ui-widget-content">
 									<ul>
 										<li><a href="#atabs-1">dto</a></li>

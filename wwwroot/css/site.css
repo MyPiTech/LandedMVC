@@ -173,13 +173,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataT
 
 .code-div {
     padding: 1em 1em !important;
-    height:100%;
+    height: 600px;
 }
 
 .code-tabs{
-    height:100%;
+    height:90%;
+    height: 500px;
     overflow:hidden;
-    padding-bottom: 58px !important;
+    padding-bottom: 42px !important;
 }
 
 .scroll-div{
@@ -360,4 +361,8 @@ pre[class*=language-] {
 
 pre code {
     padding: 0em !important;
+}
+
+.ui-helper-reset {
+    font-size: 97% !important;
 }
