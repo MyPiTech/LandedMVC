@@ -367,3 +367,7 @@ pre code {
 .ui-helper-reset {
     font-size: 97% !important;
 }
+
+.ui-dialog {
+    font-size: 90% !important;
+}

@@ -126,6 +126,8 @@ $(function () {
 	});
 
 	$('#no-users').dialog({
+		resizable: false,
+		draggable: false,
 		modal: true,
 		autoOpen: false,
 		open: function (event, ui) {   // It'll hide Close button
