@@ -3451,12 +3451,12 @@ textarea {
 		padding-top: 0;
 	}
 
-	body.landing #header {
-		background: transparent;
-		box-shadow: none;
-		position: absolute;
-	}
-
+body.landing #header {
+	background: #1c1d26;
+	box-shadow: none;
+	position: fixed;
+	border-bottom: solid 1px rgba(255, 255, 255, 0.3);
+}
 /* Banner */
 
 #banner {
