@@ -18,7 +18,8 @@ const DT_COLUMNS = [
         data: 'notes',
         orderable: false,
         render: DataTable.render.ellipsis(20),
-        className: 'td-nowrap'
+        className: 'td-nowrap',
+        type: 'string'
     },
     DT_ACTION_COLUMN
 ];
