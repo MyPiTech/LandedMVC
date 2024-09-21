@@ -7,7 +7,11 @@ function actionsHandler() {
     if (xType === 'edit') {
         handleEdit(id);
     } else if (xType === 'delete') {
-        handleDelete(id);
+        const msg = "This will permanently delete this event. Are you sure?";
+        const title = 'Delete Event?';
+        confirmDialog(title, msg).done(function () {
+            handleDelete(id);
+        });
     }
 }
 

@@ -9,7 +9,11 @@ function actionsHandler() {
     } else if (xType === 'edit') {
         handleEdit(id);
     } else if (xType === 'delete') {
-        handleDelete(id);
+        const msg = "This will permanently delete not only this user, but all of this user's events. Are you sure?";
+        const title = 'Delete User?';
+        confirmDialog(title, msg).done(function () {
+            handleDelete(id);
+        });
     }
 }
 

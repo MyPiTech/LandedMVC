@@ -60,6 +60,29 @@ function notify(message, isError = false, duration = 3000) {
     }
 }
 
+function confirmDialog(title, msg) {
+	var dialog = $(`<div title="${title}"><p>${msg}</p></div>`);
+	var def = $.Deferred();
+
+	$(dialog).dialog({
+		resizable: false,
+		autoOpen: true,
+		draggable: false,
+		modal: true,
+		width: '50%',
+		buttons: {
+			'Cancel': function () {
+				def.reject();
+				$(this).dialog("close");
+			},
+			'OK': function () {
+				def.resolve();
+				$(this).dialog("close");
+			}
+		}
+	});
+	return def.promise();
+}
 function addRowId(row, data) {
     const uId = data['id'];
     $(row).attr('id', `row_${uId}`);
@@ -144,6 +167,28 @@ $(function () {
 			},
 			{
 				text: 'Back',
+				click: function () {
+					history.back();
+				}
+			}
+		]
+	});
+
+	$('#delete-user').dialog({
+		resizable: false,
+		draggable: false,
+		modal: true,
+		autoOpen: false,
+		width: '50%',
+		buttons: [
+			{
+				text: 'Cancel',
+				click: function () {
+					window.location.assign(`Users`);
+				}
+			},
+			{
+				text: 'Delete User',
 				click: function () {
 					history.back();
 				}
