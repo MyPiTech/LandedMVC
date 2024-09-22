@@ -55,7 +55,7 @@ function handleDelete(id) {
 
 function actions(data) {
     let eventsAction = `<span x-type="events" x-id="${data.id}" class="icon solid alt fa-calendar" title="Events"></span>`;
-    let editAction = `<span x-type="edit" x-id="${data.id}" class="icon solid alt fa-list-alt" title="Edit"></span>`;
+    let editAction = `<span x-type="edit" x-id="${data.id}" class="icon solid alt fa-edit" title="Edit"></span>`;
     let deleteAction = `<span x-type="delete" x-id="${data.id}" class="icon solid alt fa-trash" title="Delete"></span>`;
 
     return `${editAction}&nbsp;&nbsp;${eventsAction}&nbsp;&nbsp;${deleteAction}`;
