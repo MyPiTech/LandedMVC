@@ -69,7 +69,7 @@ function confirmDialog(title, msg) {
 		autoOpen: true,
 		draggable: false,
 		modal: true,
-		width: '50%',
+		width: '40%',
 		buttons: {
 			'Cancel': function () {
 				def.reject();
