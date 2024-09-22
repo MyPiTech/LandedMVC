@@ -173,15 +173,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataT
 }
 
 .code-div {
-    padding: 1em 1em !important;
+    padding: 1em 1em 0em 1em !important;
     height: 600px;
 }
 
 .code-tabs{
-    height:90%;
-    height: 500px;
+    height:78%;
     overflow:hidden;
-    padding-bottom: 42px !important;
+    padding-bottom: 50px !important;
 }
 
 .scroll-div{
