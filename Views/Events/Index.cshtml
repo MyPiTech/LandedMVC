@@ -90,12 +90,12 @@
                     <hr />
 					<section id="continue">
 						<h3>Development Information</h3>
+						<div>
+							<p class="console-notes">In the accordion tabs below, you can easily scan the core code used to generate this page. The code viewer uses AJAX to pull the code directly from the GitHub repository. You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repository. The viewer itself is draggable to allow for more convenient viewing in limited space. The final tab uses SignalR to push all of the logging information from the server and API directly to the browser's console in real time.</p>
+						</div>
 						<div id="accordion" class="ui-accordion ui-widget ui-helper-reset">
 							<h6>Client-Side Code</h6>
 							<div class="code-div">
-								<div>
-									<p class="console-notes">This is the core code used by the client to create this page. The code viewer uses AJAX to pull the code directly from the GitHub repo.You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repo. The viewer itself is draggable to allow for more convenient viewing in limited space.</p>
-								</div>
 								<div id="ctabs" class="code-tabs ui-tabs ui-corner-all ui-widget ui-widget-content">
 									<ul>
 										<li><a href="#ctabs-1">cshtml</a></li>
@@ -135,9 +135,6 @@
 							</div>
 							<h6>Server-Side Code</h6>
 							<div class="code-div">
-								<div>
-									<p class="console-notes">This is the core code used by the server to create this page. The code viewer uses AJAX to pull the code directly from the GitHub repo.You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repo. The viewer itself is draggable to allow for more convenient viewing in limited space.</p>
-								</div>
 								<div id="stabs" class="code-tabs ui-tabs ui-corner-all ui-widget ui-widget-content">
 									<ul>
 										<li><a href="#stabs-1">model</a></li>
@@ -177,9 +174,6 @@
 							</div>
 							<h6>API Code</h6>
 							<div class="code-div">
-								<div>
-									<p class="console-notes">This is the core code used by the API to create this page. The code viewer uses AJAX to pull the code directly from the GitHub repo.You can use the toolbar to tab between files, copy the code to the clipboard, or jump directly to the code in the repo. The viewer itself is draggable to allow for more convenient viewing in limited space.</p>
-								</div>
 								<div id="atabs" class="code-tabs ui-tabs ui-corner-all ui-widget ui-widget-content">
 									<ul>
 										<li><a href="#atabs-1">dto</a></li>
@@ -215,7 +209,6 @@
 							</div>
 							<h6>Integrated Console</h6>
 							<div class="code-div">
-								<p class="console-notes">This is an experimental integrated console. I am using a combination of a custom client-side console and SignalR to display log data in the browser's console from client-side, server-side, and API sources.</p>
 								<div class="console-div">
 									<div id="console" class="console-view"></div>
 								</div>
