@@ -529,17 +529,6 @@ Prism.plugins.NormalizeWhitespace.setDefaults({
     'remove-initial-line-feed': true
 });
 
-/*Prism.plugins.NormalizeWhitespace.setDefaults({
-    'remove-trailing': true,
-    'remove-indent': true,
-    'left-trim': true,
-    'right-trim': true,
-    'break-lines': 500,
-    'indent': 0,
-    'remove-initial-line-feed': true,
-    'tabs-to-spaces': 2,
-    'spaces-to-tabs': 2
-});*/
 
 
 

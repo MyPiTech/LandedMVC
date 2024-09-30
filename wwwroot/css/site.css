@@ -160,7 +160,12 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataT
     }
 
 .td-nowrap, td-action{
+    cursor: default;
     white-space: nowrap;
+}
+
+tr:hover {
+    background-color: rgba(var(--dt-row-hover), .2) !important;
 }
 
 :not(pre) > code[class*=language-], pre[class*=language-] {
