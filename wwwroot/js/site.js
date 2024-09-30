@@ -85,7 +85,8 @@ function confirmDialog(title, msg) {
 }
 function addRowId(row, data) {
     const uId = data['id'];
-    $(row).attr('id', `row_${uId}`);
+	$(row).attr('id', `row_${uId}`);
+	$(row).attr('class', 'dt-row');
 }
 
 function hideTablePagination(oSettings) {

@@ -164,7 +164,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataT
     white-space: nowrap;
 }
 
-tr:hover {
+.dt-row:hover {
     background-color: rgba(var(--dt-row-hover), .2) !important;
 }
 
