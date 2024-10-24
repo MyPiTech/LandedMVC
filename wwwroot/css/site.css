@@ -225,7 +225,7 @@ p.console-notes {
 
 .console-div {
     position: relative;
-    height: 85%;
+    height: 100%;
     overflow: auto;
     width: 100%;
 }
