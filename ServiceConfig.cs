@@ -15,6 +15,12 @@ using LandedMVC.Dtos;
 using LandedMVC.Hubs;
 using LandedMVC.Services;
 using Microsoft.Net.Http.Headers;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Reflection;
 
 namespace LandedMVC
 {
@@ -30,6 +36,22 @@ namespace LandedMVC
 		/// <returns>WebApplicationBuilder.</returns>
 		public static WebApplicationBuilder ConfigureSevices(this WebApplicationBuilder builder) {
 			var apiBase = builder.Configuration.GetValue<string>("ApiBase") ?? string.Empty;
+
+			builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+			builder.Services.AddRazorPages()
+			.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+			/* Enable support for localized DataAnnotations validation 
+			   messages. 
+			   NB: this works in .NET 7.0
+			 */
+			/*.AddDataAnnotationsLocalization(options =>
+			{
+				options.DataAnnotationLocalizerProvider = (_, factory) =>
+				{
+					var assemblyName = new AssemblyName(typeof(Res).GetTypeInfo().Assembly.FullName!);
+					return factory.Create(nameof(Res), assemblyName.Name!);
+				};
+			});*/
 
 			builder.Services.AddSignalR();
 			builder.Services.AddHttpContextAccessor();
@@ -66,6 +88,7 @@ namespace LandedMVC
 					client.BaseAddress = new Uri(apiBase);
 					client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 				});
+			builder.Services.AddMvc().AddViewLocalization();
 			return builder;
 		}
 		/// <summary>
@@ -88,6 +111,8 @@ namespace LandedMVC
 			app.UseRouting();
 			app.UseAuthorization();
 			app.UseSession();
+
+			app.UseRequestLocalization();
 
 			app.MapControllerRoute(
 				name: "default",
