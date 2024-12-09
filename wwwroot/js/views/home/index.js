@@ -10,27 +10,20 @@ $(function () {
                 required: true
             }
         },
-        messages: {
-            name: {
-                required: 'Please enter a name.'
-            },
-            message: {
-                required: 'Please enter a message.'
-            }
-        },
+        messages: V_MESSAGES,
         submitHandler: function (form) {
-            notify('Sending email...');
+            notify(S_SENDING);
             $.ajax({
                 url: 'home/email',
                 method: 'POST',
                 data: $(form).serialize(),
                 success: function (result) {
-                    notify('Email sent successfully. Thanks!');
+                    notify(S_SUCCESS);
                     $('#name').val('');
                     $('#message').val('');
                 },
                 error: function (xhr, resp, text) {
-                    notify('An error occurred. The email was not sent.', true);
+                    notify(S_ERROR, true);
             }});
         }
     });

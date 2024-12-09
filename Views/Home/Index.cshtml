@@ -1,24 +1,20 @@
-﻿@page
-@using Microsoft.AspNetCore.Mvc.Localization
-@using Microsoft.Extensions.Localization
-
+﻿@using LandedMVC.Resources
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = Res.TitleHome;
 }
 
 <section id="banner">
 	<div class="content">
 		<header>
-			<h2>The future has landed</h2>
+			<h2>@Res.HeaderSplash</h2>
 			<p>
-				And there are no hoverboards or flying cars.<br />
-				Just me and Landed MVC...  &#128514;
+				@Html.Raw(Res.TextSplash)
 			</p>
 		</header>
 		<span class="image"><img src="images/pic01_316.jpg" alt="" /></span>
 	</div>
-	<a href="#one" class="goto-next scrolly">Next</a>
+	<a href="#one" class="goto-next scrolly">@Res.NavNext</a>
 </section>
 
 <!-- One -->
@@ -29,27 +25,26 @@
 			<div class="row">
 				<div class="col-4 col-12-medium">
 					<header>
-						<h2>Hello!</h2>
+						<h2>@Res.HeaderWelcome</h2>
 						<p>
-							Welcome to <strong>Landed MVC!</strong>
+							@Html.Raw(Res.SubHeaderWelcome)
 						</p>
 					</header>
 				</div>
 				<div class="col-4 col-12-medium">
 					<p>
-						This web application was built using .NET 8 MVC and some nice (and free) responsive design work from <a href="https://html5up.net/landed" target="_blank">HTML5 UP</a>. It looks best on a desktop, but is completely responsive to mobile screen sizes. Most of the credit for this lies in the design, but I've added a fair amount of JS and CSS myself.
+						@Html.Raw(Res.TextWelcome1)
 					</p>
 				</div>
 				<div class="col-4 col-12-medium">
 					<p>
-						It leverages a REST API for its backend, which is the same API utilized by my other demo applications. Consequently, modifications made here will seamlessly propagate to those applications, and vice versa. Embracing an API for the backend offers the flexibility to connect various frontends or implement alterations to them autonomously.
+						@Res.TextWelcome2
 					</p>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	<a href="#two" class="goto-next scrolly">Next</a>
+	<a href="#two" class="goto-next scrolly">@Res.NavNext</a>
 </section>
 
 <!-- Two -->
@@ -57,17 +52,17 @@
 	<span class="image fit main"><img src="images/pic02_1600X1050.jpg" alt="" /></span>
 	<div class="content">
 		<header>
-			<h2>I am self-taught.</h2>
+			<h2>@Res.HeaderBio</h2>
 			<p>
-				"Never memorize something that you can look up." - <strong>Albert Einstein</strong>
+				@Html.Raw(Res.SubHeaderBio)
 			</p>
 		</header>
-		<p>As an autodidact software developer, I've been on a journey that began in childhood and spans two decades of experience in enterprise web software development. My coding journey has traversed a diverse landscape, from BASIC to C#. Beyond writing code, I'm an avid reader, and gamer.</p>
+		<p>@Res.TextBio</p>
 		<ul class="actions">
-			<li><a href="https://resume.mypitech.com" target="_blank" class="button">Bio/Resume</a></li>
+			<li><a href="https://resume.mypitech.com" target="_blank" class="button">@Res.LinkBio</a></li>
 		</ul>
 	</div>
-	<a href="#three" class="goto-next scrolly">Next</a>
+	<a href="#three" class="goto-next scrolly">@Res.NavNext</a>
 </section>
 
 <!-- Three -->
@@ -75,56 +70,43 @@
 	<span class="image fit main bottom"><img src="images/pic04_3200x2100.jpg" alt="" /></span>
 	<div class="content">
 		<header>
-			<h2>I love riding</h2>
-			<p>Unfortunately, last year I had a severe accident.</p>
+			<h2>@Res.HeaderStory</h2>
+			<p>@Res.SubHeaderStory</p>
 		</header>
-		<p>
-			I only bring this up because I have been out of work for a year. Mostly due to this accident and the time it has taken to recover.
-		</p>
-		<p>
-			This has made me a bit rusty, and that has a lot to do with why these demo projects exist. They serve as both a refresher for my memory and a means to alleviate any concerns employers may have about my abilities.
-		</p>
-		<p>
-			Well enough about me...
-		</p>
+		@Html.Raw(Res.TextStory)
 	</div>
-	<a href="#four" class="goto-next scrolly">Next</a>
+	<a href="#four" class="goto-next scrolly">@Res.NavNext</a>
 </section>
 
 <!-- Four -->
 <section id="four" class="wrapper style1 special fade-up">
 	<div class="container">
 		<header class="major">
-			<h2>On to the fun tech stuff.</h2>
-			<p>
-				I created two tables in my database. Users and Events. They represent a common one-to-many relationship.
-			</p>
-			<p>
-				The choice to use Users and Events was completely arbitrary. They are not tied to anything functional. So feel free to add, edit, or delete them without fear.
-			</p>
+			<h2>@Res.HeaderTech</h2>
+			@Html.Raw(Res.SubHeaderTech)
 		</header>
 		<div class="box alt">
 			<div class="row gtr-uniform">
 				<section class="col-4 col-6-medium col-12-xsmall">
-                    <a asp-action="index" asp-controller="users" class="icon solid major fa-users"/></a>
-					<h3>Users</h3>
-                    <p>In a normal one-to-many flow. Things would start here.</p>
+                    <a asp-action="index" asp-controller="users" class="icon solid major fa-users"></a>
+					<h3>@Res.HeaderTechUsers</h3>
+                    <p>@Res.SubHeaderTechUsers</p>
 				</section>
 				<section class="col-4 col-6-medium col-12-xsmall">
-					<a asp-action="index" asp-controller="events"  class="icon solid major fa-calendar"></a>
-					<h3>Events</h3>
-					<p>From here you can access all the events without going through the parent user first.</p>
+					<a asp-action="index" asp-controller="events" class="icon solid major fa-calendar"></a>
+					<h3>@Res.HeaderTechEvents</h3>
+					<p>@Res.SubHeaderTechEvents</p>
 				</section>
 				<section class="col-4 col-6-medium col-12-xsmall">
 					<a href="https://swcoretestapi.azurewebsites.net/swagger/index.html" target="_blank" class="icon solid major fa-database"></a>
-					<h3>Access the API</h3>
-					<p>Access the API directly using its Swagger UI.</p>
+					<h3>@Res.HeaderTechAPI</h3>
+					<p>@Res.SubHeaderTechAPI</p>
 				</section>
 			</div>
 		</div>
 		<footer class="major">
 			<ul class="actions special">
-				<li><a href="#five" class="button scrolly">Contact Me</a></li>
+				<li><a href="#five" class="button scrolly">@Res.NavContactMe</a></li>
 			</ul>
 		</footer>
 	</div>
@@ -135,17 +117,16 @@
 	<div class="container">
 		<div id="notification" class="notification light"></div>
 		<header>
-			<h2>Lets talk...</h2>
-			<p>Send me an email the easy way. This form uses an endpoint in my API to send me an email.</p>
+			<h2>@Res.HeaderContact</h2>
+			<p>@Res.SubHeaderContact</p>
 		</header>
 		
 		<form id="contactForm" method="post" action="#" class="cta">
 			<div class="col-12">
-				
-				<div class="col-8 col-12-xsmall"><input type="text" name="name" id="name" placeholder="*Your Name" /></div>
-				<textarea name="message" id="message" placeholder="*Enter your message" rows="6"></textarea><br />
+				<div class="col-8 col-12-xsmall"><input type="text" name="name" id="name" placeholder="* @Res.FormContactName" /></div>
+				<textarea name="message" id="message" placeholder="* @Res.FormContactMessage" rows="6"></textarea><br />
 			</div>
-			<div class="col-4 col-12-xsmall"><input type="submit" value="Send" class="fit primary" /></div>
+			<div class="col-4 col-12-xsmall"><input type="submit" value="@Res.FormContactSend" class="fit primary" /></div>
 		</form>
 	</div>
 </section>
@@ -155,5 +136,18 @@
 		await Html.RenderPartialAsync("_DataTablesUIPartial");
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+	<script>
+		const V_MESSAGES = {
+			name: {
+				required: '@Res.FormContactRequiredName'
+			},
+			message: {
+				required: '@Res.FormContactRequiredMessage'
+			}
+		};
+		const S_SENDING = '@Res.FormContactNotify';
+		const S_SUCCESS = '@Res.FormContactSuccess';
+		const S_ERROR = '@Res.FormContactError';
+	</script>
 	<script src="~/js/views/home/index.js"></script>
 }

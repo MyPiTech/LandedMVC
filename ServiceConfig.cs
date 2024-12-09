@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Reflection;
+using LandedMVC.Resources;
 
 namespace LandedMVC
 {
@@ -39,19 +40,15 @@ namespace LandedMVC
 
 			builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 			builder.Services.AddRazorPages()
-			.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
-			/* Enable support for localized DataAnnotations validation 
-			   messages. 
-			   NB: this works in .NET 7.0
-			 */
-			/*.AddDataAnnotationsLocalization(options =>
+			.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+			.AddDataAnnotationsLocalization(options =>
 			{
 				options.DataAnnotationLocalizerProvider = (_, factory) =>
 				{
 					var assemblyName = new AssemblyName(typeof(Res).GetTypeInfo().Assembly.FullName!);
 					return factory.Create(nameof(Res), assemblyName.Name!);
 				};
-			});*/
+			});
 
 			builder.Services.AddSignalR();
 			builder.Services.AddHttpContextAccessor();
@@ -88,7 +85,6 @@ namespace LandedMVC
 					client.BaseAddress = new Uri(apiBase);
 					client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 				});
-			builder.Services.AddMvc().AddViewLocalization();
 			return builder;
 		}
 		/// <summary>
@@ -98,21 +94,31 @@ namespace LandedMVC
 		public static void ConfigureAppAndRun(this WebApplicationBuilder builder)
 		{
 			var app = builder.Build();
-			// Configure the HTTP request pipeline.
+
 			if (!app.Environment.IsDevelopment())
 			{
 				app.UseExceptionHandler("/Home/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
+
+			var supportedCultures = new List<CultureInfo>
+			{
+				new CultureInfo( "en" ),
+				new CultureInfo( "es" )
+			};
+			var options = new RequestLocalizationOptions
+			{
+				DefaultRequestCulture = new RequestCulture("en"),
+				SupportedCultures = supportedCultures,
+				SupportedUICultures = supportedCultures
+			};
+			app.UseRequestLocalization(options);
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseAuthorization();
 			app.UseSession();
-
-			app.UseRequestLocalization();
 
 			app.MapControllerRoute(
 				name: "default",

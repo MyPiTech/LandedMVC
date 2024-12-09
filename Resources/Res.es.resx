@@ -117,10 +117,168 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="HeaderWelcome" xml:space="preserve">
+  <data name="FormContactError" xml:space="preserve">
+    <value>Se produjo un error. El correo electrónico no fue enviado.</value>
+  </data>
+  <data name="FormContactMessage" xml:space="preserve">
+    <value>Tu Mensaje</value>
+  </data>
+  <data name="FormContactName" xml:space="preserve">
+    <value>Su Nombre</value>
+  </data>
+  <data name="FormContactNotify" xml:space="preserve">
+    <value>Enviando correo electrónico...</value>
+  </data>
+  <data name="FormContactRequiredMessage" xml:space="preserve">
+    <value>Por favor ingrese un mensaje.</value>
+  </data>
+  <data name="FormContactRequiredName" xml:space="preserve">
+    <value>Por favor ingrese un nombre.</value>
+  </data>
+  <data name="FormContactSend" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="FormContactSuccess" xml:space="preserve">
+    <value>Correo electrónico enviado correctamente.</value>
+  </data>
+  <data name="HeaderBio" xml:space="preserve">
+    <value>Soy autodidacta.</value>
+  </data>
+  <data name="HeaderContact" xml:space="preserve">
+    <value>Hablemos...</value>
+  </data>
+  <data name="HeaderSplash" xml:space="preserve">
     <value>El futuro ha aterrizado</value>
   </data>
-  <data name="TitleWelcome" xml:space="preserve">
+  <data name="HeaderStory" xml:space="preserve">
+    <value>Me encanta montar</value>
+  </data>
+  <data name="HeaderTech" xml:space="preserve">
+    <value>Pasemos a las cosas divertidas sobre tecnología.</value>
+  </data>
+  <data name="HeaderTechAPI" xml:space="preserve">
+    <value>API</value>
+  </data>
+  <data name="HeaderTechEvents" xml:space="preserve">
+    <value>Eventos</value>
+  </data>
+  <data name="HeaderTechUsers" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="HeaderWelcome" xml:space="preserve">
+    <value>¡Hola!</value>
+  </data>
+  <data name="LinkBio" xml:space="preserve">
+    <value>Biografía/Currículum</value>
+  </data>
+  <data name="LogoHome" xml:space="preserve">
+    <value>Landed MVC</value>
+  </data>
+  <data name="NavAPI" xml:space="preserve">
+    <value>Interfaz de usuario API Swagger</value>
+  </data>
+  <data name="NavAPIRepo" xml:space="preserve">
+    <value>Repositorio API</value>
+  </data>
+  <data name="NavContactMe" xml:space="preserve">
+    <value>Contacta Conmigo</value>
+  </data>
+  <data name="NavEvents" xml:space="preserve">
+    <value>Eventos</value>
+  </data>
+  <data name="NavHome" xml:space="preserve">
+    <value>Hogar</value>
+  </data>
+  <data name="NavMVC" xml:space="preserve">
+    <value>MVC</value>
+  </data>
+  <data name="NavNext" xml:space="preserve">
+    <value>Próximo</value>
+  </data>
+  <data name="NavOtherProjects" xml:space="preserve">
+    <value>Mis Otros Proyectos</value>
+  </data>
+  <data name="NavRepos" xml:space="preserve">
+    <value>Repositorios</value>
+  </data>
+  <data name="NavResume" xml:space="preserve">
+    <value>Currículum/Biografía</value>
+  </data>
+  <data name="NavSimpleMVC" xml:space="preserve">
+    <value>MVC Sencillo</value>
+  </data>
+  <data name="NavSimpleMVCRepo" xml:space="preserve">
+    <value>Repositorio MVC Sencillo</value>
+  </data>
+  <data name="NavSimpleSignalR" xml:space="preserve">
+    <value>SignalR Sencillo</value>
+  </data>
+  <data name="NavSimpleSignalRRepo" xml:space="preserve">
+    <value>Repositorio SignalR Sencillo</value>
+  </data>
+  <data name="NavThisRepo" xml:space="preserve">
+    <value>Este repositorio</value>
+  </data>
+  <data name="NavUsers" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="SubHeaderBio" xml:space="preserve">
+    <value>"Nunca memorices algo que puedas buscar". - &lt;strong&gt;Albert Einstein&lt;/strong&gt;</value>
+  </data>
+  <data name="SubHeaderContact" xml:space="preserve">
+    <value>Envíame un correo electrónico de la manera más fácil. Este formulario utiliza un punto final en mi API para enviarme un correo electrónico.</value>
+  </data>
+  <data name="SubHeaderStory" xml:space="preserve">
+    <value>Desafortunadamente, el año pasado tuve un accidente grave.</value>
+  </data>
+  <data name="SubHeaderTech" xml:space="preserve">
+    <value>&lt;p&gt;
+	Creé dos tablas en mi base de datos. Usuarios y Eventos. Representan una relación común de uno a muchos.
+&lt;/p&gt;
+&lt;p&gt;
+	La elección de utilizar Usuarios y Eventos fue completamente arbitraria. No están atados a nada funcional. Así que siéntete libre de agregarlos, editarlos o eliminarlos sin miedo.
+&lt;/p&gt;</value>
+  </data>
+  <data name="SubHeaderTechAPI" xml:space="preserve">
+    <value>Acceda a la API directamente utilizando su interfaz de usuario Swagger.</value>
+  </data>
+  <data name="SubHeaderTechEvents" xml:space="preserve">
+    <value>Desde aquí podrás acceder a todos los eventos independientemente de los usuarios.</value>
+  </data>
+  <data name="SubHeaderTechUsers" xml:space="preserve">
+    <value>En un flujo normal de uno a muchos. Las cosas empezarían aquí.</value>
+  </data>
+  <data name="SubHeaderWelcome" xml:space="preserve">
+    <value>¡Bienvenido a &lt;strong&gt;Landed MVC!&lt;/strong&gt;</value>
+  </data>
+  <data name="TextBio" xml:space="preserve">
+    <value>Como desarrollador de software autodidacta, he emprendido un viaje que comenzó en la infancia y abarca dos décadas de experiencia en el desarrollo de software web empresarial. Mi viaje en codificación ha atravesado un panorama diverso, desde BASIC hasta C#. Más allá de escribir código, soy un ávido lector y jugador.</value>
+  </data>
+  <data name="TextSplash" xml:space="preserve">
+    <value>Y no hay patinetas flotantes ni coches voladores.&lt;br /&gt;
+Sólo yo y Landed MVC... &amp;#128514;</value>
+  </data>
+  <data name="TextStory" xml:space="preserve">
+    <value>&lt;p&gt;
+	Sólo menciono esto porque llevo un año sin trabajo. Principalmente por este accidente y el tiempo que ha tardado en recuperarse.
+&lt;/p&gt;
+&lt;p&gt;
+	Esto me ha oxidado un poco y tiene mucho que ver con el motivo por el que existen estos proyectos de demostración. Sirven como un repaso de mi memoria y como un medio para aliviar cualquier preocupación que los empleadores puedan tener sobre mis habilidades.
+&lt;/p&gt;
+&lt;p&gt;
+	Bastante bien sobre mí...
+&lt;/p&gt;</value>
+  </data>
+  <data name="TextWelcome1" xml:space="preserve">
+    <value>Esta aplicación web se creó utilizando .NET 8 MVC y un excelente (y gratuito) trabajo de diseño responsivo de &lt;a href="https://html5up.net/landed" target="_blank"&gt;HTML5 UP&lt;/a&gt;. Se ve mejor en una computadora de escritorio, pero responde completamente a los tamaños de pantalla de los dispositivos móviles. La mayor parte del crédito por esto reside en el diseño, pero yo mismo agregué una buena cantidad de JS y CSS.</value>
+  </data>
+  <data name="TextWelcome2" xml:space="preserve">
+    <value>Aprovecha una API REST para su backend, que es la misma API utilizada por mis otras aplicaciones de demostración. En consecuencia, las modificaciones realizadas aquí se propagarán sin problemas a esas aplicaciones y viceversa. Adoptar una API para el backend ofrece la flexibilidad de conectar varios frontends o implementar modificaciones en ellos de forma autónoma.</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Landed MVC</value>
+  </data>
+  <data name="TitleHome" xml:space="preserve">
     <value>Hogar</value>
   </data>
 </root>

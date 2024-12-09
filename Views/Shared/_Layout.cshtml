@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using LandedMVC.Resources
+
+<!DOCTYPE html>
 <html lang="en">
 <head>   
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <title>@ViewData["Title"] - Landed MVC</title>
+    <title>@ViewData["Title"] - @Res.Title</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.0/css/responsive.dataTables.min.css" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
@@ -18,37 +20,37 @@
 <body class="is-preload landing">
     <div id="page-wrapper">
         <header id="header">
-            <h1 id="logo"><a class="navbar-brand" asp-action="index" asp-controller="home">Landed MVC</a></h1>
+            <h1 id="logo"><a class="navbar-brand" asp-action="index" asp-controller="home">@Res.LogoHome</a></h1>
             <nav id="nav">
                 <ul>
-                    <li><a class="navbar-brand" asp-action="index" asp-controller="home">Home</a></li>
+                    <li><a class="navbar-brand" asp-action="index" asp-controller="home">@Res.NavHome</a></li>
                     <li>
-                        <a asp-action="index" asp-controller="users" target="_blank">MVC</a>
+                        <a asp-action="index" asp-controller="users" target="_blank">@Res.NavMVC</a>
                         <ul>
-                            <li><a asp-action="index" asp-controller="users">Users</a></li>
-                            <li><a asp-action="index" asp-controller="events">Events</a></li>
+                            <li><a asp-action="index" asp-controller="users">@Res.NavUsers</a></li>
+                            <li><a asp-action="index" asp-controller="events">@Res.NavEvents</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="#">My Other Projects</a>
+                        <a href="#">@Res.NavOtherProjects</a>
                         <ul>
-                            <li><a href="https://resume.mypitech.com" target="_blank">Resume/Bio</a></li>
-                            <li><a href="https://mssimpletestmvc.azurewebsites.net" target="_blank">Simple MVC</a></li>
-                            <li><a href="https://signalrdemo.azurewebsites.net" target="_blank">Simple SignalR</a></li>
-                            <li><a href="https://swcoretestapi.azurewebsites.net/swagger/index.html" target="_blank">API Swagger UI</a></li>
+                            <li><a href="https://resume.mypitech.com" target="_blank">@Res.NavResume</a></li>
+                            <li><a href="https://mssimpletestmvc.azurewebsites.net" target="_blank">@Res.NavSimpleMVC</a></li>
+                            <li><a href="https://signalrdemo.azurewebsites.net" target="_blank">@Res.NavSimpleSignalR</a></li>
+                            <li><a href="https://swcoretestapi.azurewebsites.net/swagger/index.html" target="_blank">@Res.NavAPI</a></li>
                             
                             <li>
-                                <a href="#">Repositories</a>
+                                <a href="#">@Res.NavRepos</a>
                                 <ul>
-                                    <li><a href="https://github.com/MyPiTech/LandedMVC" target="_blank">This Repo</a></li>
-                                    <li><a href="https://github.com/MyPiTech/TestMVC" target="_blank">Simple MVC Repo</a></li>
-                                    <li><a href="https://github.com/MyPiTech/SignalRDiceGame" target="_blank">Simple SignalR Repo</a></li>
-                                    <li><a href="https://github.com/MyPiTech/DotNetCoreTestApi" target="_blank">API Repo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/LandedMVC" target="_blank">@Res.NavThisRepo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/TestMVC" target="_blank">@Res.NavSimpleMVCRepo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/SignalRDiceGame" target="_blank">@Res.NavSimpleSignalRRepo</a></li>
+                                    <li><a href="https://github.com/MyPiTech/DotNetCoreTestApi" target="_blank">@Res.NavAPIRepo</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
-                    <li><a href="/#five" class="button primary">Contact Me</a></li>
+                    <li><a href="/#five" class="button primary">@Res.NavContactMe</a></li>
                 </ul>
             </nav>
         </header>
